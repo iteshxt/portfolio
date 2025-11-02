@@ -19,7 +19,7 @@ export default function Experience() {
           {portfolioData.experience.map((job) => (
             <div key={job.id} className="border-l-2 border-foreground/20 pl-4 sm:pl-8 py-4">
               <h3 className="text-xl sm:text-2xl font-semibold mb-2">{job.title}</h3>
-              <p className="text-xs sm:text-sm text-foreground/60 mb-2 break-words">
+              <p className="text-xs sm:text-sm text-foreground/60 mb-2">
                 {job.company} • {job.duration} {job.location && `• ${job.location}`}
               </p>
               <p className="text-xs sm:text-sm text-foreground/70 mb-4">
@@ -30,7 +30,7 @@ export default function Experience() {
                 <ul className="space-y-2 mb-4">
                   {job.responsibilities.map((responsibility, idx) => (
                     <li key={idx} className="text-xs sm:text-sm text-foreground/70 flex items-start gap-3">
-                      <span className="text-foreground/40 mt-1 flex-shrink-0">●</span>
+                      <span className="text-foreground/40 mt-1 shrink-0">●</span>
                       <span>{responsibility}</span>
                     </li>
                   ))}

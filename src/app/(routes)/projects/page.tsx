@@ -48,7 +48,7 @@ export default function Projects() {
                 {/* Content */}
                 <div className={`${idx % 2 === 1 ? 'md:col-start-2' : ''}`}>
                   {/* Mobile Image - Float left for book-like layout */}
-                  <div className="md:hidden float-left mr-4 mb-4 flex-shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden border border-foreground/10">
+                  <div className="md:hidden float-left mr-4 mb-4 shrink-0 w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden border border-foreground/10">
                     <div className="relative w-full h-full">
                       <Image
                         src={`/projects/${project.image}`}
