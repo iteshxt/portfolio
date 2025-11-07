@@ -169,7 +169,7 @@ export default function Home() {
           />
         </animated.div>
 
-        <div className="flex flex-col items-start justify-center gap-8 z-10 w-full max-w-7xl mx-auto pl-8 xl:pl-20 2xl:pl-32">
+        <div className="flex flex-col items-start justify-center gap-8 z-10 w-full max-w-7xl mx-auto pl-0 xl:pl-8 2xl:pl-16">
           {/* Content Container */}
           <div className="flex flex-col items-start justify-start gap-6 text-left w-full max-w-xl xl:max-w-2xl">
             {/* Greeting */}
