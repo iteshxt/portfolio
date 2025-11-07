@@ -51,90 +51,99 @@ export default function Home() {
   };
 
   return (
-    <section className="relative md:min-h-screen flex flex-col md:flex-row items-center md:items-center justify-center md:justify-center px-3 md:px-8 md:py-20 md:pt-0">
-      {/* Mobile Layout - Absolute centered from screen top */}
-      <div className="md:hidden fixed inset-0 w-full h-screen flex flex-col items-center justify-center gap-3 py-0 pointer-events-auto">
-        {/* Inner container for left-aligned content with padding */}
-        <div className="w-full max-w-sm px-6 flex flex-col items-start gap-3">
+    <section className="relative flex flex-col items-center justify-center lg:min-h-screen lg:justify-start lg:pt-32 px-4 sm:px-6 md:px-8 pb-0 min-h-screen">
+      {/* Mobile & Tablet Layout (up to lg breakpoint) */}
+      <div className="lg:hidden w-full max-w-2xl mx-auto flex flex-col items-start gap-2.5 sm:gap-3 md:gap-4">
+        {/* Greeting and Name Section - Aligned with text below */}
+        <div className="pl-0 sm:pl-0">
           {/* Greeting at top */}
           <animated.p
             style={greetingSpring}
-            className="text-sm text-foreground/60 font-light tracking-wider text-left"
+            className="text-sm sm:text-base text-foreground/60 font-light tracking-wider text-left mb-3 sm:mb-4"
           >
             Hi👋, my name is
           </animated.p>
 
           {/* Name with Image Side by Side */}
-          <div className="flex items-start gap-3 w-full">
-            {/* Content on Left */}
-            <animated.div style={nameSpring} className="space-y-0 flex-1">
-              <h1 className="text-6xl font-bold text-foreground leading-tight">
-                Itesh Tomar
-              </h1>
-              <animated.p
-                style={{
-                  ...taglineSpring,
-                  color: accentColor,
-                }}
-                className="text-sm font-light"
+          <div className="flex flex-col w-full gap-0 mb-1 sm:mb-2">
+            {/* Name and Ghost on same line */}
+            <div className="flex items-start gap-1 sm:gap-3 md:gap-4 mb-0">
+              <animated.h1 
+                style={nameSpring}
+                className="text-[3.75rem] leading-[0.95] sm:text-5xl md:text-6xl sm:leading-[0.9] font-bold text-foreground m-0 p-0"
               >
-                I build things that sometimes work :)
-              </animated.p>
-            </animated.div>
-
-            {/* Mobile Icon - Larger, Next to Name */}
-            <animated.div
-              style={{
-                opacity: useSpring({
-                  from: { opacity: 0, transform: 'translate3d(40px, 0px, 0)' },
-                  to: { opacity: 1, transform: 'translate3d(0px, 0px, 0)' },
-                  delay: 100,
-                }).opacity,
-              }}
-              className="z-50 shrink-0"
-            >
-              <Image
-                src="/icon.svg"
-                alt="Itesh Tomar"
-                width={160}
-                height={160}
-                className="w-40 h-40 scale-x-[-1] opacity-100"
-              />
-            </animated.div>
+                Itesh Tomar
+              </animated.h1>
+              
+              {/* Ghost Icon - Right side, closer to name */}
+              <animated.div
+                style={{
+                  opacity: useSpring({
+                    from: { opacity: 0, transform: 'translate3d(40px, 0px, 0)' },
+                    to: { opacity: 1, transform: 'translate3d(0px, 0px, 0)' },
+                    delay: 100,
+                  }).opacity,
+                }}
+                className="shrink-0 -mt-4 sm:-mt-2 -ml-8 sm:-ml-4"
+              >
+                <Image
+                  src="/icon.svg"
+                  alt="Itesh Tomar"
+                  width={200}
+                  height={200}
+                  className="w-40 h-40 sm:w-44 sm:h-44 md:w-52 md:h-52 scale-x-[-1] opacity-100"
+                />
+              </animated.div>
+            </div>
           </div>
-
-          {/* Description */}
+          
+          {/* Tagline below everything - separate from flex container */}
           <animated.p
-            style={descriptionSpring}
-            className="text-xs text-foreground/70 w-full leading-relaxed"
+            style={{
+              ...taglineSpring,
+              color: accentColor,
+            }}
+            className="text-sm sm:text-base md:text-lg font-light leading-tight mt-1 sm:mt-2 m-0 p-0 text-left w-full max-w-sm"
           >
-            Software Developer crafting interactive web experiences. I specialize in turning complex ideas into pixel-perfect, performant applications. Currently exploring AI-powered tools and building products that blend creativity with code.
+            I build things that sometimes work :)
           </animated.p>
+        </div>
 
-          {/* Buttons - Not Full Width */}
-          <animated.div
-            style={buttonsSpring}
-            className="flex flex-col gap-1.5 w-full max-w-xs pt-2"
+        {/* Description */}
+        <animated.p
+          style={descriptionSpring}
+          className="text-[0.9rem] sm:text-base text-foreground/70 w-full leading-relaxed pt-4"
+        >
+          Software Developer crafting interactive web experiences. I specialize in turning complex ideas into pixel-perfect, performant applications. Currently exploring AI-powered tools and building products that blend creativity with code.
+        </animated.p>
+
+        {/* Buttons */}
+        <animated.div
+          style={buttonsSpring}
+          className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 w-full sm:w-auto pt-6"
+        >
+          <button
+            onClick={handleResumeClick}
+            className="btn-primary text-sm sm:text-base w-full sm:w-auto"
           >
-            <button
-              onClick={handleResumeClick}
-              className="btn-primary text-sm"
-            >
-              View Resume
-            </button>
-            <button
-              onClick={handleEmailClick}
-              className="btn-secondary text-sm"
-            >
-              Get In Touch
-            </button>
-          </animated.div>
+            View Resume
+          </button>
+          <button
+            onClick={handleEmailClick}
+            className="btn-secondary text-sm sm:text-base w-full sm:w-auto"
+          >
+            Get In Touch
+          </button>
+        </animated.div>
+
+        <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-foreground/40 w-full pb-0">
+          <p>Press 1-5 to navigate • 🎮 Keyboard shortcuts available</p>
         </div>
       </div>
 
-      {/* Desktop Layout - Original */}
-      <div className="hidden md:flex w-full items-center justify-center">
-        {/* Top Icon - Right Side (Desktop Only) */}
+      {/* Desktop Layout - Large screens only */}
+      <div className="hidden lg:flex w-full items-center justify-center relative">
+        {/* Large Icon - Right Side (Desktop Only) - Responsive sizing */}
         <animated.div
           style={{
             opacity: useSpring({
@@ -142,34 +151,38 @@ export default function Home() {
               to: { opacity: 1, transform: 'translate3d(0px, 0px, 0)' },
               delay: 100,
             }).opacity,
-            transform: 'translateY(calc(-50% - 48px))',
           }}
-          className="absolute right-32 top-1/2 z-50 hidden lg:block"
+          className="absolute right-8 xl:right-20 2xl:right-32 top-1/2 -translate-y-1/2 z-0"
         >
           <Image
             src="/icon.svg"
             alt="Itesh Tomar"
             width={1600}
             height={1600}
-            className="w-full h-full scale-x-[-1] opacity-100"
-            style={{ width: '768px', height: '768px' }}
+            className="scale-x-[-1] opacity-100"
+            style={{ 
+              width: 'clamp(400px, 40vw, 768px)', 
+              height: 'clamp(400px, 40vw, 768px)',
+              maxWidth: '768px',
+              maxHeight: '768px'
+            }}
           />
         </animated.div>
 
-        <div className="flex flex-col items-start justify-start gap-8 z-10 w-full pl-0 md:pl-32 lg:pl-80">
+        <div className="flex flex-col items-start justify-center gap-8 z-10 w-full max-w-7xl mx-auto pl-8 xl:pl-20 2xl:pl-32">
           {/* Content Container */}
-          <div className="flex flex-col items-start justify-start gap-6 text-left w-full max-w-2xl">
+          <div className="flex flex-col items-start justify-start gap-6 text-left w-full max-w-xl xl:max-w-2xl">
             {/* Greeting */}
             <animated.p
               style={greetingSpring}
-              className="text-xs sm:text-sm md:text-base text-foreground/60 font-light tracking-wider"
+              className="text-base lg:text-lg text-foreground/60 font-light tracking-wider"
             >
               Hi👋, my name is
             </animated.p>
 
             {/* Name - Creative Text */}
             <animated.div style={nameSpring} className="space-y-2 w-full">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground whitespace-nowrap overflow-hidden">
+              <h1 className="text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground">
                 Itesh Tomar
               </h1>
               <animated.p
@@ -177,7 +190,7 @@ export default function Home() {
                   ...taglineSpring,
                   color: accentColor,
                 }}
-                className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light"
+                className="text-2xl lg:text-3xl xl:text-4xl font-light"
               >
                 I build things that sometimes work :)
               </animated.p>
@@ -186,7 +199,7 @@ export default function Home() {
             {/* Description - Subtitle */}
             <animated.p
               style={descriptionSpring}
-              className="text-xs sm:text-sm md:text-base text-foreground/70 w-full leading-relaxed pt-4"
+              className="text-base lg:text-lg text-foreground/70 w-full leading-relaxed pt-4 max-w-xl"
             >
               Software Developer crafting interactive web experiences. I specialize in turning complex ideas into pixel-perfect, performant applications. Currently exploring AI-powered tools and building products that blend creativity with code.
             </animated.p>
@@ -194,23 +207,23 @@ export default function Home() {
             {/* Buttons */}
             <animated.div
               style={buttonsSpring}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-8 w-full sm:w-auto"
+              className="flex flex-row gap-4 pt-8"
             >
               <button
                 onClick={handleResumeClick}
-                className="btn-primary text-sm sm:text-base"
+                className="btn-primary"
               >
                 View Resume
               </button>
               <button
                 onClick={handleEmailClick}
-                className="btn-secondary text-sm sm:text-base"
+                className="btn-secondary"
               >
                 Get In Touch
               </button>
             </animated.div>
 
-            <div className="mt-8 sm:mt-12 text-xs text-foreground/40">
+            <div className="mt-12 text-xs lg:text-sm text-foreground/40">
               <p>Press 1-5 to navigate • 🎮 Keyboard shortcuts available</p>
             </div>
           </div>

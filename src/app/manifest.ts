@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
     return {
         name: "Itesh Tomar's Portfolio",
         short_name: 'Itesh Portfolio',
-        description: 'Full-stack developer crafting interactive web experiences with AI/ML expertise',
+        description: 'Software Developer crafting interactive web experiences with AI/ML expertise',
         start_url: '/',
         scope: '/',
         display: 'standalone',

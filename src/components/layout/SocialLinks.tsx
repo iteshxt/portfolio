@@ -54,7 +54,7 @@ const SOCIAL_LINKS = [
 
 export const SocialLinks = () => {
   return (
-    <div className="fixed left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30 hidden md:block">
+    <div className="fixed left-3 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 hidden md:block">
       <style>{`
         .social-links-container {
           display: flex;

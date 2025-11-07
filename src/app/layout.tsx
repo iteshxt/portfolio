@@ -7,7 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import ClickSpark from "@/components/common/ClickSpark";
 import { Background } from "@/components/background/Background";
 import Script from "next/script";
-import { generatePersonSchema, generateWebsiteSchema } from "@/lib/seo";
+import { generatePersonSchema, generateWebsiteSchema, generateOrganizationSchema } from "@/lib/seo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -159,6 +159,7 @@ export default function RootLayout({
 }>) {
   const personSchema = generatePersonSchema();
   const websiteSchema = generateWebsiteSchema();
+  const organizationSchema = generateOrganizationSchema();
 
   return (
     <html lang="en" className="dark">
@@ -176,6 +177,13 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(websiteSchema),
+          }}
+        />
+        <Script
+          id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
           }}
         />
         {/* Google Analytics */}

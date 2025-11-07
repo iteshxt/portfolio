@@ -48,7 +48,7 @@ textarea:focus-visible {
 
 /* Premium Button Style - Primary */
 .btn-primary {
-  padding: 10px 24px;
+  padding: 12px 28px;
   border: 2px solid transparent;
   color: #ffffff;
   background: linear-gradient(135deg, rgb(139, 92, 246), rgb(99, 102, 241));
@@ -65,7 +65,21 @@ textarea:focus-visible {
 
 @media (min-width: 640px) {
   .btn-primary {
-    padding: 12px 32px;
+    padding: 13px 32px;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .btn-primary {
+    padding: 12px 28px;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .btn-primary {
+    padding: 13px 32px;
     font-size: 1rem;
   }
 }
@@ -106,7 +120,7 @@ textarea:focus-visible {
 
 /* Premium Button Style - Secondary */
 .btn-secondary {
-  padding: 10px 24px;
+  padding: 12px 28px;
   border: 2px solid rgb(139, 92, 246);
   color: rgb(139, 92, 246);
   background: transparent;
@@ -123,7 +137,21 @@ textarea:focus-visible {
 
 @media (min-width: 640px) {
   .btn-secondary {
-    padding: 12px 32px;
+    padding: 13px 32px;
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .btn-secondary {
+    padding: 12px 28px;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .btn-secondary {
+    padding: 13px 32px;
     font-size: 1rem;
   }
 }

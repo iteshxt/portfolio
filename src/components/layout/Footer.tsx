@@ -29,7 +29,7 @@ const SOCIAL_LINKS = [
 
 export const Footer = () => {
   return (
-    <footer className="w-full flex flex-col items-center justify-center py-3 md:py-8 z-20 gap-3 md:gap-6">
+    <footer className="w-full flex flex-col items-center justify-center py-2 md:py-8 z-20 gap-2 md:gap-6">
       {/* Mobile social links (visible only on small screens) */}
       <div className="md:hidden flex items-center gap-4 flex-wrap justify-center">
         {SOCIAL_LINKS.map((social) => {
