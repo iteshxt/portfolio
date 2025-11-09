@@ -18,7 +18,7 @@ export default function Contact() {
 
   // Initialize EmailJS
   useEffect(() => {
-    emailjs.init(process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || '');
+    emailjs.init('_wY5aajq4Kb3QguKO');
   }, []);
 
   const formFieldsSpring = useSpring({

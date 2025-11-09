@@ -1,7 +1,15 @@
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState, forwardRef, useImperativeHandle } from 'react';
 import { useTheme } from '@/hooks/useTheme';
+
+export interface ClickSparkRef {
+  toggleSound: () => void;
+  isSoundMuted: boolean;
+}
+
+// Global mute state
+let globalSoundMuted = typeof window !== 'undefined' ? localStorage.getItem('soundMuted') === 'true' : false;
 
 interface ClickSparkProps {
   sparkColor?: string;
@@ -21,19 +29,65 @@ interface Spark {
   startTime: number;
 }
 
-const ClickSpark: React.FC<ClickSparkProps> = ({
-  sparkColor = '#fff',
-  sparkSize = 10,
-  sparkRadius = 15,
-  sparkCount = 8,
-  duration = 400,
-  easing = 'ease-out',
-  extraScale = 1.0,
-  children
-}) => {
+const ClickSpark = forwardRef<ClickSparkRef, ClickSparkProps>(
+  ({
+    sparkColor = '#fff',
+    sparkSize = 10,
+    sparkRadius = 15,
+    sparkCount = 8,
+    duration = 400,
+    easing = 'ease-out',
+    extraScale = 1.0,
+    children
+  }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const sparksRef = useRef<Spark[]>([]);
   const startTimeRef = useRef<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isSoundMuted, setIsSoundMuted] = useState(globalSoundMuted);
+  const [mounted, setMounted] = useState(false);
+
+  // Expose toggleSound to parent
+  useImperativeHandle(ref, () => ({
+    toggleSound,
+    get isSoundMuted() {
+      return globalSoundMuted;
+    }
+  }));
+
+  // Initialize audio
+  useEffect(() => {
+    setMounted(true);
+    
+    // Create audio element
+    if (!audioRef.current) {
+      const audio = new Audio('/audio/bloop-sound.mp3');
+      audio.loop = false;
+      audio.volume = 0.5;
+      audioRef.current = audio;
+    }
+
+    // Listen for storage changes (when mute is toggled in another tab or component)
+    const handleStorageChange = () => {
+      const storedMuted = localStorage.getItem('soundMuted') === 'true';
+      globalSoundMuted = storedMuted;
+      setIsSoundMuted(storedMuted);
+    };
+
+    // Listen for custom sound mute toggle event
+    const handleSoundToggle = (event: any) => {
+      globalSoundMuted = event.detail;
+      setIsSoundMuted(event.detail);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('soundMuteToggle', handleSoundToggle);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('soundMuteToggle', handleSoundToggle);
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -151,6 +205,20 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
     }));
 
     sparksRef.current.push(...newSparks);
+    
+    // Play sound if not muted (use global state)
+    if (!globalSoundMuted && audioRef.current && mounted) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play().catch(() => {
+        console.log('Could not play sound');
+      });
+    }
+  };
+
+  const toggleSound = () => {
+    globalSoundMuted = !globalSoundMuted;
+    setIsSoundMuted(globalSoundMuted);
+    localStorage.setItem('soundMuted', globalSoundMuted ? 'true' : 'false');
   };
 
   return (
@@ -159,6 +227,7 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
       {children}
     </div>
   );
-};
+}
+);
 
 export default ClickSpark;

@@ -6,6 +6,7 @@ import { SocialLinks } from "@/components/layout/SocialLinks";
 import { Footer } from "@/components/layout/Footer";
 import ClickSpark from "@/components/common/ClickSpark";
 import { Background } from "@/components/background/Background";
+import { KeyPressIndicator } from "@/components/common/KeyPressIndicator";
 import Script from "next/script";
 import { generatePersonSchema, generateWebsiteSchema, generateOrganizationSchema } from "@/lib/seo";
 
@@ -85,7 +86,111 @@ export const metadata: Metadata = {
     "iteshxt AI",
     "iteshxt github",
     "iteshxt linkedin",
-    "iteshxt twitter"
+    "iteshxt twitter",
+    "Hitesh Tomar",
+"hiteshxt",
+"Hitesh Singh Tomar",
+"Software Engineer",
+"Hitesh Tomar LPU",
+"Hitesh Noida",
+"Hitesh CSE",
+"Hitesh Tomar Portfolio",
+"Hitesh Tomar Projects",
+"Hitesh Tomar Blog",
+"Hitesh Tomar Experience",
+"Hitesh Tomar AI",
+"Hitesh Tomar Machine Learning",
+"Hitesh Tomar Next.js",
+"Hitesh Tomar React",
+"Hitesh Tomar Node.js",
+"Hitesh Tomar TypeScript",
+"Hitesh Singh Tomar Portfolio",
+"Hitesh Singh Tomar Projects",
+"Hitesh Singh Tomar Blog",
+"Hitesh Singh Tomar Experience",
+"Hitesh Singh Tomar AI",
+"Hitesh Singh Tomar Machine Learning",
+"Hitesh Singh Tomar Next.js",
+"Hitesh Singh Tomar React",
+"Hitesh Singh Tomar Node.js",
+"Hitesh Singh Tomar TypeScript",
+"Hitesh linkedin",
+"Hitesh github",
+"Hitesh twitter",
+"Hitesh developer",
+"Hitesh programmer",
+"Hitesh web developer",
+"Hitesh full-stack developer",
+"Hitesh AI engineer",
+"Hitesh ML engineer",
+"Hitesh software developer",
+"Hitesh tech blog",
+"Hitesh coding",
+"Hitesh open source",
+"Hitesh freelance developer",
+"Hitesh portfolio website",
+"Hitesh personal website",
+"hiteshxt portfolio",
+"hiteshxt projects",
+"hiteshxt blog",
+"hiteshxt experience",
+"hiteshxt AI",
+"hiteshxt github",
+"hiteshxt linkedin",
+"hiteshxt twitter",
+"Nitesh Tomar",
+"niteshxt",
+"Nitesh Singh Tomar",
+"Software Engineer",
+"Nitesh Tomar LPU",
+"Nitesh Noida",
+"Nitesh CSE",
+"Nitesh Tomar Portfolio",
+"Nitesh Tomar Projects",
+"Nitesh Tomar Blog",
+"Nitesh Tomar Experience",
+"Nitesh Tomar AI",
+"Nitesh Tomar Machine Learning",
+"Nitesh Tomar Next.js",
+"Nitesh Tomar React",
+"Nitesh Tomar Node.js",
+"Nitesh Tomar TypeScript",
+"Nitesh Singh Tomar Portfolio",
+"Nitesh Singh Tomar Projects",
+"Nitesh Singh Tomar Blog",
+"Nitesh Singh Tomar Experience",
+"Nitesh Singh Tomar AI",
+"Nitesh Singh Tomar Machine Learning",
+"Nitesh Singh Tomar Next.js",
+"Nitesh Singh Tomar React",
+"Nitesh Singh Tomar Node.js",
+"Nitesh Singh Tomar TypeScript",
+"Nitesh linkedin",
+"Nitesh github",
+"Nitesh twitter",
+"Nitesh developer",
+"Nitesh programmer",
+"Nitesh web developer",
+"Nitesh full-stack developer",
+"Nitesh AI engineer",
+"Nitesh ML engineer",
+"Nitesh software developer",
+"Nitesh tech blog",
+"Nitesh coding",
+"Nitesh open source",
+"Nitesh freelance developer",
+"Nitesh portfolio website",
+"Nitesh personal website",
+"niteshxt portfolio",
+"niteshxt projects",
+"niteshxt blog",
+"niteshxt experience",
+"niteshxt AI",
+"niteshxt github",
+"niteshxt linkedin",
+"niteshxt twitter"
+
+
     
   ],
   authors: [
@@ -210,8 +315,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground transition-colors duration-500`}
       >
         <Background theme="dark" />
-        <Navigation audioSrc="/audio/background-loop.mp3" />
+        <Navigation audioSrc="/audio/bloop-sound.mp3" />
         <SocialLinks />
+        <KeyPressIndicator />
         <ClickSpark
           sparkColor="#a78bfa"
           sparkSize={8}

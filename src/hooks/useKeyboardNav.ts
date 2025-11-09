@@ -14,6 +14,8 @@ export const useKeyboardNav = () => {
             if (['1', '2', '3', '4', '5'].includes(key)) {
                 const navItem = NAV_ITEMS.find((item) => item.shortcut === key);
                 if (navItem) {
+                    // Dispatch indicator event
+                    window.dispatchEvent(new CustomEvent('keyPressIndicator', { detail: key }));
                     router.push(navItem.href);
                 }
             }

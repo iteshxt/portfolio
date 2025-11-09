@@ -39,7 +39,7 @@ export default function Home() {
     delay: 600,
   });
 
-  const accentColor = theme === 'dark' ? '#8b5cf6' : '#d4d4d8';
+  const accentColor = theme === 'dark' ? '#8b5cf6' : '#8b5cf6';
   const accentColorBorder = theme === 'dark' ? '#5227FF' : '#e4e4e7';
 
   const handleResumeClick = () => {
