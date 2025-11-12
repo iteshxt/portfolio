@@ -56,7 +56,7 @@ export const portfolioData = {
                     "Fully voice-enabled mental health assistant"
                 ],
                 role: "Full-stack developer & custom model trainer",
-                github: "https://github.com/iteshxt/dia-therapist",
+                github: "https://github.com/dialabs/dia-therapist",
                 liveLink: "https://chatwithdia.vercel.app",
             },
             {
@@ -88,7 +88,7 @@ export const portfolioData = {
                     "QR code authentication for WhatsApp with auto-refresh"
                 ],
                 role: "Full-stack development & AI integration",
-                github: "https://github.com/iteshxt/dia-moderator",
+                github: "https://github.com/dialabs/dia-moderator",
                 liveLink: "https://dia-moderator.vercel.app",
             },
             {
@@ -115,7 +115,7 @@ export const portfolioData = {
                 image: "nom-nom.ico",
                 description: "A modern, production-ready e-canteen mobile app that features full authentication (email/password and Google Sign-In), dynamic menu system with categories, interactive shopping cart, seamless checkout with address management, complete order history, and light/dark theme support with elegant animations.",
                 technologies: ["Flutter", "Dart", "Firebase", "Cloud Firestore", "Provider", "animate_do"],
-                github: "https://github.com/iteshxt/nomnom",
+                github: "https://github.com/iteshxt/NomNom-App",
                 liveLink: "https://github.com/iteshxt/NomNom-App/releases/",
             },
             {
@@ -143,7 +143,7 @@ export const portfolioData = {
                 description: "A modern recipe discovery platform that features recipe browsing by categories/cuisines, powerful search functionality, detailed recipe views with ingredients and instructions, favorite recipe saving with LocalStorage, video tutorials, and fully responsive design for desktop, tablet, and mobile.",
                 technologies: ["React.js", "CSS3", "Lucide React", "TheMealDB API", "LocalStorage"],
                 github: "https://github.com/iteshxt/cooksy",
-                liveLink: "https://cooksy-recepies.vercel.app",
+                liveLink: "https://cooksy-recipes.vercel.app",
             },
             {
                 id: 9,
@@ -151,7 +151,7 @@ export const portfolioData = {
                 image: "lpu-wifi-autologin.ico",
                 description: "A dual-version Wi-Fi automation tool available as both a Python script and Chrome Extension. Python version uses automated credential-based login with Windows startup integration. Chrome Extension v1.2 provides seamless auto-login with locally stored secure credentials, tested with Chrome 140+.",
                 technologies: ["Python", "Selenium", "Chrome Extension", "JavaScript", "Local Storage"],
-                github: "https://github.com/iteshxt/lpu-wifi-autologin",
+                github: "https://github.com/iteshxt/lpu-wifi-automate-login",
                 liveLink: "https://github.com/iteshxt/lpu-wifi-automate-login/releases",
             },
         ],
