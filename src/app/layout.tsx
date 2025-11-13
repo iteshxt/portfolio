@@ -33,14 +33,16 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Itesh Tomar",
-  description: "Software Developer specializing in Next.js, React, Node.js, and AI/ML. Building beautiful, functional web experiences with cutting-edge technologies. Explore my projects, experience, and blog.",
+  title: "Itesh Tomar - Softwaare Developer",
+  description: "Software Developer specializing in all things web and AI/ML. Building beautiful, functional web experiences with cutting-edge technologies. Explore my projects and blogs.",
   keywords: [
     "Itesh Tomar",
     "iteshxt",
     "Itesh Singh Tomar",
     "Software Engineer",
     "Itesh Tomar LPU",
+    "itesh tomar lpu",
+    "itesh tomar",
     "Itesh Noida",
     "Itesh CSE",
     "Itesh Tomar Portfolio",
@@ -207,8 +209,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://iteshxt.me",
     siteName: "Itesh Tomar's Portfolio",
-    title: "Itesh Tomar - Full-Stack Developer & AI Engineer",
-    description: "Full-stack developer crafting interactive web experiences with AI/ML expertise",
+    title: "Itesh Tomar - Software Developer",
+    description: "Software Developer crafting interactive web experiences with AI/ML expertise",
     images: [
       {
         url: "https://iteshxt.me/og-image.jpg",
