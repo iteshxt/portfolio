@@ -79,17 +79,6 @@ const nextConfig: NextConfig = {
         destination: "/resume.pdf",
         permanent: true,
       },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.iteshxt.me",
-          },
-        ],
-        destination: "https://iteshxt.me/:path*",
-        permanent: true,
-      },
     ];
   },
 
