@@ -9,7 +9,7 @@ import { getTechIcon } from '@/lib/techIcons';
 import { Github, ExternalLink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
-import { generateProjectSchema, generateBreadcrumbSchema } from '@/lib/seo';
+import { generateBreadcrumbSchema } from '@/lib/seo';
 
 export default function Projects() {
   useKeyboardNav();
