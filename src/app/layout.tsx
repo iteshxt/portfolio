@@ -33,7 +33,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio · Itesh Tomar - Software Developer",
+  title: "Itesh Tomar - Software Developer",
   description: "Full-stack developer from Noida, India. Building scalable web applications with React, Next.js, Node.js, and Python.",
   keywords: [
     // Itesh name variations + context
