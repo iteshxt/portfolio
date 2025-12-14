@@ -41,22 +41,6 @@ A modern, fully SEO-optimized portfolio website built with **Next.js 16**, **Rea
 
 ---
 
----
-
-## 🎨 Key Features
-
-- 🌙 **Dark Theme** with smooth transitions
-- ✨ **Interactive Animations** using GSAP & Framer Motion
-- 🎵 **Background Audio** with toggle control
-- 🖱️ **Click Spark Effects** for delightful interactions
-- 📱 **Mobile Responsive** with keyboard navigation
-- ♿ **Accessibility Ready** with semantic HTML
-- 🔍 **SEO Optimized** with complete meta, schema, and sitemap setup
-- 📊 **Analytics Ready** for Google Analytics integration
-- 🚀 **Performance Optimized** with Next.js image optimization and Turbopack
-
----
-
 ## 🔗 Links
 
 - **Portfolio:** [iteshxt.me](https://iteshxt.me)
