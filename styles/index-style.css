@@ -1,0 +1,82 @@
+/* Styling for all */
+
+body{
+    background-image: url(/images/background.png);
+}
+
+.container {
+    margin: 30px;
+    padding: 20px;
+    overflow: hidden;
+    text-align: center;
+}
+
+.current {
+    color: rgb(186, 127, 186);
+    border: 2px solid;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+a {
+    display: inline;
+    padding: 5px;
+    margin: 20px;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(186, 127, 186);
+    border: 2px solid;
+    border-radius: 5px;
+    font-weight: bold;
+    
+}
+
+
+/* Main Content Styling */
+
+.main{
+    margin-left: 30%;
+}
+
+#name {
+    font-family:sans-serif;
+    font-size:30px;
+    font-weight: bold; 
+    padding-top: 20px; 
+    color:rgb(52, 52, 52)
+}
+
+#sub-head{
+    font-family:sans-serif; 
+    font-size:17px; 
+    color:rgb(93, 93, 93);
+}
+
+.content{
+    text-align: justify;
+    padding-top: 30px;
+    margin-right: 30%;
+    margin-left: 30%;
+}
+
+/* Footer Style */
+.footer {
+    position:fixed;
+    bottom: 0;
+    left: 30%;
+    right: 30%;
+}
+.text{
+    text-align: center;
+    padding-bottom: 15px;
+    padding-top: 2px;
+    padding-left: 10px;
+}
+
+.line {
+    border: 1px solid gray;
+}

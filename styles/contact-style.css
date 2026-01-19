@@ -1,0 +1,83 @@
+body{
+    background-image: url(/images/background.png);
+}
+
+.container {
+    margin: 30px;
+    padding: 20px;
+    overflow: hidden;
+    text-align: center;
+}
+
+#current {
+    color: rgb(186, 127, 186);
+    border: 2px solid;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.nav {
+    display: inline;
+    padding: 5px;
+    margin: 20px;
+    color: black;
+    text-align: center;
+    text-decoration: none;
+}
+
+.nav:hover {
+    color: rgb(186, 127, 186);
+    border: 2px solid;
+    border-radius: 5px;
+    font-weight: bold;
+    
+}
+
+.main{
+    padding-top: 2%;
+    margin-left: 30%;
+    margin-right: 30%;
+
+}
+
+.portfolio-links {
+    margin-left: 30%;
+    margin-top: 50px;
+    
+}
+.portfolio-links > img:hover {
+    rotate: 20;
+}
+.items {
+    display: flex;
+    align-items: center;
+}
+
+.link{
+    text-decoration: none;
+    color: gray;
+    padding: 20px;
+    text-align: center;
+}
+.link:hover {
+    font-size: 20px;
+    transition-duration: 0.2s;
+}
+
+/*Footer Style*/
+.footer {
+    position:fixed;
+    bottom: 0;
+    left: 30%;
+    right: 30%;
+}
+.text{
+    text-align: center;
+    padding-bottom: 15px;
+    padding-top: 2px;
+    padding-left: 10px;
+}
+
+.line {
+    border: 1px solid gray;
+}
