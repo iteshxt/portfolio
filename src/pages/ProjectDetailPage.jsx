@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { projects } from '../data/portfolioData';
-import { FaGithub, FaArrowLeft, FaExternalLinkAlt } from 'react-icons/fa';
-import '../styles/ProjectDetailPage.css';
+import { FaGithub, FaArrowLeft } from 'react-icons/fa';
+import '../styles/project-detail.css';
 
 const ProjectDetailPage = () => {
     const { id } = useParams();
@@ -59,60 +59,59 @@ const ProjectDetailPage = () => {
                     </Link>
                 </div>
 
-                <div className="project-header">
-                    <h1 className="project-title">{project.title}</h1>
-                    <p className="project-date"> </p>
-                    <p className="project-description">{project.description}</p>
+                <div className="project-card">
+                    <div className="project-content">
+                        <div className="project-header">
+                            <h1 className="project-title">{project.title}</h1>
 
-                    <div className="technologies-section">
-                        <h3 className="technologies-title">Technologies Used</h3>
-                        <div className="tech-tags">
-                            {project.technologies.map((tech, index) => (
-                                <span key={index} className="tech-tag">
-                                    {tech}
-                                </span>
-                            ))}
+                            {project.github && (
+                                <a
+                                    href={project.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="github-button"
+                                    aria-label="View GitHub Repository"
+                                >
+                                    <FaGithub className="github-icon" /> View GitHub Repo
+                                </a>
+                            )}
                         </div>
-                    </div>
 
-                    <div className="project-actions">
-                        {project.demo && (
-                            <a
-                                href={project.demo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="action-button primary"
-                            >
-                                <FaExternalLinkAlt className="button-icon" />
-                                Live Demo
-                            </a>
+                        <div className="project-overview">
+                            <h2 className="section-heading">Project Overview</h2>
+                            <p className="project-description">
+                                {project.description}
+                            </p>
+                        </div>
+
+                        {project.details && project.details.length > 0 && (
+                            <div className="project-details">
+                                <h2 className="section-heading">Key Features</h2>
+                                <ul className="job-description-list">
+                                    {project.details.map((detail, index) => (
+                                        <li key={index} className="job-description-item">
+                                            <span className="bullet-point">▹</span>
+                                            <span className="description-text">{detail}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
                         )}
-                        {project.github && (
-                            <a
-                                href={project.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="action-button secondary"
-                            >
-                                <FaGithub className="button-icon" />
-                                Source Code
-                            </a>
-                        )}
+
+                        <div className="tech-container">
+                            <h4 className="tech-title">Technologies Used:</h4>
+                            <div className="tech-tags">
+                                {project.technologies.map((tech, index) => (
+                                    <span key={index} className="tech-tag">
+                                        {tech}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Remove the footer with the GitHub Repo button since we've moved it to the header */}
                     </div>
                 </div>
-
-                {project.details && project.details.length > 0 && (
-                    <div className="project-section">
-                        <ul className="project-details-list">
-                            {project.details.map((detail, index) => (
-                                <li key={index} className="project-detail-item">
-                                    <span className="detail-bullet">▹</span>
-                                    <span className="detail-text">{detail}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
             </div>
         </main>
     );

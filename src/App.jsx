@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Layout/Navbar';
-import Footer from './components/Layout/Footer';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import HomePage from './pages/HomePage';
 import ExperiencePage from './pages/ExperiencePage';
 import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ContactPage from './pages/ContactPage';
 import { getThemeVariables } from './styles/theme';
+import './App.css';
 
 function App() {
   // Changed default theme from 'light' to 'dark'
@@ -59,6 +61,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className="App">
         {/* Theme transition overlay */}
         {isTransitioning && (

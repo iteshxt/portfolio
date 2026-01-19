@@ -1,8 +1,7 @@
-/* ===== EXPERIENCE PAGE STYLES ===== */
-
+/* Experience section styles */
 .experience-section {
     padding: 6rem 0;
-    background: transparent;
+    background-color: var(--surface);
     color: var(--text-primary);
     min-height: 80vh;
 }
@@ -15,18 +14,15 @@
 }
 
 .section-title {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
+    font-size: 2.5rem;
+    font-weight: 700;
     margin-bottom: 0.5rem;
     text-align: left;
-    color: var(--text-primary);
 }
 
 .experience-subtitle {
     color: var(--text-secondary);
-    font-size: var(--font-size-lg);
-    line-height: var(--line-height-normal);
+    font-size: 1.1rem;
     margin-bottom: 3rem;
     text-align: left;
 }
@@ -43,15 +39,13 @@
 }
 
 .job-title {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-tight);
+    font-size: 1.5rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
     align-items: center;
-    color: var(--text-primary);
 }
 
 .company-at {
@@ -61,11 +55,9 @@
 
 .job-period {
     color: var(--text-secondary);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-normal);
+    font-size: 1rem;
     margin-bottom: 1.5rem;
     font-style: italic;
-    font-weight: var(--font-weight-normal);
 }
 
 .job-description-list {
@@ -76,9 +68,8 @@
 
 .job-description-item {
     color: var(--text-secondary);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-relaxed);
     margin-bottom: 1rem;
+    line-height: 1.6;
     display: flex;
     align-items: flex-start;
 }
@@ -94,40 +85,37 @@
     flex: 1;
 }
 
+/* Technologies Section */
 .tech-container {
     margin-top: 2rem;
     background: rgba(var(--accent-primary-rgb), 0.05);
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    border: 1px solid rgba(var(--accent-primary-rgb), 0.1);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-primary);
 }
 
 .tech-title {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-normal);
     color: var(--text-primary);
-    margin-bottom: 1rem;
-    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .tech-tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.85rem;
+    gap: 0.75rem;
 }
 
 .tech-tag {
-    display: inline-block;
-    background: linear-gradient(135deg, rgba(var(--accent-primary-rgb), 0.15) 0%, rgba(var(--accent-secondary-rgb), 0.15) 100%);
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35rem 0.85rem;
+    background: linear-gradient(135deg, rgba(var(--accent-primary-rgb), 0.2) 0%, rgba(var(--accent-secondary-rgb), 0.2) 100%);
     color: var(--accent-primary);
-    padding: 0.4rem 0.75rem;
     border-radius: 4px;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-normal);
-    transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(var(--accent-primary-rgb), 0.1);
+    transition: all 0.3s ease;
 }
 
 .tech-tag:hover {
@@ -135,15 +123,15 @@
     box-shadow: 0 4px 8px rgba(var(--accent-primary-rgb), 0.2);
 }
 
+/* Skills Section */
 .skills-section {
     margin-top: 5rem;
     text-align: left;
 }
 
 .section-subtitle {
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-tight);
+    font-size: 1.75rem;
+    font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 1.5rem;
     text-align: left;
@@ -154,9 +142,8 @@
 }
 
 .skills-group-title {
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--line-height-normal);
+    font-size: 1.25rem;
+    font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 1rem;
     position: relative;
@@ -186,11 +173,10 @@
     display: inline-block;
     background: linear-gradient(135deg, rgba(var(--accent-primary-rgb), 0.15) 0%, rgba(var(--accent-secondary-rgb), 0.15) 100%);
     color: var(--accent-primary);
-    padding: 0.4rem 0.75rem;
+    padding: 0.35rem 0.85rem;
     border-radius: 4px;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-normal);
+    font-size: 0.9rem;
+    font-weight: 500;
     transition: all 0.3s ease;
     box-shadow: 0 2px 4px rgba(var(--accent-primary-rgb), 0.1);
 }
@@ -200,51 +186,26 @@
     box-shadow: 0 4px 8px rgba(var(--accent-primary-rgb), 0.2);
 }
 
-/* Responsive Design for Experience Page */
-@media (max-width: 768px) {
-    .experience-section {
-        padding: 4rem 0;
+@media (min-width: 768px) {
+    .section-title {
+        font-size: 3rem;
+    }
+
+    .job-title {
+        font-size: 1.75rem;
     }
 
     .experience-container {
-        padding: 0 1rem;
-    }
-
-    .job-title {
-        font-size: var(--font-size-xl);
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .company-at {
-        margin: 0;
-    }
-
-    .tech-container {
-        padding: 1rem;
-    }
-
-    .tech-tags,
-    .skills-list {
-        gap: 0.5rem;
+        padding: 0 2rem;
     }
 }
 
-@media (max-width: 480px) {
-    .experience-section {
-        padding: 3rem 0;
+@media (min-width: 1024px) {
+    .section-title {
+        font-size: 3.5rem;
     }
 
-    .job-title {
-        font-size: var(--font-size-lg);
-    }
-
-    .section-subtitle {
-        font-size: var(--font-size-xl);
-    }
-
-    .skills-group-title {
-        font-size: var(--font-size-lg);
+    .experience-container {
+        padding: 0 3rem;
     }
 }
