@@ -1,59 +1,44 @@
 'use client';
 
 import Link from 'next/link';
-import { useKeyboardNav } from '@/hooks/useKeyboardNav';
 import { Home, ArrowLeft } from 'lucide-react';
+import { useEffect } from 'react';
+import { CrosshairCursor } from './page';
 
 export default function NotFound() {
-  useKeyboardNav();
+  useEffect(() => {
+    if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
 
   return (
-    <section className="relative min-h-screen py-20 px-8 flex items-center justify-center">
-      <div className="max-w-2xl mx-auto z-10 relative">
-        {/* 404 Content */}
-        <div className="text-center">
-          {/* Large 404 */}
-          <div className="mb-8">
-            <h1 className="text-9xl md:text-[150px] font-bold text-foreground/90 mb-2 tracking-tighter">
-              404
-            </h1>
-            <div className="h-1 w-24 mx-auto bg-foreground/30 rounded-full mb-8"></div>
-          </div>
+    <>
+      <CrosshairCursor />
+      <section className="relative min-h-screen py-20 px-8 flex items-center justify-center">
+      <div className="max-w-2xl mx-auto z-10 relative text-center">
+        <h1 className="display-huge mb-4" style={{ color: 'var(--foreground)' }}>
+          404
+        </h1>
+        <div className="w-16 h-0.5 mx-auto mb-8" style={{ background: 'var(--accent)' }} />
 
-          {/* Message */}
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Page Not Found</h2>
-          
-          <p className="text-lg text-foreground/70 mb-8 max-w-md mx-auto">
-            Looks like you've ventured into uncharted territory. This page doesn't exist, but there's plenty to explore elsewhere!
-          </p>
+        <h2 className="text-3xl font-bold mb-4">Page Not Found</h2>
+        <p className="text-base mb-8" style={{ color: 'var(--muted)' }}>
+          Looks like you&apos;ve ventured into uncharted territory.
+        </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2 px-6 py-3 bg-foreground text-background hover:bg-foreground/90 rounded-lg font-semibold transition-all hover:scale-105"
-            >
-              <Home className="w-5 h-5" />
-              Back to Home
-            </Link>
-            
-            <button
-              onClick={() => window.history.back()}
-              className="flex items-center gap-2 px-6 py-3 border border-foreground/30 hover:bg-foreground/10 rounded-lg font-semibold transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Go Back
-            </button>
-          </div>
-
-          {/* Fun message */}
-          <div className="mt-12 p-6 bg-foreground/5 rounded-lg border border-foreground/10">
-            <p className="text-sm text-foreground/60 italic">
-              💡 Tip: Try pressing <span className="font-mono font-semibold">1</span>, <span className="font-mono font-semibold">2</span>, <span className="font-mono font-semibold">3</span>, or <span className="font-mono font-semibold">4</span> to navigate quickly!
-            </p>
-          </div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Link href="/" className="btn-primary">
+            <Home className="w-4 h-4" /> BACK TO HOME
+          </Link>
+          <button onClick={() => window.history.back()} className="btn-secondary">
+            <ArrowLeft className="w-4 h-4" /> GO BACK
+          </button>
         </div>
       </div>
     </section>
+    </>
   );
 }

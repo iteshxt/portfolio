@@ -1,29 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Poppins, JetBrains_Mono } from "next/font/google";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { Navigation } from "@/components/layout/Navigation";
-import { SocialLinks } from "@/components/layout/SocialLinks";
-import { Footer } from "@/components/layout/Footer";
-import ClickSpark from "@/components/common/ClickSpark";
-import { Background } from "@/components/background/Background";
-import { KeyPressIndicator } from "@/components/common/KeyPressIndicator";
 import Script from "next/script";
 import { generatePersonSchema, generateWebsiteSchema, generateOrganizationSchema } from "@/lib/seo";
+import { ExperienceProvider } from "@/context/ExperienceContext";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -36,39 +21,26 @@ export const metadata: Metadata = {
   title: "Itesh Tomar - Software Developer",
   description: "Full-stack developer from Noida, India. Building scalable web applications with React, Next.js, Node.js, and Python.",
   keywords: [
-    // Itesh name variations + context
     "Itesh Tomar", "Itesh Singh Tomar", "Itesh Singh", "iteshxt", "iteshxt.me",
     "Hitesh Tomar", "Nitesh Tomar", "Ritesh Tomar",
     "Itesh Tomar Noida", "Itesh Tomar Madhya Pradesh", "Itesh Tomar India",
     "Itesh developer", "Itesh developer Noida", "Itesh Singh developer",
     "Itesh LPU", "Itesh Lovely Professional University",
-    
-    // Generalized terms + Itesh context
     "software developer Noida", "software engineer India", "full stack developer Noida",
     "web developer Madhya Pradesh", "developer Noida", "developer India",
     "React developer Noida", "Next.js developer India", "Node.js developer Noida",
     "TypeScript developer India", "Python developer Noida",
     "frontend developer India", "backend developer Noida",
     "full stack engineer India", "software engineer Noida",
-    
-    // Generalized + location
     "freelance developer India", "hire developer Noida", "remote developer India",
     "developer for hire Noida", "software developer for hire India",
     "web development services Noida", "custom web development India",
-    
-    // Tech stack
     "React", "Next.js", "Node.js", "TypeScript", "JavaScript", "Python",
     "React.js developer", "Next.js developer", "MERN stack", "MEAN stack",
-    
-    // Portfolio related
     "Itesh portfolio", "portfolio Itesh", "Itesh work", "Itesh projects",
     "developer portfolio", "portfolio website", "developer portfolio Noida",
-    
-    // Social/contact
     "Itesh GitHub", "Itesh LinkedIn", "iteshxt social",
     "contact developer Noida", "message developer", "reach out developer",
-    
-    // General discovery
     "web developer", "software developer", "developer",
     "hire freelancer", "find developer", "tech portfolio",
   ],
@@ -121,7 +93,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-verification-code", // Replace with your actual code
+    google: "your-google-verification-code",
   },
   appleWebApp: {
     capable: true,
@@ -191,27 +163,17 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://linkedin.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${jetbrainsMono.variable} antialiased bg-background text-foreground transition-colors duration-500`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <Background theme="dark" />
-        <Navigation audioSrc="/audio/bloop-sound.mp3" />
-        <SocialLinks />
-        <KeyPressIndicator />
-        <ClickSpark
-          sparkColor="#a78bfa"
-          sparkSize={8}
-          sparkRadius={20}
-          sparkCount={12}
-          duration={500}
-          easing="ease-out"
-        >
-          <main className="pt-12 flex flex-col min-h-screen">
-            <div className="flex-1">
-              {children}
-            </div>
-            <Footer />
+        <ExperienceProvider>
+          {/* Fractal Grid Background */}
+          <div className="fractal-grid" aria-hidden="true" />
+          
+          {/* Main Content */}
+          <main className="relative z-10">
+            {children}
           </main>
-        </ClickSpark>
+        </ExperienceProvider>
       </body>
     </html>
   );

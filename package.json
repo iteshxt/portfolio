@@ -1,6 +1,6 @@
 {
   "name": "portfolio",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,9 +12,10 @@
     "@emailjs/browser": "^4.4.1",
     "@react-spring/web": "^10.0.3",
     "animejs": "^4.2.2",
+    "framer-motion": "^12.38.0",
     "gsap": "^3.13.0",
     "lucide-react": "^0.552.0",
-    "next": "16.0.10",
+    "next": "^16.2.1",
     "ogl": "^1.0.11",
     "react": "19.2.0",
     "react-dom": "19.2.0",

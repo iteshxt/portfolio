@@ -1,0 +1,56 @@
+Itesh Singh Tomar
+Noida, Uttar Pradesh 201303
++91 6262803216 iteshxt@gmail.com linkedin.com/in/iteshxt github.com/iteshxt iteshxt.me
+Experience
+Full Stack Developer | MERN Stack, Firebase, Razorpay, Ekart | Live Apr 2025 – Nov 2025
+Sutr Clothing
+• Developed scalable microservices for production deployment, serving 100+ monthly customers with stable order and
+payment workflows
+• Implemented secure payments and real-time logistics integration via Razorpay and Ekart service endpoints with reliable error
+handling, reducing payment failures and delivery delays
+• Built and optimized a modular admin dashboard and responsive User Interface following MVC principles,
+Tailwind CSS, and reusable components, reducing UI defects through unit testing and validation
+Projects
+DiaChat – Fine-Tunned LLM for GenZ | Unsloth, WebGPU, WebAssembly, MLC-LLM, MERN | Live Mar 2025 – Feb 2026
+• Curated and engineered a high-quality NLP dataset on Hugging Face to train a personality-driven conversational model with
+empathetic, Gen Z-style dialogue
+• Fine-tuned Gemma-3 1B Instruct with PyTorch and Unsloth, optimizing inference to achieve ~40 tokens/sec with low-latency
+streaming responses
+• Deployed on-device model inference pipeline by converting weights to MLC format and compiling WebAssembly runtimes via
+WebLLM and WebGPU for low-latency browser inference
+• Repository Link: https://github.com/DiaLabs/dia-chat
+FitCheckr – Virtual Try-On System | Next.js, Node.js, Gemini 2.5 Flash-Image API, REST APIs | Live Aug 2025 – Sep2025
+• Engineered an AI-powered virtual try-on system powered by Gemini 2.5 Flash-Image and Next.js with modular backend services
+and image-processing pipelines
+• Optimized inference and API workflows, achieving average image response times under 3 seconds across 95% of requests for
+real-time previews
+• Shipped and deployed a Chrome extension integrating secure service interfaces for instant virtual try-ons across major
+e-commerce platforms and marketplaces, driving higher click-through and try-on usage rates
+• Repository Link: https://github.com/iteshxt/fitcheckr
+DiaMod – Multi-platform Moderation System | Python, REST APIs, Microservices, JWT, MERN | Live Jan2025 – Mar 2025
+• Designed and architected a centralized moderation system for Discord, WhatsApp, and Telegram through scalable RESTful APIs
+and modular architecture, enabling consistent policy enforcement
+• Automated profanity filtering, spam detection, and progressive warning pipelines for automated and scalable community
+management
+• Integrated Google Gemini services to generate summaries and contextual replies, supported by a real-time dashboard with
+secure QR-based authentication
+• Repository Link: https://github.com/DiaLabs/dia-mod
+Certificates
+Mobile Application Development using Flutter Jul 2025
+Cipher Schools — Link
+Cloud Computing Apr 2025
+NPTEL — Link
+Computer Communications Specialization Oct 2024
+Coursera — Link
+Skills
+Languages: C++, Java, JavaScript, Python, TypeScript, Shell Script
+Technologies/Frameworks: React.js, Next.js, Node.js, Flutter, Git, GitHub, Docker, Vercel, AWS(EC2, S3), Linux
+Domain Skills: Data Structures and Algorithms, Responsive Web Design, Pytorch, Fine-Tuning(LoRA, PEFT), RAG, LLMs
+Soft Skills: Problem-Solving, Rapid Adaptability, Strong Work Ethic, Self-Driven Learning
+Education
+Lovely Professional University Aug 2023 – Jun 2027
+Bachelor of Technology - Computer Science and Engineering — CGPA: 8.48 Phagwara, Punjab
+Kiddys Corner Hr Sec School Apr 2021 – Mar 2022
+Intermediate — Percentage: 78 Gwalior, Madhya Pradesh
+Amar Public School Apr 2019 – Mar 2020
+Matriculation — Percentage: 90 Gwalior, Madhya Pradesh

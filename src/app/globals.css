@@ -1,234 +1,765 @@
 @import "tailwindcss";
 
-/* Light Theme */
-html.light {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ===== Design Tokens ===== */
+:root {
+  --background: #fafafa;
+  --foreground: #141414;
+  --accent: #7c5cfc;
+  --accent-soft: #b4a0ff;
+  --accent-bg: rgba(124, 92, 252, 0.06);
+  --muted: #888888;
+  --muted-light: #b8b8b8;
+  --border: #e0e0e0;
+  --border-soft: #f0f0f0;
+
+  /* Grid layers — 5 levels of nesting */
+  --grid-1: rgba(0, 0, 0, 0.09);
+  --grid-2: rgba(0, 0, 0, 0.055);
+  --grid-3: rgba(0, 0, 0, 0.035);
+  --grid-4: rgba(0, 0, 0, 0.02);
+  --grid-5: rgba(0, 0, 0, 0.012);
+
   color-scheme: light;
 }
 
-/* Dark Theme */
-html.dark {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+.dark {
+  --background: #0d0d0f;
+  --foreground: #f4f4f5;
+  --accent: #9275ff;
+  --accent-soft: #b4a0ff;
+  --accent-bg: rgba(146, 117, 255, 0.12);
+  --muted: #9ca3af;
+  --muted-light: #4b5563;
+  --border: #27272a;
+  --border-soft: #18181b;
+
+  /* Grid layers — Dark mode opacity balances */
+  --grid-1: rgba(255, 255, 255, 0.06);
+  --grid-2: rgba(255, 255, 255, 0.035);
+  --grid-3: rgba(255, 255, 255, 0.02);
+  --grid-4: rgba(255, 255, 255, 0.012);
+  --grid-5: rgba(255, 255, 255, 0.007);
+
   color-scheme: dark;
 }
 
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-}
-
-/* Smooth transitions for theme changes */
+/* ===== Base ===== */
 html {
   scroll-behavior: smooth;
+  cursor: none;
+  overflow-y: scroll;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-poppins), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  transition: background-color 500ms ease, color 500ms ease;
-  letter-spacing: 0.3px;
+  font-family: 'Space Grotesk', var(--font-space), system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
 }
 
-/* Remove default focus outline for better custom styling */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
+/* ===== Typography Scale ===== */
+h1 {
+  font-family: 'Space Grotesk', var(--font-space), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  color: var(--foreground);
+}
+
+h2 {
+  font-family: 'Space Grotesk', var(--font-space), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--foreground);
+}
+
+h3 {
+  font-family: 'Space Grotesk', var(--font-space), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--foreground);
+}
+
+h4 {
+  font-family: 'Space Grotesk', var(--font-space), system-ui, sans-serif;
+  font-weight: 600;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--foreground);
+}
+
+p {
+  line-height: 1.7;
+}
+
+.font-mono,
+code, pre, .monospace {
+  font-family: 'JetBrains Mono', var(--font-jetbrains), 'Courier New', monospace;
+}
+
+/* ===== Display Typography ===== */
+.display-hero {
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.display-huge {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.display-large {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.display-medium {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+/* Italic accent text — used in display headings */
+.text-accent-italic {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 400;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+/* ===== Body text sizes ===== */
+.text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.text-body {
+  font-size: 0.938rem;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+.text-body-sm {
+  font-size: 0.813rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.text-caption {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ===== Focus ===== */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--foreground);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Ensure font-mono applies correctly */
-.font-mono {
-  font-family: var(--font-jetbrains), var(--font-geist-mono), 'JetBrains Mono', 'Courier New', monospace !important;
+/* ===== Fractal Grid Background — 5 Layers ===== */
+.fractal-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background-image:
+    /* Layer 1: 320px */
+    linear-gradient(var(--grid-1) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-1) 1px, transparent 1px),
+    /* Layer 2: 160px */
+    linear-gradient(var(--grid-2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-2) 1px, transparent 1px),
+    /* Layer 3: 80px */
+    linear-gradient(var(--grid-3) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-3) 1px, transparent 1px),
+    /* Layer 4: 40px */
+    linear-gradient(var(--grid-4) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-4) 1px, transparent 1px),
+    /* Layer 5: 20px */
+    linear-gradient(var(--grid-5) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-5) 1px, transparent 1px);
+
+  background-size:
+    320px 320px,
+    320px 320px,
+    160px 160px,
+    160px 160px,
+    80px 80px,
+    80px 80px,
+    40px 40px,
+    40px 40px,
+    20px 20px,
+    20px 20px;
 }
 
-/* Premium Button Style - Primary */
-.btn-primary {
-  padding: 12px 28px;
-  border: 2px solid transparent;
-  color: #ffffff;
-  background: linear-gradient(135deg, rgb(139, 92, 246), rgb(99, 102, 241));
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: all 300ms ease;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  display: inline-block;
-  letter-spacing: 0.5px;
-}
-
-@media (min-width: 640px) {
-  .btn-primary {
-    padding: 13px 32px;
-    font-size: 1rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .btn-primary {
-    padding: 12px 28px;
-    font-size: 0.875rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .btn-primary {
-    padding: 13px 32px;
-    font-size: 1rem;
-  }
-}
-
-.btn-primary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.6s ease;
-}
-
-.btn-primary::after {
+/* Accent dots at top-level grid intersections */
+.fractal-grid::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at var(--mouse-x, 0%) var(--mouse-y, 0%), rgba(255, 255, 255, 0.2), transparent 80%);
-  opacity: 0;
-  transition: opacity 300ms ease;
+  background-image:
+    radial-gradient(circle, rgba(124, 92, 252, 0.22) 2.5px, transparent 2.5px);
+  background-size: 320px 320px;
+  background-position: -0.5px -0.5px;
 }
 
-.btn-primary:hover::before {
-  left: 100%;
+/* Smaller dots at secondary intersections */
+.fractal-grid::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(124, 92, 252, 0.09) 1.5px, transparent 1.5px);
+  background-size: 160px 160px;
+  background-position: -0.5px -0.5px;
+}
+
+/* ===== Crosshair Cursor ===== */
+.crosshair-x {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(124, 92, 252, 0.3);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.crosshair-y {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(124, 92, 252, 0.3);
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.crosshair-x.visible,
+.crosshair-y.visible {
+  opacity: 1;
+}
+
+/* Solid square at crosshair intersection */
+.crosshair-dot {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  transform: translate(-50%, -50%);
+}
+
+/* Smaller squares at window borders */
+.crosshair-border-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.crosshair-border-dot.top { top: 0; transform: translate(-50%, -50%); }
+.crosshair-border-dot.bottom { bottom: 0; transform: translate(-50%, 50%); }
+.crosshair-border-dot.left { left: 0; transform: translate(-50%, -50%); }
+.crosshair-border-dot.right { right: 0; transform: translate(50%, -50%); }
+
+.crosshair-dot.visible,
+.crosshair-border-dot.visible {
+  opacity: 1;
+}
+
+/* Disable crosshair on mobile/touch screens and when resume modal is open */
+@media (max-width: 768px), (pointer: coarse) {
+  .crosshair-x, .crosshair-y, .crosshair-dot, .crosshair-border-dot {
+    display: none !important;
+  }
+  html, body, *, *::before, *::after {
+    cursor: auto !important;
+  }
+}
+
+body.resume-open .crosshair-x,
+body.resume-open .crosshair-y,
+body.resume-open .crosshair-dot,
+body.resume-open .crosshair-border-dot {
+  display: none !important;
+}
+
+body.resume-open,
+body.resume-open *,
+body.resume-open *::before,
+body.resume-open *::after {
+  cursor: auto !important;
+}
+
+/* ===== Buttons ===== */
+.btn-primary {
+  padding: 14px 32px;
+  background: var(--accent);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  transition: all 0.25s ease;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-primary:hover {
+  background: #6a4ce0;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4), 0 0 20px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 24px rgba(124, 92, 252, 0.35);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
 }
 
-/* Premium Button Style - Secondary */
 .btn-secondary {
-  padding: 12px 28px;
-  border: 2px solid rgb(139, 92, 246);
-  color: rgb(139, 92, 246);
+  padding: 14px 32px;
   background: transparent;
-  border-radius: 8px;
+  color: var(--foreground);
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 600;
-  font-size: 0.875rem;
-  transition: all 300ms ease;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  display: inline-block;
-  letter-spacing: 0.5px;
-}
-
-@media (min-width: 640px) {
-  .btn-secondary {
-    padding: 13px 32px;
-    font-size: 1rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .btn-secondary {
-    padding: 12px 28px;
-    font-size: 0.875rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .btn-secondary {
-    padding: 13px 32px;
-    font-size: 1rem;
-  }
-}
-
-.btn-secondary::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(99, 102, 241, 0.1));
-  transition: left 0.5s ease;
-  z-index: -1;
-}
-
-.btn-secondary:hover::before {
-  left: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1.5px solid var(--border);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
   transform: translateY(-2px);
-  border-color: rgb(99, 102, 241);
-  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.25), inset 0 1px 0 rgba(139, 92, 246, 0.1);
-  color: rgb(99, 102, 241);
 }
 
-.btn-secondary:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+/* ===== Section Styling ===== */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.688rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* Typography Enhancements */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-jetbrains), var(--font-geist-mono), 'JetBrains Mono', 'Courier New', monospace !important;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
 }
 
-p,
-a,
-span {
-  font-family: var(--font-poppins);
-}
-
-code,
-pre,
-.monospace {
-  font-family: var(--font-jetbrains);
-}
-
-/* Custom scrollbar - Hidden */
+/* ===== Custom Scrollbar ===== */
 ::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--background);
+  border-left: 1px solid rgba(124, 92, 252, 0.05); /* very soft accent */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: var(--border); /* minimal grey by default */
+  border-radius: 0; /* brutalist/tech feel */
 }
 
-/* Firefox scrollbar */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent); /* purple on hover */
+}
+
+/* Firefox compatibility */
 * {
-  scrollbar-color: transparent transparent;
-  scrollbar-width: none;
+  scrollbar-color: var(--border) var(--background);
+  scrollbar-width: thin;
 }
 
-/* Prevent layout shift from scrollbar */
-html {
-  overflow-y: scroll;
+/* ===== Selection ===== */
+::selection {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* ===== Hover Link Underline ===== */
+.hover-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.hover-underline:hover::after,
+.hover-underline.active::after {
+  width: 100%;
+}
+
+/* ===== Marquee ===== */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  gap: 4rem;
+  animation: marquee 25s linear infinite;
+  width: max-content;
+}
+
+/* ===== Glow dot ===== */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent); }
+  50% { opacity: 0.4; box-shadow: 0 0 14px var(--accent); }
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ===== Project Card Hover ===== */
+.project-card {
+  border: 1px solid var(--border);
+  transition: all 0.35s ease;
+}
+
+.project-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 40px rgba(124, 92, 252, 0.08);
+  transform: translateY(-4px);
+}
+
+/* ═══════════════════════════════════════════════
+   3D IMMERSIVE EXPERIENCE MODE — PHASE 2
+   ═══════════════════════════════════════════════ */
+
+/* Experience Toggle Switch */
+.experience-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.experience-toggle-track {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--border);
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+}
+
+.experience-toggle-track.active {
+  background: var(--accent);
+}
+
+.experience-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.experience-toggle-track.active .experience-toggle-thumb {
+  transform: translateX(16px);
+}
+
+/* Immersive wrapper — full-height scroll container */
+.immersive-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Tunnel viewport — full screen with CSS perspective */
+.tunnel-viewport {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  perspective: 800px;
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+  background: var(--background);
+}
+
+/* 3D Scene container that moves along Z axis */
+.tunnel-scene {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Each panel is a full-screen card at a depth */
+.tunnel-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.tunnel-panel-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(250, 250, 250, 0.92);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border);
+}
+
+.tunnel-panel-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Tunnel wireframe walls */
+.tunnel-wall {
+  position: absolute;
+  transform-style: preserve-3d;
+}
+
+.tunnel-wall-left {
+  top: 0;
+  left: 0;
+  width: 500vh;
+  height: 100%;
+  transform-origin: left center;
+  transform: rotateY(90deg);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(124, 92, 252, 0.06) 0px,
+      rgba(124, 92, 252, 0.06) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(124, 92, 252, 0.06) 0px,
+      rgba(124, 92, 252, 0.06) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+}
+
+.tunnel-wall-right {
+  top: 0;
+  right: 0;
+  width: 500vh;
+  height: 100%;
+  transform-origin: right center;
+  transform: rotateY(-90deg);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(124, 92, 252, 0.06) 0px,
+      rgba(124, 92, 252, 0.06) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(124, 92, 252, 0.06) 0px,
+      rgba(124, 92, 252, 0.06) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+}
+
+.tunnel-wall-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 500vh;
+  transform-origin: center top;
+  transform: rotateX(-90deg);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(124, 92, 252, 0.04) 0px,
+      rgba(124, 92, 252, 0.04) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(124, 92, 252, 0.04) 0px,
+      rgba(124, 92, 252, 0.04) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+}
+
+.tunnel-wall-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 500vh;
+  transform-origin: center bottom;
+  transform: rotateX(90deg);
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(124, 92, 252, 0.04) 0px,
+      rgba(124, 92, 252, 0.04) 1px,
+      transparent 1px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(124, 92, 252, 0.04) 0px,
+      rgba(124, 92, 252, 0.04) 1px,
+      transparent 1px,
+      transparent 80px
+    );
+}
+
+/* Fixed side navigation dots */
+.tunnel-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.tunnel-nav-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--muted-light);
+  background: transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0;
+}
+
+.tunnel-nav-dot.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(124, 92, 252, 0.4);
+  transform: scale(1.3);
+}
+
+.tunnel-nav-dot:hover {
+  border-color: var(--accent);
+}
+
+.tunnel-nav-label {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.tunnel-nav-dot:hover .tunnel-nav-label,
+.tunnel-nav-dot.active .tunnel-nav-label {
+  opacity: 1;
+}
+
+/* Mode switch transition */
+.mode-transition {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

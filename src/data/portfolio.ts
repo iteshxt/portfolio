@@ -2,7 +2,7 @@ export const portfolioData = {
     // Hero Section
     hero: {
         greeting: "Hello, I'm Itesh",
-        description: "Full-stack developer passionate about building beautiful and functional web experiences.",
+        description: "Crafting digital experiences with code & creativity",
         cta: {
             primary: { text: "View My Work", href: "/projects" },
             secondary: { text: "Get In Touch", href: "/contact" },
@@ -13,31 +13,75 @@ export const portfolioData = {
     experience: [
         {
             id: 1,
-            title: "Full Stack Developer (Freelance)",
+            title: "Full Stack Developer",
             company: "Sutr Clothing",
             companyWebsite: "https://sutr.store",
-            duration: "April 2025 – Present",
+            duration: "Apr 2025 – Nov 2025",
             location: "Remote",
-            description: "Building a full-stack e-commerce website using Next.js, MongoDB, Firebase, Razorpay API, and Ekart API.",
-            responsibilities: [
-                "Building a full-stack e-commerce website using Next.js, MongoDB, Firebase, Razorpay API, and Ekart API",
-                "Implemented secure payments (Razorpay) and logistics tracking (Ekart)",
-                "Designed and deployed an Admin Dashboard for product, order, and user management",
-                "Developed responsive and scalable UI with Next.js and Tailwind CSS",
-            ],
-            technologies: ["Next.js", "MongoDB", "Firebase", "Razorpay API", "Ekart API", "Tailwind CSS"],
+            description: "I led the architectural evolution of Sutr's digital storefront, transforming a conceptual design into a high-stakes, production-ready microservices powerhouse. By engineering a seamless nexus between Razorpay's financial layer and Ekart's logistics network, I architected a system that flawlessly scaled to serve hundreds of customers monthly. My work centered on ensuring that complex e-commerce logic remained invisible to the user, delivering a pixel-perfect interface where technical robustness and elegant design met with absolute stability.",
+            technologies: ["MERN Stack", "Firebase", "Razorpay", "Ekart", "Next.js", "Tailwind CSS"],
+        },
+    ],
+
+    // Education Section
+    education: [
+        {
+            id: 1,
+            degree: "B. Tech - Computer Science & Engineering",
+            institution: "Lovely Professional University",
+            duration: "Aug 2023 – Jun 2027",
+            location: "Phagwara, Punjab",
+            score: "CGPA: 8.53",
+        },
+        {
+            id: 2,
+            degree: "Intermediate",
+            institution: "Kiddys Corner Hr Sec School",
+            duration: "Apr 2021 – Mar 2022",
+            location: "Gwalior, Madhya Pradesh",
+            score: "Percentage: 78",
+        },
+        {
+            id: 3,
+            degree: "Matriculation",
+            institution: "Amar Public School",
+            duration: "Apr 2019 – Mar 2020",
+            location: "Gwalior, Madhya Pradesh",
+            score: "Percentage: 90",
+        },
+    ],
+
+    // Certificates Section
+    certificates: [
+        {
+            id: 1,
+            title: "Mobile Application Development using Flutter",
+            issuer: "Cipher Schools",
+            date: "Jul 2025",
+            link: "https://www.cipherschools.com/certificate/preview?id=687e15067efd6d5090703c18",
+        },
+        {
+            id: 2,
+            title: "Cloud Computing",
+            issuer: "NPTEL",
+            date: "Apr 2025",
+            link: "https://archive.nptel.ac.in/noc/Ecertificate/?q=NPTEL25CS11S133730033704237102",
+        },
+        {
+            id: 3,
+            title: "Computer Communications Specialization",
+            issuer: "Coursera",
+            date: "Oct 2024",
+            link: "https://coursera.org/verify/specialization/JFN3Z245HGHK",
         },
     ],
 
     // Skills Section
     skills: {
-        languages: ["Python", "JavaScript", "TypeScript", "Java", "C++"],
-        frontend: ["React.js", "Next.js", "HTML5/CSS3", "Tailwind CSS"],
-        backend: ["Node.js", "Express.js", "Flask", "FastAPI"],
-        aiml: ["HuggingFace Transformers", "PyTorch", "NLP", "Model Fine-Tuning"],
-        databases: ["MongoDB", "Firebase", "MySQL", "SQL"],
-        tools: ["Git", "Docker", "REST APIs", "Railway", "Vercel", "AWS"],
-        soft: ["Problem Solving", "Technical Leadership", "Team Collaboration", "Project Management", "Critical Thinking", "Communication"],
+        languages: ["Python", "JavaScript", "Java", "C++"],
+        stack: ["MERN Stack", "Next.js", "Tailwind CSS"],
+        aiml: ["PyTorch", "TensorFlow", "Fine-Tuning (LoRA, PEFT)", "RAG"],
+        tools: ["GitHub", "Docker", "Vercel", "AWS", "Linux"],
     },
 
     // Projects Section
@@ -45,114 +89,86 @@ export const portfolioData = {
         featured: [
             {
                 id: 1,
-                title: "Dia Therapist",
-                image: "dia-therapist.jpg",
-                description: "A custom-built AI therapist powered by a fine-tuned Qwen 2.5 7B Instruct model trained on therapy-focused dataset for empathetic conversations. Features Flask backend, real-time chat integration, voice-enabled mental health support with Whisper for speech-to-text and Kokoro for expressive text-to-speech, enabling fully voice-based therapeutic interactions.",
-                technologies: ["Qwen 2.5 7B", "Flask", "Whisper", "Kokoro", "Python", "Next.js", "Tailwind"],
-                highlights: [
-                    "Custom-trained conversational LLM on therapy-focused dataset",
-                    "Real-time voice input/output for seamless interactions",
-                    "Context-aware empathetic response generation",
-                    "Fully voice-enabled mental health assistant"
-                ],
-                role: "Full-stack developer & custom model trainer",
-                github: "https://github.com/dialabs/dia-therapist",
-                liveLink: "https://chatwithdia.vercel.app",
+                title: "DiaChat",
+                subtitle: "Fine-Tuned LLM for Gen Z",
+                description: "I engineered a personality-driven conversational powerhouse designed to speak the language of Gen Z with genuine empathy. By fine-tuning Gemma-3 1B with PyTorch and Unsloth, I achieved blazing-fast 40 tokens/sec stream responses. The true innovation lies in its on-device deployment—using WebGPU and WebAssembly to run full LLM inference directly in the browser, ensuring absolute privacy and low-latency interaction without a backend.",
+                image: "/projects/diachat.png",
+                accentColor: "#DEA32E", // Golden yellow from the UI
+                titleAccentLength: 4,     // "Chat" part
+                technologies: ["PyTorch", "Huggingface", "Next.js", "WebGPU", "WebAssembly", "MERN Stack"],
+                github: "https://github.com/DiaLabs/dia-chat",
+                live: "https://dia-chat.vercel.app",
             },
             {
                 id: 2,
-                title: "Sutr Clothing",
-                image: "sutr-clothing.jpg",
-                description: "A full-stack modern e-commerce platform for apparel built with Next.js, MongoDB, Firebase, Razorpay API, and Ekart API. Features secure payments with Razorpay integration, real-time logistics tracking via Ekart, comprehensive Admin Dashboard for product/order/user management, and responsive scalable UI with Tailwind CSS.",
-                technologies: ["Next.js", "MongoDB", "Firebase", "Razorpay API", "Ekart API", "Tailwind CSS"],
-                highlights: [
-                    "Secure payment processing with Razorpay integration",
-                    "Real-time order tracking and delivery integration via Ekart",
-                    "Comprehensive Admin Dashboard for inventory and order management",
-                    "Responsive and scalable architecture with modern practices"
-                ],
-                role: "Full-stack developer & system architect",
-                github: "https://github.com/iteshxt/sutr.store",
-                liveLink: "https://sutr.store",
+                title: "FitCheckr",
+                subtitle: "AI Virtual Try-On Ecosystem",
+                description: "I revolutionized the e-commerce shopping experience by building an AI-powered virtual try-on system. Leveraging Gemini 2.5 Flash-Image API, I developed a lightning-fast pipeline that delivers real-time garment previews in under 3 seconds. I also shipped a dedicated Chrome extension that integrates secure service interfaces directly into major marketplaces, bridging the gap between browsing and buying with instant AI previews.",
+                image: "/projects/fitcheckr.png",
+                accentColor: "#813C3C", // Reddish-brown 
+                titleAccentLength: 6,     // "Checkr" part
+                technologies: ["Next.js", "Node.js", "Gemini", "REST API", "Tailwind CSS"],
+                github: "https://github.com/iteshxt/fitcheckr",
+                live: "https://fitcheckr.vercel.app",
             },
             {
                 id: 3,
-                title: "Dia Moderator",
-                image: "dia-moderator.jpg",
-                description: "A comprehensive multi-platform content moderation system for Discord, WhatsApp, and Telegram. Features automatic profanity filtering, spam protection, progressive warning system, and AI-powered interactions via Google Gemini for message summarization and context-aware responses. Includes centralized web dashboard with real-time updates and QR code authentication.",
-                technologies: ["Node.js", "React", "Express", "Google Gemini API", "Discord.js", "Telegram Bot API", "WhatsApp Web"],
-                highlights: [
-                    "Cross-platform moderation from single interface",
-                    "AI-powered message summarization and natural conversations",
-                    "Real-time dashboard with bot status monitoring",
-                    "QR code authentication for WhatsApp with auto-refresh"
-                ],
-                role: "Full-stack development & AI integration",
-                github: "https://github.com/dialabs/dia-moderator",
-                liveLink: "https://dia-moderator.vercel.app",
-            },
-            {
-                id: 4,
-                title: "FitCheckr",
-                image: "fitcheckr.png",
-                description: "An AI-powered virtual try-on application that uses Google's gemini-2.5-flash-image model for realistic clothing visualization. Features drag-and-drop uploads, real-time image processing, glassmorphism UI design, social media sharing, downloadable results, mobile-responsive design, and PWA-ready architecture for confident online shopping.",
-                technologies: ["Next.js", "React.js", "TypeScript", "Tailwind CSS", "Google Gemini AI"],
-                highlights: [
-                    "Advanced Google Gemini AI for realistic virtual try-on",
-                    "Real-time image processing with loading indicators",
-                    "Drag-and-drop file uploads for photos and clothing items",
-                    "Social sharing and downloadable results with Chrome Extension support"
-                ],
-                role: "Full-stack developer & AI integration specialist",
-                github: "https://github.com/iteshxt/fitcheckr",
-                liveLink: "https://fitcheckr.vercel.app",
+                title: "DiaMod",
+                subtitle: "Cross-Platform AI Moderation",
+                description: "I architected a unified command center for digital community management, spanning Discord, WhatsApp, and Telegram. This microservices-based system automates complex moderation workflows—from spam detection to contextual summarization via Gemini—while maintaining a high-security posture with encrypted QR-based authentication. It's a scalable solution for consistent policy enforcement across fragmented social ecosystems.",
+                image: "/projects/diamod.png",
+                accentColor: "#22C55E", // Security green from the UI
+                titleAccentLength: 3,     // "Mod" part
+                technologies: ["Python", "Gemini", "Microservices", "JWT", "MERN Stack", "REST API"],
+                github: "https://github.com/DiaLabs/dia-mod",
+                live: "https://dia-mod.vercel.app",
             },
         ],
         other: [
             {
                 id: 5,
-                title: "NomNom",
-                image: "nom-nom.ico",
-                description: "A modern, production-ready e-canteen mobile app that features full authentication (email/password and Google Sign-In), dynamic menu system with categories, interactive shopping cart, seamless checkout with address management, complete order history, and light/dark theme support with elegant animations.",
-                technologies: ["Flutter", "Dart", "Firebase", "Cloud Firestore", "Provider", "animate_do"],
-                github: "https://github.com/iteshxt/NomNom-App",
-                liveLink: "https://github.com/iteshxt/NomNom-App/releases/",
+                title: "UniBites",
+                image: "unibites.ico",
+                description: "A modern, production-ready e-canteen mobile app that features full authentication, dynamic menu system, interactive shopping cart, and seamless checkout with elegant animations.",
+                technologies: ["Flutter", "Firebase", "Provider"],
+                github: "https://github.com/iteshxt/UniBites",
+                live: "https://github.com/iteshxt/UniBites/releases/",
             },
             {
                 id: 6,
                 title: "Ukie's Universe",
                 image: "untillifoundyou.ico",
-                description: "A personal/pet project that presents an interactive, themed 'universe' site. Features retro/8-bit visual style, Framer Motion animations, lightweight password-style auth gate, optional background music, and interactive pages including terminal, match game, compliments, and universe map.",
+                description: "A personal/pet project that presents an interactive, themed 'universe' site with retro visual style and Framer Motion animations.",
                 technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
                 github: "https://github.com/iteshxt/ukies-universe",
-                liveLink: "https://untillifoundyou.vercel.app",
+                live: "https://untillifoundyou.vercel.app",
             },
             {
                 id: 7,
                 title: "Velo Rapido",
                 image: "velo-rapido.ico",
-                description: "A comprehensive bike rental management system that features user bike browsing, reservations, online payments (card/COD/UPI), admin dashboard for bike/user/maintenance management, damage reporting system, dual role access (user and admin), and dark/light theme support with SSL security.",
-                technologies: ["PHP", "MySQL", "HTML5", "CSS3", "JavaScript", "Tailwind CSS"],
+                description: "A comprehensive bike rental management system with reservations, online payments, and admin dashboard.",
+                technologies: ["PHP", "MySQL", "Tailwind CSS"],
                 github: "https://github.com/iteshxt/velo-rapido",
-                liveLink: "https://velo-rapido.wuazu.com",
+                live: "https://velo-rapido.wuazu.com",
             },
             {
                 id: 8,
                 title: "Cooksy",
                 image: "cooksy.ico",
-                description: "A modern recipe discovery platform that features recipe browsing by categories/cuisines, powerful search functionality, detailed recipe views with ingredients and instructions, favorite recipe saving with LocalStorage, video tutorials, and fully responsive design for desktop, tablet, and mobile.",
-                technologies: ["React.js", "CSS3", "Lucide React", "TheMealDB API", "LocalStorage"],
+                description: "A modern recipe discovery platform that features recipe browsing by categories/cuisines, search functionality, and detailed recipe views.",
+                technologies: ["React.js", "CSS3", "Lucide React", "LocalStorage"],
                 github: "https://github.com/iteshxt/cooksy",
-                liveLink: "https://cooksy-recipes.vercel.app",
+                live: "https://cooksy-recipes.vercel.app",
             },
             {
                 id: 9,
                 title: "LPU Wi-Fi Auto Login",
                 image: "lpu-wifi-autologin.ico",
-                description: "A dual-version Wi-Fi automation tool available as both a Python script and Chrome Extension. Python version uses automated credential-based login with Windows startup integration. Chrome Extension v1.2 provides seamless auto-login with locally stored secure credentials, tested with Chrome 140+.",
-                technologies: ["Python", "Selenium", "Chrome Extension", "JavaScript", "Local Storage"],
+                description: "A dual-version Wi-Fi automation tool (Python & Chrome Extension) for seamless credential-based login with locally stored secure credentials.",
+                technologies: ["Python", "Selenium", "Chrome Extension", "JavaScript"],
                 github: "https://github.com/iteshxt/lpu-wifi-automate-login",
-                liveLink: "https://github.com/iteshxt/lpu-wifi-automate-login/releases",
+                live: "https://github.com/iteshxt/lpu-wifi-automate-login/releases",
             },
         ],
     },
@@ -191,8 +207,8 @@ export const portfolioData = {
     // Contact Section
     contact: {
         email: "iteshxt@gmail.com",
-        phone: "+91 XXXXXXXXXX",
-        location: "Your Location",
+        phone: "+91 6262803216",
+        location: "Noida, Uttar Pradesh, India",
         message:
             "Feel free to reach out! I'm always interested in hearing about new projects and opportunities.",
         socialLinks: {
