@@ -272,7 +272,7 @@ function Nav() {
                     <span className={`font-mono text-[10px] tracking-widest uppercase opacity-40 ${isActive ? 'text-[var(--accent)]' : ''}`}>Section 0{i + 1}</span>
                     <div className="flex items-center gap-3">
                       <span className={`text-4xl font-bold tracking-tight uppercase transition-all group-hover:pl-4 group-hover:text-[var(--accent)] ${isActive ? 'text-[var(--accent)]' : 'text-[var(--foreground)]'}`}>
-                        {l.label}
+                        {l.label.replace(/^\d+\./, '')}
                       </span>
                       {isActive && <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />}
                     </div>
@@ -342,19 +342,42 @@ function Nav() {
               </div>
 
               {/* Modal Body: Custom Iframe Context */}
-              <div className="flex-1 w-full bg-[var(--background)] relative overflow-hidden">
-                 {/* Elegant Fallback Loader inside iframe container */}
-                 <div className="absolute inset-0 flex flex-col items-center justify-center -z-10 opacity-50">
-                   <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mb-4" style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }} />
-                   <span className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--muted)' }}>Loading Document...</span>
-                 </div>
-                 
-                 <iframe 
-                   src="/resume.pdf#toolbar=0&view=FitH" 
-                   className="w-full h-full border-none absolute inset-0 z-0 bg-white"
-                   style={{ mixBlendMode: 'normal' }}
-                   title="Itesh Tomar Resume Document"
-                 />
+              <div className="flex-1 w-full bg-[var(--background)] relative overflow-hidden flex items-center justify-center">
+                  {/* Desktop Preview */}
+                  <iframe 
+                    src="/resume.pdf#toolbar=0&view=FitH" 
+                    className="w-full h-full border-none absolute inset-0 z-0 bg-white hidden md:block"
+                    style={{ mixBlendMode: 'normal' }}
+                    title="Itesh Tomar Resume Document"
+                  />
+
+                  {/* Mobile Preview Fallback (Centered Button) */}
+                  <div className="md:hidden flex flex-col items-center justify-center p-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+                    <div className="w-20 h-20 mb-8 border border-dashed flex items-center justify-center relative group" style={{ borderColor: 'var(--accent)' }}>
+                      <Download className="w-8 h-8 opacity-20 transition-all group-hover:opacity-40" />
+                      <div className="absolute inset-0 bg-[var(--accent)] opacity-5 transition-opacity group-hover:opacity-10" />
+                    </div>
+                    
+                    <h3 className="font-mono text-lg font-bold uppercase tracking-widest mb-4">Mobile Preview</h3>
+                    <p className="font-mono text-xs opacity-60 mb-10 max-w-[240px] leading-relaxed mx-auto">
+                      Device browsers typically block integrated PDF previews...
+                    </p>
+
+                    <a 
+                      href="/resume.pdf" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="btn-primary w-full py-5 px-10 flex items-center justify-center gap-3 active:scale-95 transition-transform"
+                    >
+                      OPEN IN BROWSER <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </div>
+
+                  {/* Elegant Fallback Loader inside iframe container (Desktop only) */}
+                  <div className="absolute inset-0 flex-col items-center justify-center -z-10 opacity-50 hidden md:flex">
+                    <div className="w-8 h-8 border-4 border-t-transparent rounded-full animate-spin mb-4" style={{ borderColor: 'var(--accent)', borderTopColor: 'transparent' }} />
+                    <span className="font-mono text-xs uppercase tracking-widest" style={{ color: 'var(--muted)' }}>Loading Document...</span>
+                  </div>
               </div>
 
             </motion.div>
