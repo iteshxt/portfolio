@@ -272,7 +272,7 @@ function Nav() {
                     <span className={`font-mono text-[10px] tracking-widest uppercase opacity-40 ${isActive ? 'text-[var(--accent)]' : ''}`}>Section 0{i + 1}</span>
                     <div className="flex items-center gap-3">
                       <span className={`text-4xl font-bold tracking-tight uppercase transition-all group-hover:pl-4 group-hover:text-[var(--accent)] ${isActive ? 'text-[var(--accent)]' : 'text-[var(--foreground)]'}`}>
-                        {l.label.replace(/^\d+\./, '')}
+                        {l.label.includes('.') ? l.label.split('.')[1] : l.label}
                       </span>
                       {isActive && <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />}
                     </div>
