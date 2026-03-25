@@ -97,7 +97,7 @@ export const portfolioData = {
                 titleAccentLength: 4,     // "Chat" part
                 technologies: ["PyTorch", "Huggingface", "Next.js", "WebGPU", "WebAssembly", "MERN Stack"],
                 github: "https://github.com/DiaLabs/dia-chat",
-                live: "https://dia-chat.vercel.app",
+                live: "https://diachat.vercel.app",
             },
             {
                 id: 2,
@@ -121,7 +121,7 @@ export const portfolioData = {
                 titleAccentLength: 3,     // "Mod" part
                 technologies: ["Python", "Gemini", "Microservices", "JWT", "MERN Stack", "REST API"],
                 github: "https://github.com/DiaLabs/dia-mod",
-                live: "https://dia-mod.vercel.app",
+                live: "https://diamod.vercel.app",
             },
         ],
         other: [
