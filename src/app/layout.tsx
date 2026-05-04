@@ -93,8 +93,9 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: "your-google-verification-code",
-  },
+  google: "_nlljJh2vkhAnhwjHmm9jh4mIk3VlyikAX1idqfTgzo",
+},
+
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
