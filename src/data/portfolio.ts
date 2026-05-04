@@ -134,7 +134,7 @@ export const portfolioData = {
                 github: "https://github.com/iteshxt/UniBites",
                 live: "https://github.com/iteshxt/UniBites/releases/",
             },
-            {
+           /* {
                 id: 6,
                 title: "Ukie's Universe",
                 image: "untillifoundyou.ico",
@@ -142,9 +142,9 @@ export const portfolioData = {
                 technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
                 github: "https://github.com/iteshxt/ukies-universe",
                 live: "https://untillifoundyou.vercel.app",
-            },
+            },*/
             {
-                id: 7,
+                id: 6,
                 title: "Velo Rapido",
                 image: "velo-rapido.ico",
                 description: "A comprehensive bike rental management system with reservations, online payments, and admin dashboard.",
@@ -153,7 +153,7 @@ export const portfolioData = {
                 live: "https://velo-rapido.wuazu.com",
             },
             {
-                id: 8,
+                id: 7,
                 title: "Cooksy",
                 image: "cooksy.ico",
                 description: "A modern recipe discovery platform that features recipe browsing by categories/cuisines, search functionality, and detailed recipe views.",
@@ -162,7 +162,7 @@ export const portfolioData = {
                 live: "https://cooksy-recipes.vercel.app",
             },
             {
-                id: 9,
+                id: 8,
                 title: "LPU Wi-Fi Auto Login",
                 image: "lpu-wifi-autologin.ico",
                 description: "A dual-version Wi-Fi automation tool (Python & Chrome Extension) for seamless credential-based login with locally stored secure credentials.",
