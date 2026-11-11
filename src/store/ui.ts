@@ -22,6 +22,9 @@ type UIState = {
   /** Arcee chat panel, plus a question to send as soon as it opens. */
   arceeOpen: boolean;
   arceeSeed: string | null;
+  /** Heavy overlays load on first use, then stay mounted to keep their state. */
+  arceeMounted: boolean;
+  terminalMounted: boolean;
   muted: boolean;
   toasts: Toast[];
   openArcee: (seed?: string) => void;
@@ -51,9 +54,11 @@ export const useUI = create<UIState>((set, get) => ({
   terminalOpen: false,
   arceeOpen: false,
   arceeSeed: null,
+  arceeMounted: false,
+  terminalMounted: false,
   muted: false,
   toasts: [],
-  openArcee: (seed) => set({ arceeOpen: true, arceeSeed: seed?.trim() || null, navOpen: false }),
+  openArcee: (seed) => set({ arceeOpen: true, arceeMounted: true, arceeSeed: seed?.trim() || null, navOpen: false }),
   closeArcee: () => set({ arceeOpen: false }),
   takeArceeSeed: () => {
     const seed = get().arceeSeed;
@@ -77,7 +82,7 @@ export const useUI = create<UIState>((set, get) => ({
   },
   setTransitionPhase: (transitionPhase) => set({ transitionPhase }),
   setNavOpen: (navOpen) => set({ navOpen }),
-  setTerminalOpen: (terminalOpen) => set({ terminalOpen }),
+  setTerminalOpen: (terminalOpen) => set(terminalOpen ? { terminalOpen, terminalMounted: true } : { terminalOpen }),
   setMuted: (muted) => {
     setSoundMuted(muted);
     try {

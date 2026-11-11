@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { foundEgg } from "@/lib/eggs";
-import { konamiStep } from "@/lib/konami";
+import { useEffect } from "react";
 import { play } from "@/lib/sound";
 
 const SWIM_MS = 7600;
@@ -42,51 +40,25 @@ function CatDiver() {
 }
 
 /**
- * Konami code (↑↑↓↓←→←→BA) or the terminal's `scuba` command sends the cat
- * swimming across the screen, trailing bubbles. Reduced motion gets a calm
- * appearance instead of a swim.
+ * The cat swims across the screen trailing bubbles, then calls `onDone`.
+ * Triggered by the Konami code or the terminal's `scuba` (see LazyOverlays).
+ * Reduced motion gets a calm appearance instead of a swim.
  */
-export function ScubaCat() {
-  const [swim, setSwim] = useState(0);
-  const progress = useRef(0);
-
+export function ScubaCat({ run, onDone }: { run: number; onDone: () => void }) {
   useEffect(() => {
-    const launch = () => {
-      setSwim((n) => n + 1);
-      foundEgg("scuba", "Easter egg found: scuba cat", "It's also a real Linux boot animation: github.com/iteshxt/scuba-cat");
-    };
-    const onKey = (e: KeyboardEvent) => {
-      progress.current = konamiStep(progress.current, e.key);
-      if (progress.current === 10) {
-        progress.current = 0;
-        launch();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    window.addEventListener("egg:scuba", launch);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      window.removeEventListener("egg:scuba", launch);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!swim) return;
     const bubbles = window.setInterval(() => play("bubble"), 700);
     const done = window.setTimeout(() => {
       window.clearInterval(bubbles);
-      setSwim(0);
+      onDone();
     }, SWIM_MS);
     return () => {
       window.clearInterval(bubbles);
       window.clearTimeout(done);
     };
-  }, [swim]);
-
-  if (!swim) return null;
+  }, [run, onDone]);
 
   return (
-    <div key={swim} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[85] overflow-hidden">
+    <div key={run} aria-hidden="true" className="pointer-events-none fixed inset-0 z-[85] overflow-hidden">
       <div className="scuba-swim absolute top-[38%] left-0">
         <div className="scuba-bob relative">
           <CatDiver />

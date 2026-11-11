@@ -5,7 +5,6 @@ import { Close } from "@/components/icons";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { cn } from "@/lib/cn";
 import { foundEgg } from "@/lib/eggs";
-import { isTypingTarget } from "@/lib/motion";
 import { play } from "@/lib/sound";
 import { complete, runCommand, type TermAction, type TermLine } from "@/lib/terminal";
 import { useUI } from "@/store/ui";
@@ -39,18 +38,7 @@ export function Terminal({ now }: { now: { repo: string; message: string } | nul
   const inputRef = useRef<HTMLInputElement>(null);
   const outRef = useRef<HTMLDivElement>(null);
 
-  // ` or ~ toggles the terminal from anywhere except text fields.
-  useEffect(() => {
-    const onKey = (e: globalThis.KeyboardEvent) => {
-      if ((e.key === "`" || e.key === "~") && !isTypingTarget(e.target)) {
-        e.preventDefault();
-        setOpen(!useUI.getState().terminalOpen);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [setOpen]);
-
+  // The ` / ~ shortcut lives in LazyOverlays, which mounts this on first use.
   useEffect(() => {
     if (!open) return;
     foundEgg("terminal", "Easter egg found: the terminal", "Type `help`. Some commands aren't listed.");

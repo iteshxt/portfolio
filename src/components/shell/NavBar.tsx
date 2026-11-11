@@ -6,6 +6,7 @@ import { filterNav, NAV_ITEMS, NAV_PROMPT, type NavItem } from "@/content/nav";
 import { cn } from "@/lib/cn";
 import { isTypingTarget } from "@/lib/motion";
 import { play } from "@/lib/sound";
+import { preloadArcee } from "./LazyOverlays";
 import { useUI } from "@/store/ui";
 
 /**
@@ -34,6 +35,7 @@ export function NavBar() {
   const openNav = useCallback(() => {
     play("open");
     useUI.getState().closeArcee();
+    preloadArcee();
     setOpen(true);
   }, [setOpen]);
 

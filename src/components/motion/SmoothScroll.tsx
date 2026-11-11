@@ -3,13 +3,12 @@
 import Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useUI } from "@/store/ui";
 
 /**
- * Lenis smooth scrolling driven by GSAP's ticker, so ScrollTrigger stays in
- * sync (docs/design.md §6). Off for reduced motion.
+ * Lenis smooth scrolling (docs/design.md §6), running on its own animation
+ * frame so GSAP isn't needed for first load. Off for reduced motion.
  */
 export function SmoothScroll() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -18,14 +17,9 @@ export function SmoothScroll() {
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
-    const lenis = new Lenis({ lerp: 0.12, wheelMultiplier: 1 });
+    const lenis = new Lenis({ lerp: 0.12, autoRaf: true });
     lenisRef.current = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
-    const tick = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(tick);
-    gsap.ticker.lagSmoothing(0);
     return () => {
-      gsap.ticker.remove(tick);
       lenis.destroy();
       lenisRef.current = null;
     };
@@ -35,13 +29,6 @@ export function SmoothScroll() {
   useEffect(() => {
     lenisRef.current?.scrollTo(0, { immediate: true, force: true });
   }, [pathname]);
-
-  // Page heights change after every reveal; recompute trigger positions.
-  useEffect(() => {
-    if (phase !== "idle") return;
-    const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
-    return () => cancelAnimationFrame(raf);
-  }, [phase, pathname]);
 
   // Freeze scrolling while the screen is covered.
   useEffect(() => {
