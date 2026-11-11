@@ -155,7 +155,8 @@ Fallback (no View Transitions support, or reduced motion): crossfade the shift c
 The App Router has no exit-animation hook, so transitions are orchestrated by hand:
 
 - `TransitionLink` and the nav bar call `transition.go(href)` instead of navigating directly.
-- `go()`: the slap sticker (a full-screen element in `--violet`, showing the destination's name, e.g. "Arcee") slaps in (Web Animations) → `router.push(href)` → waits for the new `usePathname()` value and for `main h1` to exist (content behind Suspense may stream in a moment later; capped at 1.5 s) → peels the sticker away with the §5.1 geometry (the sticker element is the clipped layer, and the flap uses `--lavender`) → the new page's `Headline` starts typing.
+- `go()`: the slap sticker (a full-screen element in `--violet`, showing the destination's name, e.g. "Arcee") slaps in (Web Animations) → `router.push(href)` → waits for the new `usePathname()` value and for a visible `main h1` (content behind Suspense may stream in a moment later, and Next keeps recently left pages in the DOM, hidden, so only visible elements count; capped at 1.5 s) → peels the sticker away with the §5.1 geometry (the sticker element is the clipped layer, and the flap uses `--lavender`) → the new page's `Headline` starts typing.
+- Card flight: inside a `data-fly-card`, `TransitionLink` passes the card's `data-fly-source` element to `go()`. A fixed flyer (z above the sticker) gets the source's background and a clone of its drawing, animates from the source rect to a centred hold box during the slap (Web Animations on left/top/width/height, so the drawing re-lays out instead of stretching), and the sticker's label is left empty. The reveal waits for the visible `[data-fly-target={slug}]` stage instead of the headline; the landing follows the stage's live rect each frame (the headline may still be fitting) for the peel's duration, then fades out over the real stage. If the stage never appears (600 ms grace), the flyer fades where it is. Skipped with reduced motion and on back/forward.
 - Back/forward (`popstate`): the reveal peel only, starting from a covered sticker for 120 ms.
 - The first visit runs the same reveal as the intro, with no slap.
 - `router.prefetch(href)` is called on nav hover/focus so the push is instant.
@@ -319,10 +320,10 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 1. Foundation: app scaffold, tokens, fonts, shift bootstrap, shell layout ✓
 2. Signature moves: Spike S1 → peel toggle → page transition → nav bar → headline ✓ (stub pages for every route; sound comes in milestone 6)
 3. Content + pages: content files, home, work, about, DiaLabs, contact, 404 ✓ (footer feed, smooth scroll and reveals included)
-4. Star case studies + 3D objects ✓ (the object flying from its card into the case-study hero is deferred; home and work cards keep the 2D drawings for performance)
+4. Star case studies + 3D objects ✓ (home and work cards keep the 2D drawings for performance; the drawing flies from its card into the case-study stage, §5.3)
 5. Arcee chatbot ✓ built and tested end to end with a stand-in model (`ARCEE_MOCK=1`): chat panel, retrieval, guardrails, rate limits, navigate/sticker/draftMessage tools, leave-a-message email. Live answers need `GROQ_API_KEY`; Spike S2 (tool-calling reliability of `gpt-oss-20b`) runs once the key is in. Placeholder cat stickers live in `public/stickers/` until Itesh's set replaces them (same file names).
 6. Easter eggs + sound ✓ (built before 5 because it needs no keys: terminal, scuba cat, tab title, 3am note, print-to-resume, toasts, synthesized UI sounds with a mute toggle)
-7. Polish ✓: on-demand loading (JS budget met), share images, sitemap, robots, manifest, JSON-LD, per-page metadata, error page, Vercel Analytics, Playwright e2e + axe (no violations, day and night, desktop and phone), Firefox render check, CI. Left for launch: Safari/WebKit testing (not available on this Linux machine), the Groq/Upstash/Resend keys, and deploying from `iteshxt/portfolio`.
+7. Polish ✓ (extras: scribble underlines, flickable stickers, card-to-stage flight): on-demand loading (JS budget met), share images, sitemap, robots, manifest, JSON-LD, per-page metadata, error page, Vercel Analytics, Playwright e2e + axe (no violations, day and night, desktop and phone), Firefox render check, CI. Left for launch: Safari/WebKit testing (not available on this Linux machine), the Groq/Upstash/Resend keys, and deploying from `iteshxt/portfolio`.
 
 ## 16. Risks
 

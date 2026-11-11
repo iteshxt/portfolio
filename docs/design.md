@@ -30,6 +30,8 @@ Reference studied: extrafazant.nl. We learned from its discipline (a few signatu
 3. The sticker peels off from the top-right corner (same geometry as §2.1) in about 620 ms, its back in lavender tint. Sound: peel.
 4. The new page's headline types its serif line in.
 
+From a star card (home stack or work grid), the card's drawing lifts off its card with a white die-cut edge and a shadow, settles in the centre over the slapping sticker (in place of the destination's name), then flies into the case-study stage as the sticker peels, and fades into the real one.
+
 The same sequence runs as the site intro on first load, starting from a sticker already in place. Reduced motion: a 200 ms crossfade, with no slap or peel.
 
 ### 2.3 Two-line headlines
@@ -123,8 +125,8 @@ Libraries: GSAP (ScrollTrigger, SplitText, DrawSVG, CustomEase, Inertia), Lenis 
 | Text reveal | Lines are masked, rising from `yPercent: 120` → 0, `expo.out`, 1.0 s, stagger 0.08 s |
 | Headline typing | §2.3 |
 | Scroll reveal (blocks) | y 40 → 0, opacity 0 → 1, `power3.out`, 0.8 s, starting at 85% of the viewport |
-| Hover underline | A hand-drawn scribble draws under links (DrawSVG 0 → 100%, 0.5 s, `power2.inOut`), with a different scribble each time; our own set of 6 scribbles |
-| Sticker flick | Stickers respond to cursor velocity with inertia: they spin and drift, then settle (Inertia plugin, resistance 200) |
+| Hover underline | A hand-drawn scribble draws under links (0 → 100%, 0.55 s, `expo.out`), with a different scribble each time; our own set of 6 scribbles. *As built:* SVG paths with `pathLength=1` and a `stroke-dashoffset` transition (no DrawSVG), violet by day, lavender by night, lime on violet. Used on footer links, the contact CTA and channels, and "Try it live" |
+| Sticker flick | Stickers respond to cursor velocity with inertia: they spin and drift, then settle. *As built:* a hand-rolled damped spring (no Inertia plugin); the spin is the cross product of where the cursor hit and how fast it was moving, capped at ±22°. Fine pointers only |
 | Media frames | Slight rotation (-4° to 6°), parallax ±40 px on scroll |
 | Featured stack | Star project cards stacked in 3D; scrolling drops the top card away to reveal the next |
 | Nav bar open | Panel rises 12 px + fades in, 220 ms, `power3.out`; options stagger 30 ms |
@@ -155,7 +157,7 @@ Reduced motion (`prefers-reduced-motion: reduce`): no smooth scroll, no parallax
 ## 9. Sound
 
 - Subtle and short (under 400 ms), mixed quietly (peak around -18 dBFS).
-- Set: `peel` (paper rip, rising band-pass), `slap` (soft low thump), `nav-open` / `nav-close` (soft pop), `tick` (typing), `sticker` (tiny squeak on flick), `terminal-key`, `success` (message sent).
+- Set: `peel` (paper rip, rising band-pass), `slap` (soft low thump), `nav-open` / `nav-close` (soft pop), `tick` (typing), `sticker` (tiny squeak on flick; *as built:* a short paper flutter, only on a real knock, at most once per 260 ms), `terminal-key`, `success` (message sent).
 - A mute toggle sits in the top bar; the setting is remembered. Nothing plays before the first interaction.
 
 ## 10. Components
