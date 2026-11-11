@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, JetBrains_Mono, Mona_Sans } from "next/font/google";
+import { NavBar } from "@/components/shell/NavBar";
+import { PeelCorner } from "@/components/shell/PeelCorner";
+import { TopBar } from "@/components/shell/TopBar";
+import { TransitionProvider } from "@/components/transition/TransitionProvider";
 import { shiftBootstrapScript } from "@/lib/shift";
 import "./globals.css";
 
@@ -54,7 +58,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* Picks the day/night shift before first paint (docs/spec.md §3.2). */}
         <script dangerouslySetInnerHTML={{ __html: shiftBootstrapScript }} />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <TransitionProvider>
+          <TopBar />
+          {children}
+          <NavBar />
+        </TransitionProvider>
+        <PeelCorner />
+      </body>
     </html>
   );
 }
