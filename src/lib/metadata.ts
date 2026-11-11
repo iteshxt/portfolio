@@ -8,6 +8,7 @@ export function pageMetadata({ title, description, path }: { title: string; desc
     description,
     alternates: { canonical: path },
     openGraph: { title: full, description, url: path },
-    twitter: { title: full, description },
+    // Page-level twitter metadata replaces the layout's, so restate the card type.
+    twitter: { card: "summary_large_image", creator: "@iteshxt", title: full, description },
   };
 }

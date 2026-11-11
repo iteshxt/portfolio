@@ -20,9 +20,11 @@ export function ogCard({ kicker, sans, serif, accent = "#7A2CFF" }: { kicker: st
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between", background: "#F5F5F4", color: "#0E0E10", padding: "64px 72px", position: "relative" }}>
-        {/* Peel corner: the page's sticker lifting at the top-right */}
-        <div style={{ position: "absolute", top: 0, right: 0, width: 0, height: 0, borderTop: "150px solid #0B0A10", borderLeft: "150px solid transparent", display: "flex" }} />
-        <div style={{ position: "absolute", top: 0, right: 0, width: 0, height: 0, borderBottom: "150px solid " + accent, borderRight: "150px solid transparent", display: "flex", transform: "translate(-150px, 0)" }} />
+        {/* Peel corner: the page's sticker lifting at the top-right, night showing underneath */}
+        <svg width="170" height="170" viewBox="0 0 170 170" style={{ position: "absolute", top: 0, right: 0 }}>
+          <polygon points="0,0 170,0 170,170" fill="#0B0A10" />
+          <polygon points="0,0 170,170 0,170" fill={accent} />
+        </svg>
         <div style={{ display: "flex", fontFamily: "Instrument Serif", fontSize: 40, fontStyle: "italic" }}>itesh</div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontFamily: "Instrument Serif", fontSize: 34, color: "#55555C", marginBottom: 14 }}>{kicker}</div>

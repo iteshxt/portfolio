@@ -8,8 +8,10 @@ export default function AppleIcon() {
   return new ImageResponse(
     (
       <div style={{ width: "100%", height: "100%", display: "flex", background: "#7A2CFF", position: "relative" }}>
-        <div style={{ position: "absolute", top: 0, right: 0, width: 0, height: 0, borderTop: "62px solid #F5F5F4", borderLeft: "62px solid transparent", display: "flex" }} />
-        <div style={{ position: "absolute", top: 0, right: 62, width: 0, height: 0, borderBottom: "62px solid #CBB8FF", borderRight: "62px solid transparent", display: "flex" }} />
+        <svg width="66" height="66" viewBox="0 0 66 66" style={{ position: "absolute", top: 0, right: 0 }}>
+          <polygon points="0,0 66,0 66,66" fill="#F5F5F4" />
+          <polygon points="0,0 66,66 0,66" fill="#CBB8FF" />
+        </svg>
       </div>
     ),
     size,
