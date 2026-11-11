@@ -7,7 +7,7 @@ const TONES = [
   "bg-paper text-ink",
   "bg-sunflower text-[#4A3A00]",
   "bg-lavender text-violet-ink",
-  "bg-tomato text-white",
+  "bg-tomato text-[#2A0700]",
 ];
 
 /**
@@ -29,11 +29,11 @@ export function ArchiveMarquee({ projects }: { projects: Project[] }) {
             )}
             style={{ rotate: `${[-3, 2, -1.5, 3, -2.5][i % 5]}deg` }}
           >
-            <span className="text-[12px] font-medium tracking-wide uppercase opacity-70">
+            <span className="text-[12px] font-semibold tracking-wide uppercase">
               {CATEGORY_LABELS[p.category]} · {p.year}
             </span>
             <span className="display-sans text-[38px]">{p.name}</span>
-            <span className="text-[14px] leading-snug opacity-85">
+            <span className="text-[14px] leading-snug">
               <span className="day-only">{p.day}</span>
               <span className="night-only">{p.night}</span>
             </span>

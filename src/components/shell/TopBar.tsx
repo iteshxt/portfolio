@@ -39,7 +39,7 @@ export function TopBar() {
       <TransitionLink
         href="/"
         transitionLabel="Home"
-        aria-label="Home"
+        aria-label="itesh, home"
         className="pointer-events-auto font-serif text-[28px] italic leading-none"
       >
         itesh

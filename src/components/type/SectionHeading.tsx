@@ -23,7 +23,7 @@ export function SectionHeading({
   return (
     <header className={cn("flex flex-col gap-3", className)}>
       {kicker && (
-        <p className={cn("font-serif text-[clamp(17px,1.6vw,22px)]", tone === "inverse" ? "opacity-75" : "text-fg-muted")}>
+        <p className={cn("font-serif text-[clamp(17px,1.6vw,22px)]", tone === "inverse" ? "" : "text-fg-muted")}>
           <span className="day-only">{kicker.day}</span>
           <span className="night-only">{kicker.night ?? kicker.day}</span>
         </p>

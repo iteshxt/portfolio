@@ -7,7 +7,7 @@ const TONES = {
   sunflower: "bg-sunflower text-[#4A3A00]",
   lavender: "bg-lavender text-violet-ink",
   violet: "bg-violet text-white",
-  tomato: "bg-tomato text-white",
+  tomato: "bg-tomato text-[#2A0700]",
   paper: "bg-paper text-ink",
 } as const;
 

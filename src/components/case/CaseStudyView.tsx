@@ -11,9 +11,9 @@ import { cn } from "@/lib/cn";
 import { StarStage } from "./StarStage";
 
 const ACCENT = {
-  violet: { frame: "border-violet bg-violet", dot: "bg-violet" },
-  tomato: { frame: "border-tomato bg-tomato", dot: "bg-tomato" },
-  sunflower: { frame: "border-sunflower bg-sunflower", dot: "bg-sunflower" },
+  violet: { frame: "border-violet bg-violet", dot: "bg-violet", onDot: "text-white" },
+  tomato: { frame: "border-tomato bg-tomato", dot: "bg-tomato", onDot: "text-[#2A0700]" },
+  sunflower: { frame: "border-sunflower bg-sunflower", dot: "bg-sunflower", onDot: "text-[#4A3A00]" },
 } as const;
 
 /**
@@ -123,7 +123,7 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
             <ol className="relative mb-16 flex flex-col gap-0 before:absolute before:top-3 before:bottom-3 before:left-[19px] before:w-px before:bg-line">
               {study.night.pipeline.map((s, i) => (
                 <Reveal as="li" key={s.step} delay={i * 60} className="relative grid grid-cols-[40px_1fr] gap-5 py-4">
-                  <span className={cn("relative z-10 flex size-10 items-center justify-center rounded-full font-mono text-[13px] text-white", accent.dot, project.accent === "sunflower" && "text-[#4A3A00]")}>
+                  <span className={cn("relative z-10 flex size-10 items-center justify-center rounded-full font-mono text-[13px]", accent.dot, accent.onDot)}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div className="pt-1.5">
