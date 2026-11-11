@@ -27,6 +27,7 @@ import { applyShiftToDom, otherShift, useUI } from "@/store/ui";
 
 const REST = 34;
 const BOX = 112;
+const COMPLETE_AT = 0.35;
 const RESTING = peelShape(BOX, BOX, peelRest(BOX, REST));
 
 type Session = {
@@ -233,7 +234,10 @@ export function PeelCorner() {
     if (!s || !s.dragging) return;
     s.dragging = false;
     const moved = Math.hypot(s.pointer[0] - s.start[0], s.pointer[1] - s.start[1]);
-    const release = moved < 6 || peelProgress(s.w, s.h, s.pointer) > 0.3 ? "complete" : "back";
+    // A click completes; a drag completes once the corner has travelled ~35% of the
+    // screen diagonal (docs/design.md §2.1), otherwise it springs back.
+    const travelled = Math.hypot(s.w - s.pointer[0], s.pointer[1]);
+    const release = moved < 6 || travelled > Math.hypot(s.w, s.h) * COMPLETE_AT ? "complete" : "back";
     if (!s.ready) s.release = release;
     else if (release === "complete") complete(s);
     else springBack(s);

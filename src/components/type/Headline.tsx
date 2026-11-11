@@ -43,7 +43,8 @@ export function Headline({ lines, as: Tag = "h1", cycle = false, className }: Pr
     const wrap = wrapRef.current;
     if (!wrap) return;
     const fit = () => {
-      const width = wrap.clientWidth;
+      // Leave a little breathing room so wide lines never kiss the gutters.
+      const width = wrap.clientWidth * 0.96;
       const ms = measureSansRef.current;
       const mf = measureSerifRef.current;
       if (!width || !ms || !mf || !sansRef.current || !serifRef.current) return;

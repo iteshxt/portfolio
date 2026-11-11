@@ -18,7 +18,7 @@ Reference studied: extrafazant.nl. We learned from its discipline (a few signatu
 ### 2.1 The peel (theme toggle)
 
 - The top-right corner of the page is always slightly curled up, showing a sliver of the sticker's back in the owned violet.
-- Dragging the corner peels the whole page like a sticker, revealing the other shift underneath. Releasing past about 40% of the diagonal completes the peel; otherwise it springs back. A click or tap completes it automatically.
+- Dragging the corner peels the whole page like a sticker, revealing the other shift underneath. Releasing once the corner has travelled about 35% of the screen diagonal completes the peel; otherwise it springs back. A click or tap completes it automatically.
 - Geometry: the fold line is the perpendicular bisector between the corner and the pointer. The top layer is clipped to the far side of the fold, and the peeled part is reflected across the fold to draw the flap (see spec §5.1).
 - Flap: the sticker back is solid owned violet in day→night, lavender tint in night→day, with a soft shading gradient near the fold in the real build.
 - Duration of the auto-peel: 650 ms, ease `power2.inOut`. Sound: peel (§9).
