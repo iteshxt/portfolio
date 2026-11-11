@@ -1,0 +1,210 @@
+# Design: iteshxt.me v4
+
+How the site looks, moves, sounds and speaks. Requirements live in [prd.md](./prd.md); implementation lives in [spec.md](./spec.md).
+
+Reference studied: extrafazant.nl. We learned from its discipline (a few signature moves repeated everywhere, big confident type, saturated colour on neutral ground, humour in the copy). We don't copy its layout, nav, transitions or assets.
+
+## 1. Principles
+
+1. **One idea, everywhere.** Two shifts (day = what, night = how). Every page, headline and interaction serves it.
+2. **A few signature moves, repeated.** The peel, the slap, the typing headline. Repetition is what makes it recognisable.
+3. **Type does the heavy lifting.** Huge, tight, confident headlines. Decoration is secondary.
+4. **Saturated colour on neutral ground.** Paper and ink are neutral; colour arrives in bold blocks, never as a pastel wash.
+5. **Playful, never confusing.** Every creative control (peel, nav bar, terminal) has an obvious affordance and a plain fallback.
+6. **Fast is part of the design.** If an effect costs the frame rate or the load time, it gets simplified.
+
+## 2. Signature moves
+
+### 2.1 The peel (theme toggle)
+
+- The top-right corner of the page is always slightly curled up, showing a sliver of the sticker's back in the owned violet.
+- Dragging the corner peels the whole page like a sticker, revealing the other shift underneath. Releasing past about 40% of the diagonal completes the peel; otherwise it springs back. A click or tap completes it automatically.
+- Geometry: the fold line is the perpendicular bisector between the corner and the pointer. The top layer is clipped to the far side of the fold, and the peeled part is reflected across the fold to draw the flap (see spec §5.1).
+- Flap: the sticker back is solid owned violet in day→night, lavender tint in night→day, with a soft shading gradient near the fold in the real build.
+- Duration of the auto-peel: 650 ms, ease `power2.inOut`. Sound: peel (§9).
+
+### 2.2 The slap + peel (page transition)
+
+1. On navigation, a full-screen sticker in owned violet slaps on from the nav bar: scale 0.08 → 1.06 → 1, rotate -14° → 2° → 0°, corners 40 px → 0, 420 ms with a slight overshoot. Sound: slap.
+2. The new page mounts underneath.
+3. The sticker peels off from the top-right corner (same geometry as §2.1) in about 620 ms, its back in lavender tint. Sound: peel.
+4. The new page's headline types its serif line in.
+
+The same sequence runs as the site intro on first load, starting from a sticker already in place. Reduced motion: a 200 ms crossfade, with no slap or peel.
+
+### 2.3 "Itesh ___" headlines
+
+- Every page headline is two lines: a **sans line** that starts the sentence ("ITESH BUILDS") and a **serif line** that completes it ("AGENTS").
+- The serif line types itself in (80 ms per character) and, on the home page, deletes and retypes through the completions (35 ms per character when deleting, 1.7 s pause).
+- Each line is fitted to the container width (see spec §5.3), so headlines always span the page.
+- Day completions say *what*; night completions say *how* (the table in §11).
+
+## 3. Colour
+
+### 3.1 Palette
+
+| Token | Hex | Use |
+|---|---|---|
+| `violet` (owned) | `#7A2CFF` (electric violet) | Signature colour: the peel back, the slap sticker, nav pill, key buttons, star tags, highlights |
+| `violet-ink` | `#3A0E8C` | Text on violet tints, pressed states |
+| `lavender` | `#CBB8FF` | Support tint: night accents, the flap back on night→day, quiet fills |
+| `lime` | `#CCFF33` | Accent: stickers, terminal prompt, "new" or "live" markers |
+| `tomato` | `#FF4B2B` | Accent: frames, warnings with attitude, hover hits |
+| `sunflower` | `#FFC700` | Accent: stickers, frames, highlights |
+| `paper` | `#F5F5F4` | Day background |
+| `paper-2` | `#FFFFFF` | Day raised surfaces |
+| `ink` | `#0E0E10` | Day text |
+| `night` | `#0B0A10` | Night background |
+| `night-2` | `#15121D` | Night raised surfaces |
+| `night-ink` | `#F4F2FF` | Night text |
+| `line-day` / `line-night` | `#E3E2E6` / `#2A2535` | Hairlines |
+
+Electric violet is the default. Ultraviolet `#5A2BFF` and grape pop `#A032FF` stay as fallbacks if it doesn't hold up on real screens.
+
+### 3.2 Rules
+
+- Paper and ink are neutral. No tinted backgrounds.
+- Colour comes in solid blocks: thick frames around media (12–16 px), full-bleed sections, stickers, buttons. No gradients in UI chrome (the 3D scenes may use lighting gradients).
+- At most one accent beside violet in any one viewport section.
+- Text contrast: body text is always `ink` on paper or `night-ink` on night. Violet is used for text only at headline sizes (≥ 32 px) on paper; on night, use `lavender` for coloured text.
+- Text on accent fills uses that accent's darkest partner: violet → white, lime → `#2B3600`, sunflower → `#4A3A00`, tomato → white at ≥ 18 px only.
+
+### 3.3 Shifts
+
+| | Day | Night |
+|---|---|---|
+| Background | paper | night |
+| Headline colour | ink (serif line ink) | night-ink (serif line lavender) |
+| Mood | Bright, product, outcomes | Focused, technical, glowing accents |
+| Extra details | Stickers, coloured frames | Terminal snippets, commit messages, diagrams, lime prompt colour |
+| Peel flap | violet | lavender |
+
+## 4. Typography
+
+All free (Google Fonts), self-hosted through `next/font`.
+
+| Role | Font | Settings |
+|---|---|---|
+| Display sans | **Mona Sans** | width 75, weight 820, tracking -0.035em, line-height 0.86, uppercase |
+| Display serif | **Instrument Serif** | regular (italic for emphasis), tracking -0.02em, line-height 0.9, uppercase in headlines |
+| Body / UI | **Mona Sans** | width 100, weight 400 / 500 / 600 |
+| Code / terminal | **JetBrains Mono** | 400 / 500 |
+
+### Scale (fluid, clamp-based)
+
+| Token | Size | Use |
+|---|---|---|
+| `display` | fitted to width, max ≈ 18 vw | Page headlines |
+| `h1` | clamp(40px, 6vw, 88px) | Section headlines (same sans + serif pairing) |
+| `h2` | clamp(28px, 3.6vw, 48px) | Sub-sections |
+| `kicker` | clamp(18px, 1.8vw, 24px) | Serif line above headlines ("By day: what he builds") |
+| `body-l` | 20px / 1.5 | Intros |
+| `body` | 17px / 1.6 | Default copy |
+| `small` | 14px / 1.5 | Meta, captions |
+| `micro` | 12px / 1.4 | Tags (sentence case, never below 12px) |
+
+Rules: headlines are uppercase; everything else is sentence case. Body line length is 55–75 characters. Never use more than one serif line per headline.
+
+## 5. Layout
+
+- 12-column grid, max width 1440 px, side gutters clamp(16px, 4vw, 48px), column gap 24 px.
+- Spacing scale (px): 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192.
+- Radii: 6 px (controls), 16 px (cards, panels), 999 px (pills). Media frames are square-cornered with thick colour borders.
+- Sections alternate paper and full-bleed colour or night blocks to create rhythm.
+- Mobile first: one column under 768 px. Headlines still fit the width. Interactions become tap-first (§12).
+
+## 6. Motion
+
+Libraries: GSAP (ScrollTrigger, SplitText, DrawSVG, CustomEase, Inertia), Lenis smooth scroll.
+
+| Pattern | Spec |
+|---|---|
+| Text reveal | Lines are masked, rising from `yPercent: 120` → 0, `expo.out`, 1.0 s, stagger 0.08 s |
+| Headline typing | §2.3 |
+| Scroll reveal (blocks) | y 40 → 0, opacity 0 → 1, `power3.out`, 0.8 s, starting at 85% of the viewport |
+| Hover underline | A hand-drawn scribble draws under links (DrawSVG 0 → 100%, 0.5 s, `power2.inOut`), with a different scribble each time; our own set of 6 scribbles |
+| Sticker flick | Stickers respond to cursor velocity with inertia: they spin and drift, then settle (Inertia plugin, resistance 200) |
+| Media frames | Slight rotation (-4° to 6°), parallax ±40 px on scroll |
+| Featured stack | Star project cards stacked in 3D; scrolling drops the top card away to reveal the next |
+| Nav bar open | Panel rises 12 px + fades in, 220 ms, `power3.out`; options stagger 30 ms |
+| Page transition | §2.2 |
+| Easings | `expo.out` (reveals), `power3.out` (UI), `power2.inOut` (peels), custom `slap` = cubic-bezier(.2,.9,.3,1.2) |
+
+Reduced motion (`prefers-reduced-motion: reduce`): no smooth scroll, no parallax, no typing (completions shown instantly), peels and slaps become crossfades, 3D is replaced by still renders.
+
+## 7. 3D
+
+- **Art direction:** soft, toy-like "clay" objects with subtle rim light. Violet key light by day, lavender and lime accents by night. No photoreal.
+- **Objects:**
+  - Arcee: woven amber rings around a geodesic wireframe orb (its own identity, only on its pages)
+  - PatentIQ: a rubber stamp that stamps "VERIFIED"
+  - DiaChat: a squishy speech bubble with a wobbly jelly body
+  - Archive: die-cut stickers as flat 3D cards that bend slightly when grabbed
+- Objects react to the cursor (look-at, squish, wobble) and scroll. On a case study, the object flies from its card to the hero during the transition.
+- Built with three.js through React Three Fiber; see spec §7 for performance rules.
+
+## 8. Stickers, icons, photo
+
+- **Stickers:** die-cut style: a 5–6 px white border around the artwork, slight rotation, very soft shadow. Used for decoration, archive projects, achievements (LeetCode 320+, certificates) and Arcee's chat replies.
+- **Cat stickers:** WhatsApp-style cats chosen by mood (happy, smug, thinking, shocked, sleepy, love, nope). Placeholders until Itesh supplies the set; each sticker maps to a mood tag.
+- **Custom icons:** our own set on a 24 px grid, 2 px rounded strokes with an optional violet fill accent, slightly playful (a little wobble on corners). First set: arrow, arrow-up-right, close, menu, search, sun-peel (theme), sound-on, sound-off, mail, linkedin, github, x, resume, external, play, pause, terminal, chat, sticker, star, cat.
+- **Photo of Itesh** (supplied later): cut out as a die-cut sticker, duotone in violet + ink with a fine halftone, placed tilted like a polaroid.
+- **Logo:** postponed. Placeholder: "itesh" set in Instrument Serif italic.
+
+## 9. Sound
+
+- Subtle and short (under 400 ms), mixed quietly (peak around -18 dBFS).
+- Set: `peel` (paper rip, rising band-pass), `slap` (soft low thump), `nav-open` / `nav-close` (soft pop), `tick` (typing), `sticker` (tiny squeak on flick), `terminal-key`, `success` (message sent).
+- A mute toggle sits in the top bar; the setting is remembered. Nothing plays before the first interaction.
+
+## 10. Components
+
+| Component | Notes |
+|---|---|
+| Top bar | Logo placeholder (left), sound toggle, peel corner (right). Very minimal; real navigation lives in the nav bar |
+| "Itesh ___" nav bar | Bottom-centre violet pill, white text. Opens upward into a panel (paper-2 / night-2) with input + completion list; star items carry a violet "star" tag. Unmatched input shows an Arcee row |
+| Peel corner | 34 px curl at rest, grows on hover |
+| Headline | Fitted sans line + typing serif line + optional kicker |
+| Button | Pill with a label and a square arrow cap in an accent colour; the scribble underline for text links |
+| Media frame | Thick accent border, tilt, parallax |
+| Project sticker card | Die-cut card: title, one-line day blurb, tags, flick-able |
+| Arcee panel | Chat panel that grows from the nav bar; Arcee's messages are on the left with a cat sticker slot, visitor messages on the right; inline action chips ("Open Arcee case study", "Leave a message") |
+| Terminal | Full-width overlay in night colours, JetBrains Mono, lime prompt `itesh@shift:~$` |
+| Footer | Big contact CTA, channels, "currently building" live line, © and a hint ("psst, try ~") |
+
+## 11. Voice and tone
+
+Funny with attitude, confident without bragging, short sentences, English only. Third person when Arcee talks about Itesh.
+
+| Context | Day (what) | Night (how) |
+|---|---|---|
+| Home completions | builds agents · ships real products · fine-tunes models · co-founded DiaLabs | reads the logs · evals everything · debugs at 3am · writes the docs |
+| Arcee case | "Itesh builds agents" | "Plans, guards, then acts" |
+| PatentIQ | "Itesh screens patents" | "Citations first, then Gemini" |
+| DiaChat | "Itesh fine-tunes companions" | "Gemma 3, live on WebGPU" |
+| Work | "Itesh ships real products" | "Payments, logistics, retries" |
+| DiaLabs | "Itesh co-founded DiaLabs" | "Open models, open data" |
+| About | "Itesh worked at Caudal AI" | "Evals, edge cases, failure modes" |
+| Contact | "Itesh wants to hear from you" | "Leave Arcee a message" |
+
+Microcopy examples:
+- 404: "The model hallucinated this page."
+- Tab title away: "come back (╥﹏╥)"
+- 3am: "why are you awake? same."
+- Arcee refusing off-topic: "I only gossip about Itesh. Ask me what he's built."
+- Terminal `rm -rf /`: "nice try. permission denied, forever."
+
+## 12. Responsive and mobile
+
+- Full personality on phones; the 3D is lighter (pre-rendered or simplified objects, no post-processing).
+- The nav bar sits at the bottom in the thumb zone; its panel becomes a bottom sheet.
+- Peel: tap the corner to flip; dragging still works. The corner hit area is at least 44 × 44 px.
+- Hover-only effects (scribble, image trail, sticker flick) are replaced with tap or scroll versions or skipped.
+- Test widths: 360, 390, 768, 1024, 1440, 1920.
+
+## 13. Accessibility in design
+
+- Visible focus ring: 2 px violet + 2 px offset on paper, lavender on night.
+- Every creative control has a labelled button equivalent: the peel corner is a button "Switch to night shift"; the nav bar is a combobox.
+- Typing headlines expose the full text to assistive technology immediately (`aria-label`), and the animation is decorative.
+- Never rely on colour alone; star projects also carry a "star" label.
