@@ -18,16 +18,17 @@ const FILL = {
 
 /**
  * Star projects as a stack of framed cards (docs/design.md §6 "featured
- * stack"): each card sticks near the top and the next one slides over it.
- * Pure CSS (position: sticky), so it's smooth everywhere and free on mobile.
+ * stack"): from tablet width up, each card sticks near the top and the next
+ * one slides over it. Pure CSS (position: sticky). Phones get a plain list
+ * because the cards are taller than the screen there.
  */
 export function StarStack({ projects }: { projects: Project[] }) {
   return (
-    <ol className="mt-12 flex flex-col gap-[14vh] pb-[6vh]">
+    <ol className="mt-12 flex flex-col gap-10 pb-[6vh] md:gap-[14vh]">
       {projects.map((p, i) => {
         const accent = p.accent ?? "violet";
         return (
-          <li key={p.slug} className="sticky" style={{ top: `calc(10vh + ${i * 26}px)` }}>
+          <li key={p.slug} className="md:sticky" style={{ top: `calc(10vh + ${i * 26}px)` }}>
             <article
               className={cn(
                 "grid overflow-hidden border-[clamp(8px,1.1vw,16px)] bg-surface shadow-[0_30px_80px_-40px_rgb(0_0_0/0.45)] md:min-h-[min(70vh,620px)] md:grid-cols-[1.15fr_1fr]",
