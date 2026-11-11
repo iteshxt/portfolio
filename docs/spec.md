@@ -290,7 +290,7 @@ ArceePanel (useChat, AI SDK)
 | Lighthouse performance (mobile) | ≥ 90 |
 | Fonts | 3 families, subset latin, preload the display fonts only |
 
-*Measured 2026-11-12, after the milestone 7 pass:* about 192 KB gzipped on the home page, of which ~160 KB is the React/Next runtime and ~30 KB our code. The chat (AI SDK + corpus), terminal and scuba cat load on first use; GSAP loads after first paint for the line reveals; three.js loads only on case studies. (Before the pass it was ~345 KB once Arcee landed.)
+*Measured 2026-11-12, after the milestone 7 pass and the extras:* 199 KB gzipped on the home page (197 KB before the extras; the scribbles, flickable stickers and card flight add 2.3 KB), of which ~160 KB is the React/Next runtime and the rest our code. That leaves under 1 KB of headroom: anything new on the home page needs to load on demand or pay for itself. The chat (AI SDK + corpus), terminal and scuba cat load on first use; GSAP loads after first paint for the line reveals; three.js loads only on case studies. (Before the pass it was ~345 KB once Arcee landed.)
 
 Techniques: Server Components by default (only interactive pieces are client components), GSAP plugins registered lazily per feature, 3D lazy-loaded with tiering, `next/image` with AVIF, and no layout-shifting typing (§5.4).
 
