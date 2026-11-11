@@ -235,6 +235,151 @@
   }
 }
 
+/* Easter eggs: scuba cat swim + bubbles, toasts. */
+.scuba-swim {
+  animation: scuba-swim 7.6s linear forwards;
+}
+.scuba-bob {
+  animation: scuba-bob 1.6s ease-in-out infinite;
+}
+.scuba-bubble {
+  animation: scuba-bubble 2.4s ease-out infinite;
+  opacity: 0;
+}
+@keyframes scuba-swim {
+  from {
+    transform: translateX(-35vw);
+  }
+  to {
+    transform: translateX(115vw);
+  }
+}
+@keyframes scuba-bob {
+  50% {
+    transform: translateY(-18px) rotate(-3deg);
+  }
+}
+@keyframes scuba-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.6);
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-30px, -160px) scale(1.15);
+  }
+}
+.toast-in {
+  animation: toast-in 0.45s var(--ease-slap) both;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) rotate(-3deg) scale(0.9);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scuba-swim {
+    animation: none;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .scuba-bob,
+  .scuba-bubble {
+    animation: none;
+  }
+}
+
+/* Print to resume: printing swaps the whole site for a one-page resume. */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+  :root,
+  :root[data-shift="night"] {
+    --bg: #fff;
+    --fg: #0e0e10;
+    color-scheme: light;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #0e0e10 !important;
+  }
+  body > *:not([data-print-resume]) {
+    display: none !important;
+  }
+  [data-print-resume] {
+    display: block !important;
+  }
+}
+.print-resume {
+  font-family: var(--font-sans);
+  font-size: 9.6pt;
+  line-height: 1.38;
+  color: #0e0e10;
+}
+.print-resume h1 {
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 75;
+  font-weight: 820;
+  font-size: 26pt;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+.print-resume h2 {
+  font-family: var(--font-serif);
+  font-size: 13pt;
+  margin: 9pt 0 3pt;
+  padding-bottom: 2pt;
+  border-bottom: 1px solid #0e0e10;
+}
+.print-resume .pr-role {
+  font-family: var(--font-serif);
+  font-size: 13pt;
+  color: #7a2cff;
+}
+.print-resume .pr-contact {
+  color: #55555c;
+  margin-top: 2pt;
+}
+.print-resume .pr-item {
+  margin-bottom: 4pt;
+}
+.print-resume .pr-line {
+  display: flex;
+  gap: 4pt;
+}
+.print-resume .pr-line span {
+  margin-left: auto;
+  color: #55555c;
+}
+.print-resume ul {
+  margin: 1pt 0 0 12pt;
+  list-style: disc;
+}
+.print-resume .pr-compact {
+  margin-left: 12pt;
+}
+.print-resume .pr-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14pt;
+}
+.print-resume .pr-skill {
+  margin-bottom: 2pt;
+}
+.print-resume .pr-foot {
+  margin-top: 10pt;
+  color: #8e88a3;
+  font-size: 8pt;
+}
+
 /* Shift-specific content is rendered for both shifts and hidden with CSS. */
 [data-shift="night"] .day-only,
 [data-shift="day"] .night-only,

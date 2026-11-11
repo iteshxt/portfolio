@@ -5,6 +5,7 @@ import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { filterNav, NAV_ITEMS, NAV_PROMPT, type NavItem } from "@/content/nav";
 import { cn } from "@/lib/cn";
 import { isTypingTarget } from "@/lib/motion";
+import { play } from "@/lib/sound";
 import { useUI } from "@/store/ui";
 
 /**
@@ -31,8 +32,14 @@ export function NavBar() {
   const items = useMemo(() => filterNav(NAV_ITEMS, query), [query]);
   const activeIndex = items.length ? Math.min(active, items.length - 1) : -1;
 
+  const openNav = useCallback(() => {
+    play("open");
+    setOpen(true);
+  }, [setOpen]);
+
   const closeNav = useCallback(
     (focusPill = false) => {
+      if (useUI.getState().navOpen) play("close");
       setOpen(false);
       setQuery("");
       setActive(0);
@@ -50,14 +57,14 @@ export function NavBar() {
       if ((e.key === "/" && !isTypingTarget(e.target)) || (mod && e.key.toLowerCase() === "k")) {
         e.preventDefault();
         if (isOpen) closeNav(true);
-        else setOpen(true);
+        else openNav();
       } else if (e.key === "Escape" && isOpen) {
         closeNav(true);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [closeNav, setOpen]);
+  }, [closeNav, openNav]);
 
   useEffect(() => {
     if (!open) return;
@@ -74,7 +81,11 @@ export function NavBar() {
 
   function choose(item: NavItem) {
     const r = pillRef.current?.getBoundingClientRect();
-    closeNav();
+    play("select");
+    setOpen(false);
+    setQuery("");
+    setActive(0);
+    setArceeAsk(null);
     go(item.href, {
       label: item.label,
       origin: r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined,
@@ -89,8 +100,12 @@ export function NavBar() {
       setActive((activeIndex + step + items.length) % items.length);
     } else if (e.key === "Enter") {
       e.preventDefault();
+      const q = query.trim();
       if (activeIndex >= 0) choose(items[activeIndex]);
-      else if (query.trim()) setArceeAsk(query.trim());
+      else if (["terminal", "~", "cli", "shell"].includes(q.toLowerCase())) {
+        closeNav();
+        useUI.getState().setTerminalOpen(true);
+      } else if (q) setArceeAsk(q);
     }
   }
 
@@ -173,7 +188,7 @@ export function NavBar() {
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={panelId}
-          onClick={() => (open ? closeNav() : setOpen(true))}
+          onClick={() => (open ? closeNav() : openNav())}
           className="group flex min-h-12 items-center gap-3 rounded-full bg-violet px-5 py-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-0.5 active:scale-[0.97]"
         >
           <span className="font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>

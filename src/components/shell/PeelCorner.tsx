@@ -13,6 +13,7 @@ import {
   type Point,
 } from "@/lib/peel";
 import type { Shift } from "@/lib/shift";
+import { play } from "@/lib/sound";
 import { applyShiftToDom, otherShift, useUI } from "@/store/ui";
 
 /**
@@ -110,6 +111,7 @@ export function PeelCorner() {
 
   function complete(s: Session) {
     cancelAnimationFrame(s.raf);
+    play("peel");
     const progress = peelProgress(s.w, s.h, s.pointer);
     const duration = 300 + 450 * (1 - progress);
     s.cancelAnim = animatePoint(
@@ -143,6 +145,7 @@ export function PeelCorner() {
   }
 
   function crossfade(to: Shift) {
+    play("peel");
     const root = document.documentElement;
     root.classList.add("shift-fade");
     useUI.getState().setShift(to);

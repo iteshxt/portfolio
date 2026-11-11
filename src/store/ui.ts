@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { SHIFT_STORAGE_KEY, type Shift } from "@/lib/shift";
+import { setSoundMuted } from "@/lib/sound";
 
 /**
  * Page transition phases (docs/spec.md §5.3):
@@ -9,24 +10,41 @@ import { SHIFT_STORAGE_KEY, type Shift } from "@/lib/shift";
  */
 export type TransitionPhase = "idle" | "covering" | "covered" | "revealing";
 
+export type Toast = { id: number; title: string; body?: string };
+
+const MUTED_KEY = "muted";
+
 type UIState = {
   shift: Shift;
   transitionPhase: TransitionPhase;
   navOpen: boolean;
+  terminalOpen: boolean;
+  muted: boolean;
+  toasts: Toast[];
   setShift: (shift: Shift, options?: { persist?: boolean }) => void;
   syncShiftFromDom: () => void;
   setTransitionPhase: (phase: TransitionPhase) => void;
   setNavOpen: (open: boolean) => void;
+  setTerminalOpen: (open: boolean) => void;
+  setMuted: (muted: boolean) => void;
+  hydrateMuted: () => void;
+  pushToast: (title: string, body?: string) => void;
+  dismissToast: (id: number) => void;
 };
 
 export function applyShiftToDom(shift: Shift) {
   document.documentElement.dataset.shift = shift;
 }
 
-export const useUI = create<UIState>((set) => ({
+let toastId = 0;
+
+export const useUI = create<UIState>((set, get) => ({
   shift: "day",
   transitionPhase: "covered",
   navOpen: false,
+  terminalOpen: false,
+  muted: false,
+  toasts: [],
   setShift: (shift, options) => {
     applyShiftToDom(shift);
     if (options?.persist !== false) {
@@ -44,6 +62,32 @@ export const useUI = create<UIState>((set) => ({
   },
   setTransitionPhase: (transitionPhase) => set({ transitionPhase }),
   setNavOpen: (navOpen) => set({ navOpen }),
+  setTerminalOpen: (terminalOpen) => set({ terminalOpen }),
+  setMuted: (muted) => {
+    setSoundMuted(muted);
+    try {
+      localStorage.setItem(MUTED_KEY, muted ? "1" : "0");
+    } catch {
+      // Ignore storage errors; the choice still applies for this visit.
+    }
+    set({ muted });
+  },
+  hydrateMuted: () => {
+    let muted = false;
+    try {
+      muted = localStorage.getItem(MUTED_KEY) === "1";
+    } catch {
+      muted = false;
+    }
+    setSoundMuted(muted);
+    set({ muted });
+  },
+  pushToast: (title, body) => {
+    const id = ++toastId;
+    set({ toasts: [...get().toasts, { id, title, body }].slice(-3) });
+    window.setTimeout(() => get().dismissToast(id), 6000);
+  },
+  dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
 }));
 
 export const otherShift = (shift: Shift): Shift => (shift === "day" ? "night" : "day");

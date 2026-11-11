@@ -267,7 +267,7 @@ ArceePanel (useChat, AI SDK)
 
 ## 10. Sound (`lib/sound.ts`)
 
-- A single `AudioContext`, created on the first user gesture. Sounds come from a small sprite (`/sounds/ui.webm` + `.mp3` fallback, under 60 KB) decoded once; the peel and slap may be synthesized with WebAudio as in the prototype.
+- A single `AudioContext`, created on the first user gesture. *As built:* every sound is synthesized with WebAudio (filtered noise for peel and key clicks, pitch-swept oscillators for slap, nav open/close, select, bubbles, and a little arpeggio for found eggs), so there are no audio files to download. Sound is on by default and the mute choice is remembered (`localStorage`).
 - `play(name, { volume })` with a master gain around 0.4; `muted` lives in the Zustand store and is saved to `localStorage`.
 - Never plays when `muted`, when the tab is hidden, or before the first interaction.
 
@@ -320,8 +320,8 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 2. Signature moves: Spike S1 → peel toggle → page transition → nav bar → headline ✓ (stub pages for every route; sound comes in milestone 6)
 3. Content + pages: content files, home, work, about, DiaLabs, contact, 404 ✓ (footer feed, smooth scroll and reveals included)
 4. Star case studies + 3D objects ✓ (the object flying from its card into the case-study hero is deferred; home and work cards keep the 2D drawings for performance)
-5. Arcee chatbot (Spike S2: tool-calling reliability of `gpt-oss-20b` on Groq) ← *next*
-6. Easter eggs + sound
+5. Arcee chatbot (Spike S2: tool-calling reliability of `gpt-oss-20b` on Groq) ← *next; needs the Groq, Upstash and Resend keys*
+6. Easter eggs + sound ✓ (built before 5 because it needs no keys: terminal, scuba cat, tab title, 3am note, print-to-resume, toasts, synthesized UI sounds with a mute toggle)
 7. Polish: performance, accessibility, SEO, mobile, launch
 
 ## 16. Risks

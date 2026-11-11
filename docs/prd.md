@@ -232,10 +232,11 @@ Big CTA, channels, "leave Arcee a message", and the resume.
 
 ## 10. Open questions
 
+- Resolved: sound is on by default (it can only start after the first interaction anyway), with a mute toggle in the top bar that's remembered.
+
 
 Resolved on 2026-11-12: DiaChat uses a Gemma-3 1B fine-tune; Sutr's number is the CV's (500+ monthly customers); UniBites is in the archive, the alok-misra site is not.
 
-- Should sound be on by default (after the first interaction) or muted until the visitor turns it on?
 - Final project list and order for the archive.
 - Whether a phone number or a scheduling link should appear on the contact page.
 - Whether the current iteshxt.me repository (`iteshxt/portfolio`) is replaced by this one, or this becomes a new repository.

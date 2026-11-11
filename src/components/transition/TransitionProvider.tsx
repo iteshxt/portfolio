@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useRef, type ReactNode } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
 import { animatePoint, peelEnd, peelShape, toClipPath, toSvgPoints, type Point } from "@/lib/peel";
+import { play } from "@/lib/sound";
 import { useUI, type TransitionPhase } from "@/store/ui";
 
 /**
@@ -48,6 +49,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const phase = useRef<TransitionPhase>("covered");
   const pendingPath = useRef<string | null | undefined>(undefined);
   const safety = useRef(0);
+  // The intro peel happens before any interaction, so it stays silent.
+  const introDone = useRef(false);
 
   const setPhase = useCallback(
     (p: TransitionPhase) => {
@@ -80,6 +83,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     if (!root || !sheet || phase.current === "revealing" || phase.current === "idle") return;
     setPhase("revealing");
     delete root.dataset.intro;
+    if (introDone.current) play("peel");
+    introDone.current = true;
 
     const done = () => {
       root.style.display = "none";
@@ -141,6 +146,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       if (target.pathname === window.location.pathname && target.search === window.location.search) return;
 
       router.prefetch(href);
+      play("slap");
       setPhase("covering");
       cover(options).then(() => {
         setPhase("covered");

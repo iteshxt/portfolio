@@ -53,7 +53,7 @@ export async function Footer() {
 
       <div className="mx-auto mt-14 flex max-w-[1440px] flex-wrap justify-between gap-3 text-[13px] text-fg-muted">
         <p>© {year} {SITE.name}</p>
-        <p>Built by hand with Next.js. Peel the corner for the night shift.</p>
+        <p>Built by hand with Next.js. Peel the corner for the night shift. Psst: press ~</p>
       </div>
     </footer>
   );

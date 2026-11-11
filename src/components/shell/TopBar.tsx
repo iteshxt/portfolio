@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TransitionLink } from "@/components/transition/TransitionLink";
+import { SoundToggle } from "./SoundToggle";
 
 /**
  * Minimal top bar: the wordmark placeholder (the logo comes after the site,
@@ -43,6 +44,10 @@ export function TopBar() {
       >
         itesh
       </TransitionLink>
+      {/* Leaves room for the peel corner in the top-right. */}
+      <div className="-mt-2.5 mr-14">
+        <SoundToggle />
+      </div>
     </header>
   );
 }
