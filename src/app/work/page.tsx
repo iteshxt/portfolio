@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { PageHero } from "@/components/shell/PageHero";
 import { SectionHeading } from "@/components/type/SectionHeading";
 import { StarCards } from "@/components/work/StarCards";
@@ -6,7 +7,11 @@ import { WorkGrid } from "@/components/work/WorkGrid";
 import { PAGES } from "@/content/pages";
 import { ARCHIVE_PROJECTS, STAR_PROJECTS } from "@/content/projects";
 
-export const metadata: Metadata = { title: "Work" };
+export const metadata: Metadata = pageMetadata({
+  title: "Work",
+  description: "Three star projects with full case studies (Arcee, PatentIQ, DiaChat) and an archive of everything else Itesh has built and shipped.",
+  path: "/work",
+});
 
 export default function WorkPage() {
   return (

@@ -5,6 +5,7 @@ import { CaseStudyView } from "@/components/case/CaseStudyView";
 import { CASE_STUDIES } from "@/content/case-studies";
 import { STAR_SLUGS, type StarSlug } from "@/content/pages";
 import { STAR_PROJECTS } from "@/content/projects";
+import { pageMetadata } from "@/lib/metadata";
 
 function isStarSlug(slug: string): slug is StarSlug {
   return (STAR_SLUGS as readonly string[]).includes(slug);
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/work/[slug]">): P
   const { slug } = await params;
   if (!isStarSlug(slug)) return {};
   const study = CASE_STUDIES[slug];
-  return { title: study.name, description: study.summary.day };
+  return pageMetadata({ title: study.name, description: study.summary.day, path: `/work/${slug}` });
 }
 
 // `params` is URL data, so it's read behind Suspense to keep the route's App Shell

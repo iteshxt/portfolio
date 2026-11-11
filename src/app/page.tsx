@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArchiveMarquee } from "@/components/home/ArchiveMarquee";
 import { ContactCta } from "@/components/home/ContactCta";
 import { DiaLabsTeaser } from "@/components/home/DiaLabsTeaser";
@@ -20,6 +21,8 @@ const FACTS = [
   { text: "Co-founder, DiaLabs", tone: "lavender", tilt: -1.5 },
   { text: "Based in Delhi", tone: "sunflower", tilt: 2.5 },
 ] as const;
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function Home() {
   return (

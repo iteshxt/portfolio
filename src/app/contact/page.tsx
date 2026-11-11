@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowUpRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
@@ -7,7 +8,11 @@ import { EmailButton } from "@/components/ui/EmailButton";
 import { PAGES } from "@/content/pages";
 import { SITE } from "@/content/site";
 
-export const metadata: Metadata = { title: "Contact" };
+export const metadata: Metadata = pageMetadata({
+  title: "Contact",
+  description: "Get in touch with Itesh Singh Tomar for roles, collaborations or a project that needs both a model and a product around it.",
+  path: "/contact",
+});
 
 const CHANNELS = [
   { label: "LinkedIn", href: SITE.socials.linkedin, day: "The formal version.", night: "Where the resume lives." },

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { ArrowUpRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealText } from "@/components/motion/RevealText";
@@ -8,13 +9,17 @@ import { DIALABS_URL, RELEASES, TEAM_NOTE } from "@/content/dialabs";
 import { PAGES } from "@/content/pages";
 import { cn } from "@/lib/cn";
 
-export const metadata: Metadata = { title: "DiaLabs" };
+export const metadata: Metadata = pageMetadata({
+  title: "DiaLabs",
+  description: "DiaLabs, the open-source AI/ML lab Itesh co-founded: PatentIQ, DiaChat, fine-tuned models, Stryde and more.",
+  path: "/dialabs",
+});
 
 const KIND_TONE: Record<string, string> = {
   App: "bg-violet text-white",
   Model: "bg-lime text-[#2B3600]",
   Tool: "bg-lavender text-violet-ink",
-  Bot: "bg-tomato text-white",
+  Bot: "bg-tomato text-[#2A0700]",
   Site: "bg-sunflower text-[#4A3A00]",
 };
 

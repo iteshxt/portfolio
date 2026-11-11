@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { ExperienceList } from "@/components/home/ExperienceList";
 import { ArrowUpRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
@@ -9,7 +10,11 @@ import { Sticker, type StickerTone } from "@/components/ui/Sticker";
 import { PAGES } from "@/content/pages";
 import { ACHIEVEMENTS, CERTIFICATES, EDUCATION, EXPERIENCE, SKILLS } from "@/content/profile";
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = pageMetadata({
+  title: "About",
+  description: "Itesh Singh Tomar: ML engineer and full-stack developer. Experience at Caudal AI Labs and Sutr Clothing, skills, education and achievements.",
+  path: "/about",
+});
 
 const SKILL_TONES: StickerTone[] = ["lime", "lavender", "sunflower", "paper"];
 
