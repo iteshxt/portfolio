@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "./motion";
+import { play } from "./sound";
 
 /**
  * Flickable stickers (docs/design.md §6): swiping the cursor across one gives
@@ -31,6 +32,11 @@ function trackPointer() {
 }
 
 const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+
+// Only real knocks make a sound, and a swipe across a row of stickers plays it once.
+const SOUND_SPIN = 6;
+const SOUND_GAP_MS = 260;
+let lastSound = 0;
 
 /** Torque from a hit: the 2D cross product of the hit offset and the pointer velocity. */
 export function flickImpulse(offsetX: number, offsetY: number, vx: number, vy: number) {
@@ -79,6 +85,11 @@ export function useFlick<T extends HTMLElement>() {
       s.vr += hit.spin;
       s.vx += hit.pushX;
       s.vy += hit.pushY;
+      const now = performance.now();
+      if (Math.abs(hit.spin) > SOUND_SPIN && now - lastSound > SOUND_GAP_MS) {
+        lastSound = now;
+        play("flick");
+      }
       if (!running) {
         running = true;
         raf = requestAnimationFrame(step);

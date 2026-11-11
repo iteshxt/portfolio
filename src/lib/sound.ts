@@ -4,7 +4,7 @@
  * never before the first interaction, never while muted or the tab is hidden.
  */
 
-export type SoundName = "peel" | "slap" | "open" | "close" | "select" | "key" | "found" | "bubble";
+export type SoundName = "peel" | "slap" | "open" | "close" | "select" | "key" | "found" | "bubble" | "flick";
 
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
@@ -123,5 +123,19 @@ export function play(name: SoundName) {
     case "bubble":
       tone(a, "sine", 280 + Math.random() * 120, 900 + Math.random() * 300, t, 0.12, 0.06);
       break;
+    case "flick": {
+      // A short paper flutter for a sticker knocked by the cursor.
+      const src = noise(a, 0.09, 2.2);
+      const filter = a.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.Q.value = 2.5;
+      filter.frequency.setValueAtTime(2400 + Math.random() * 600, t);
+      filter.frequency.exponentialRampToValueAtTime(1300, t + 0.08);
+      const g = a.createGain();
+      g.gain.value = 0.07;
+      src.connect(filter).connect(g).connect(master);
+      src.start(t);
+      break;
+    }
   }
 }
