@@ -48,7 +48,7 @@ export const EDUCATION: Education[] = [
   {
     school: "Lovely Professional University",
     detail: "B.Tech, Computer Science & Engineering",
-    period: "Aug 2023 – present",
+    period: "Aug 2023 – Jun 2027",
     place: "Phagwara, Punjab",
     score: "CGPA 8.53",
   },
@@ -78,9 +78,24 @@ export const SKILLS: { group: string; items: string[] }[] = [
 export type Certificate = { name: string; issuer: string; date: string; url?: string };
 
 export const CERTIFICATES: Certificate[] = [
-  { name: "Mobile Application Development using Flutter", issuer: "Cipher Schools", date: "Jul 2025" },
-  { name: "Cloud Computing", issuer: "NPTEL", date: "Apr 2025" },
-  { name: "Computer Communications Specialization", issuer: "Coursera", date: "Oct 2024" },
+  {
+    name: "Mobile Application Development using Flutter",
+    issuer: "Cipher Schools",
+    date: "Jul 2025",
+    url: "https://www.cipherschools.com/certificate/preview?id=687e15067efd6d5090703c18",
+  },
+  {
+    name: "Cloud Computing",
+    issuer: "NPTEL",
+    date: "Apr 2025",
+    url: "https://archive.nptel.ac.in/noc/Ecertificate/?q=NPTEL25CS11S133730033704237102",
+  },
+  {
+    name: "Computer Communications Specialization",
+    issuer: "Coursera",
+    date: "Oct 2024",
+    url: "https://coursera.org/verify/specialization/JFN3Z245HGHK",
+  },
 ];
 
 export const ACHIEVEMENTS: { title: string; detail: string; url?: string }[] = [

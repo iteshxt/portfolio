@@ -5,13 +5,11 @@ import { SectionHeading } from "@/components/type/SectionHeading";
 import { Sticker, type StickerTone } from "@/components/ui/Sticker";
 
 const RELEASES: { name: string; tone: StickerTone }[] = [
-  { name: "DiaChat", tone: "sunflower" },
   { name: "PatentIQ", tone: "tomato" },
-  { name: "Dia Moderator", tone: "lime" },
-  { name: "Stryde", tone: "paper" },
-  { name: "Watermark detector", tone: "lavender" },
+  { name: "DiaChat", tone: "sunflower" },
   { name: "dia-convo-v1.2c", tone: "lime" },
-  { name: "Dia Dataset", tone: "paper" },
+  { name: "Stryde", tone: "paper" },
+  { name: "Dia Moderator", tone: "lavender" },
 ];
 
 /** DiaLabs as one chapter (not the headline): a full-bleed violet block. */
@@ -31,7 +29,7 @@ export function DiaLabsTeaser() {
               An open-source AI/ML organisation that releases free AI products and developer tools.
             </span>
             <span className="night-only">
-              Fine-tuned Gemma and Qwen models, a conversation dataset, evaluators, and the apps that run them.
+              A fine-tuned Qwen model, a conversation dataset, a patent evaluator, and the apps that run them.
             </span>
           </p>
           <ul className="flex flex-wrap gap-2.5">

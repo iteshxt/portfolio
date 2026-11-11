@@ -314,8 +314,8 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 
 1. Foundation: app scaffold, tokens, fonts, shift bootstrap, shell layout ✓
 2. Signature moves: Spike S1 → peel toggle → page transition → nav bar → headline ✓ (stub pages for every route; sound comes in milestone 6)
-3. Content + pages: content files, home, work, about, DiaLabs, contact, 404 ← *next*
-4. Star case studies + 3D objects
+3. Content + pages: content files, home, work, about, DiaLabs, contact, 404 ✓ (footer feed, smooth scroll and reveals included)
+4. Star case studies + 3D objects ← *next*
 5. Arcee chatbot (Spike S2: tool-calling reliability of `gpt-oss-20b` on Groq)
 6. Easter eggs + sound
 7. Polish: performance, accessibility, SEO, mobile, launch
