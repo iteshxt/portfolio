@@ -232,7 +232,7 @@ ArceePanel (useChat, AI SDK)
 
 ### 8.3 Retrieval
 
-- `scripts/build-arcee-index.ts` (runs before `next build` and in dev on demand) reads `content/**` (projects, case studies, experience, education, achievements, `arcee/facts.md`). It splits by heading into chunks of about 300–500 tokens, each with `{ id, title, url, text }`, and writes a serialized MiniSearch index to `src/generated/arcee-index.json`.
+- *As built:* `lib/arcee/corpus.ts` builds chunks (`{ id, title, url, text }`) straight from the typed content modules (site, profile, projects, case studies, DiaLabs, `content/arcee-facts.ts`) and `lib/arcee/retrieve.ts` indexes them with MiniSearch in memory, once per server instance. No build script or generated file: Arcee's knowledge can't drift from the site, and the corpus is small enough (about 60 chunks) to index in milliseconds.
 - Query: BM25 with fuzzy and prefix matching, boosting `title`. The corpus is small (tens of chunks), so this is enough. An upgrade path to embeddings is documented but not built.
 
 ### 8.4 Guardrails
@@ -320,9 +320,9 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 2. Signature moves: Spike S1 → peel toggle → page transition → nav bar → headline ✓ (stub pages for every route; sound comes in milestone 6)
 3. Content + pages: content files, home, work, about, DiaLabs, contact, 404 ✓ (footer feed, smooth scroll and reveals included)
 4. Star case studies + 3D objects ✓ (the object flying from its card into the case-study hero is deferred; home and work cards keep the 2D drawings for performance)
-5. Arcee chatbot (Spike S2: tool-calling reliability of `gpt-oss-20b` on Groq) ← *next; needs the Groq, Upstash and Resend keys*
+5. Arcee chatbot ✓ built and tested end to end with a stand-in model (`ARCEE_MOCK=1`): chat panel, retrieval, guardrails, rate limits, navigate/sticker/draftMessage tools, leave-a-message email. Live answers need `GROQ_API_KEY`; Spike S2 (tool-calling reliability of `gpt-oss-20b`) runs once the key is in. Placeholder cat stickers live in `public/stickers/` until Itesh's set replaces them (same file names).
 6. Easter eggs + sound ✓ (built before 5 because it needs no keys: terminal, scuba cat, tab title, 3am note, print-to-resume, toasts, synthesized UI sounds with a mute toggle)
-7. Polish: performance, accessibility, SEO, mobile, launch
+7. Polish: performance, accessibility, SEO, mobile, launch ← *next*
 
 ## 16. Risks
 

@@ -21,7 +21,6 @@ export function NavBar() {
 
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
-  const [arceeAsk, setArceeAsk] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const pillRef = useRef<HTMLButtonElement>(null);
@@ -34,6 +33,7 @@ export function NavBar() {
 
   const openNav = useCallback(() => {
     play("open");
+    useUI.getState().closeArcee();
     setOpen(true);
   }, [setOpen]);
 
@@ -43,7 +43,6 @@ export function NavBar() {
       setOpen(false);
       setQuery("");
       setActive(0);
-      setArceeAsk(null);
       if (focusPill) pillRef.current?.focus();
     },
     [setOpen],
@@ -85,7 +84,6 @@ export function NavBar() {
     setOpen(false);
     setQuery("");
     setActive(0);
-    setArceeAsk(null);
     go(item.href, {
       label: item.label,
       origin: r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined,
@@ -105,7 +103,10 @@ export function NavBar() {
       else if (["terminal", "~", "cli", "shell"].includes(q.toLowerCase())) {
         closeNav();
         useUI.getState().setTerminalOpen(true);
-      } else if (q) setArceeAsk(q);
+      } else if (q) {
+        closeNav();
+        useUI.getState().openArcee(q);
+      }
     }
   }
 
@@ -133,7 +134,6 @@ export function NavBar() {
               onChange={(e) => {
                 setQuery(e.target.value);
                 setActive(0);
-                setArceeAsk(null);
               }}
               onKeyDown={onInputKeyDown}
               autoComplete="off"
@@ -171,14 +171,31 @@ export function NavBar() {
           </ul>
 
           {!items.length && query.trim() && (
-            <p role="status" className="px-3 py-2.5 text-[14px]">
-              <span className="mr-2 rounded-full bg-violet px-2 py-0.5 text-[12px] text-white">Arcee</span>
-              {arceeAsk ? (
-                <>Arcee isn&apos;t awake yet. Soon it&apos;ll answer &ldquo;{arceeAsk}&rdquo; for you.</>
-              ) : (
-                <>No page for that. Press Enter and Arcee will take it from here.</>
-              )}
-            </p>
+            <button
+              type="button"
+              onClick={() => {
+                const q = query.trim();
+                closeNav();
+                useUI.getState().openArcee(q);
+              }}
+              className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[14px] hover:bg-violet/12"
+            >
+              <span className="rounded-full bg-violet px-2 py-0.5 text-[12px] text-white">Arcee</span>
+              No page for that. Press Enter and Arcee will answer it.
+            </button>
+          )}
+          {!query.trim() && (
+            <button
+              type="button"
+              onClick={() => {
+                closeNav();
+                useUI.getState().openArcee();
+              }}
+              className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[14px] text-fg-muted hover:bg-violet/12 hover:text-fg"
+            >
+              <span className="rounded-full bg-violet px-2 py-0.5 text-[12px] text-white">Arcee</span>
+              Or just ask Arcee anything about Itesh
+            </button>
           )}
         </div>
 

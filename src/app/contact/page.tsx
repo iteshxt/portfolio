@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowUpRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
 import { PageHero } from "@/components/shell/PageHero";
@@ -44,9 +45,15 @@ export default function ContactPage() {
             ))}
           </ul>
 
-          <p className="max-w-md text-center text-fg-muted">
-            Soon you&apos;ll also be able to leave a message with Arcee, the site&apos;s chatbot, from the bar below.
-          </p>
+          <div className="flex flex-col items-center gap-3 text-center">
+            <p className="max-w-md text-fg-muted">Rather not open your mail app? Leave a message with Arcee, the site&apos;s chatbot.</p>
+            <OpenArceeButton
+              seed="I want to leave a message for Itesh"
+              className="rounded-full bg-violet px-5 py-3 text-[15px] font-medium text-white transition-transform hover:-translate-y-0.5"
+            >
+              Leave Arcee a message
+            </OpenArceeButton>
+          </div>
         </div>
       </section>
     </main>

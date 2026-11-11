@@ -380,6 +380,39 @@
   font-size: 8pt;
 }
 
+/* Arcee chat: typing dots and stickers popping in. */
+.typing-dots span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.4;
+  animation: typing 1s ease-in-out infinite;
+}
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes typing {
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+.sticker-pop {
+  animation: sticker-pop 0.5s var(--ease-slap) both;
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 0.18));
+}
+@keyframes sticker-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4) rotate(-25deg);
+  }
+}
+
 /* Shift-specific content is rendered for both shifts and hidden with CSS. */
 [data-shift="night"] .day-only,
 [data-shift="day"] .night-only,

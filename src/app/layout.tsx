@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, JetBrains_Mono, Mona_Sans } from "next/font/google";
+import { ArceePanel } from "@/components/arcee/ArceePanel";
 import { QuietEggs } from "@/components/eggs/QuietEggs";
 import { ScubaCat } from "@/components/eggs/ScubaCat";
 import { Terminal } from "@/components/eggs/Terminal";
@@ -74,6 +75,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <Footer />
           <NavBar />
+          <ArceePanel />
           <Terminal now={now ? { repo: now.repo, message: now.message } : null} />
           <ScubaCat />
           <QuietEggs />

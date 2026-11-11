@@ -19,8 +19,14 @@ type UIState = {
   transitionPhase: TransitionPhase;
   navOpen: boolean;
   terminalOpen: boolean;
+  /** Arcee chat panel, plus a question to send as soon as it opens. */
+  arceeOpen: boolean;
+  arceeSeed: string | null;
   muted: boolean;
   toasts: Toast[];
+  openArcee: (seed?: string) => void;
+  closeArcee: () => void;
+  takeArceeSeed: () => string | null;
   setShift: (shift: Shift, options?: { persist?: boolean }) => void;
   syncShiftFromDom: () => void;
   setTransitionPhase: (phase: TransitionPhase) => void;
@@ -43,8 +49,17 @@ export const useUI = create<UIState>((set, get) => ({
   transitionPhase: "covered",
   navOpen: false,
   terminalOpen: false,
+  arceeOpen: false,
+  arceeSeed: null,
   muted: false,
   toasts: [],
+  openArcee: (seed) => set({ arceeOpen: true, arceeSeed: seed?.trim() || null, navOpen: false }),
+  closeArcee: () => set({ arceeOpen: false }),
+  takeArceeSeed: () => {
+    const seed = get().arceeSeed;
+    if (seed) set({ arceeSeed: null });
+    return seed;
+  },
   setShift: (shift, options) => {
     applyShiftToDom(shift);
     if (options?.persist !== false) {
