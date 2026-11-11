@@ -114,12 +114,13 @@ export function NavBar() {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
-      <div ref={shellRef} className="pointer-events-auto flex w-full max-w-[440px] flex-col items-center gap-2">
+      {/* Clicks pass through the column; only the open panel and the pill take them. */}
+      <div ref={shellRef} className="flex w-full max-w-[440px] flex-col items-center gap-2">
         <div
           id={panelId}
           data-open={open}
           inert={!open}
-          className="nav-panel w-full origin-bottom rounded-2xl border border-line bg-surface p-2 text-fg shadow-[0_24px_60px_-24px_rgb(0_0_0/0.45)]"
+          className="nav-panel pointer-events-auto w-full origin-bottom rounded-2xl border border-line bg-surface p-2 text-fg shadow-[0_24px_60px_-24px_rgb(0_0_0/0.45)]"
         >
           <label className="flex items-baseline gap-2 rounded-xl px-3 pt-2 pb-3">
             <span className="shrink-0 font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>
@@ -208,7 +209,7 @@ export function NavBar() {
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => (open ? closeNav() : openNav())}
-          className="group flex min-h-12 items-center gap-3 rounded-full bg-violet px-5 py-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-0.5 active:scale-[0.97]"
+          className="group pointer-events-auto flex min-h-12 items-center gap-3 rounded-full bg-violet px-5 py-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-0.5 active:scale-[0.97]"
         >
           <span className="font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>
           <span aria-hidden="true" className="h-[2px] w-12 translate-y-[7px] rounded-full bg-white/70" />
