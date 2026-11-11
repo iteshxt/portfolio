@@ -125,7 +125,7 @@ Libraries: GSAP (ScrollTrigger, SplitText, DrawSVG, CustomEase, Inertia), Lenis 
 | Text reveal | Lines are masked, rising from `yPercent: 120` → 0, `expo.out`, 1.0 s, stagger 0.08 s |
 | Headline typing | §2.3 |
 | Scroll reveal (blocks) | y 40 → 0, opacity 0 → 1, `power3.out`, 0.8 s, starting at 85% of the viewport |
-| Hover underline | A hand-drawn scribble draws under links (0 → 100%, 0.55 s, `expo.out`), with a different scribble each time; our own set of 6 scribbles. *As built:* SVG paths with `pathLength=1` and a `stroke-dashoffset` transition (no DrawSVG), violet by day, lavender by night, lime on violet. Used on footer links, the contact CTA and channels, and "Try it live" |
+| Hover underline | A hand-drawn scribble draws under links (0 → 100%, 0.55 s, `expo.out`), with a different scribble each time; our own set of 6 scribbles. *As built:* SVG paths wiped in left to right by a `clip-path: inset()` transition (no DrawSVG; a `pathLength` dash trick leaked a stub in Chrome with non-scaling strokes), violet by day, lavender by night, lime on violet. Used on footer links, the contact CTA and channels, and "Try it live" |
 | Sticker flick | Stickers respond to cursor velocity with inertia: they spin and drift, then settle. *As built:* a hand-rolled damped spring (no Inertia plugin); the spin is the cross product of where the cursor hit and how fast it was moving, capped at ±22°. Fine pointers only |
 | Media frames | Slight rotation (-4° to 6°), parallax ±40 px on scroll |
 | Featured stack | Star project cards stacked in 3D; scrolling drops the top card away to reveal the next |

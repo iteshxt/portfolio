@@ -15,7 +15,7 @@ const SCRIBBLES = [
 
 /**
  * Wraps link text with a scribble that draws itself on hover or focus,
- * a different one each time. Pure CSS stroke drawing.
+ * a different one each time. Pure CSS: a clip wipes the stroke in.
  */
 export function Scribble({ children, className, inverse = false }: { children: ReactNode; className?: string; inverse?: boolean }) {
   const [variant, setVariant] = useState(0);
@@ -29,8 +29,14 @@ export function Scribble({ children, className, inverse = false }: { children: R
   return (
     <span className={cn("relative inline-block", className)} onPointerEnter={enter} onPointerLeave={() => setOn(false)} onFocus={enter} onBlur={() => setOn(false)}>
       {children}
-      <svg aria-hidden="true" viewBox="0 0 200 20" preserveAspectRatio="none" className="pointer-events-none absolute -bottom-[0.32em] left-0 h-[0.45em] min-h-2 w-full overflow-visible">
-        <path d={SCRIBBLES[variant]} pathLength={1} className={cn("scribble", inverse && "scribble-inverse")} data-on={on} />
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 200 20"
+        preserveAspectRatio="none"
+        data-on={on}
+        className="scribble-svg pointer-events-none absolute -bottom-[0.32em] left-0 h-[0.45em] min-h-2 w-full overflow-visible"
+      >
+        <path d={SCRIBBLES[variant]} className={cn("scribble", inverse && "scribble-inverse")} />
       </svg>
     </span>
   );

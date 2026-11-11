@@ -413,7 +413,17 @@
   }
 }
 
-/* Hand-drawn hover underline (Scribble). */
+/* Hand-drawn hover underline (components/motion/Scribble): the stroke is wiped in
+   left to right with a clip. (Dash tricks with pathLength leak a stub in Chrome
+   once vector-effect: non-scaling-stroke is on.) */
+.scribble-svg {
+  clip-path: inset(-8px 100% -8px 0);
+  transition: clip-path 0.4s var(--ease-expo-out);
+}
+.scribble-svg[data-on="true"] {
+  clip-path: inset(-8px -8px -8px -8px);
+  transition-duration: 0.55s;
+}
 .scribble {
   fill: none;
   stroke: var(--violet);
@@ -421,13 +431,6 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  transition: stroke-dashoffset 0.45s var(--ease-expo-out);
-}
-.scribble[data-on="true"] {
-  stroke-dashoffset: 0;
-  transition-duration: 0.55s;
 }
 [data-shift="night"] .scribble {
   stroke: var(--lavender);
@@ -436,10 +439,11 @@
   stroke: var(--lime);
 }
 @media (prefers-reduced-motion: reduce) {
-  .scribble {
+  .scribble-svg {
     transition: none;
   }
 }
+
 
 /* Shift-specific content is rendered for both shifts and hidden with CSS. */
 [data-shift="night"] .day-only,
