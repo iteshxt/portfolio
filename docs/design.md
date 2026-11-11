@@ -32,7 +32,7 @@ Reference studied: extrafazant.nl. We learned from its discipline (a few signatu
 
 From a star card (home stack or work grid), the card's drawing lifts off its card with a white die-cut edge and a shadow, settles in the centre over the slapping sticker (in place of the destination's name), then flies into the case-study stage as the sticker peels, and fades into the real one.
 
-The same sequence runs as the site intro on first load, starting from a sticker already in place. Reduced motion: a 200 ms crossfade, with no slap or peel.
+The same sequence runs as the site intro on first load, starting from a sticker already in place. While it covers the page, the intro sticker shows a loader: the wordmark, a 000→100 counter with a lime progress bar, a rotating "Warming up agents / models / …" line (night: logs / evals / …), and three stickers slapping on. It runs at least 1.1 s on a first visit (0.35 s on repeat visits in the same tab), finishes once fonts are ready (capped at 1.2 s), fades its content out, then peels. Reduced motion: a 200 ms crossfade, with no slap or peel.
 
 ### 2.3 Two-line headlines
 

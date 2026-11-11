@@ -82,6 +82,44 @@
   }
 }
 
+/* Intro screen on the sticker: only during the intro. */
+[data-slap-root]:not([data-intro]) .intro-ui {
+  display: none;
+}
+.intro-rotator-track {
+  animation: intro-rotate 1.8s var(--ease-expo-out) infinite;
+}
+@keyframes intro-rotate {
+  0%,
+  18% {
+    transform: translateY(0);
+  }
+  25%,
+  43% {
+    transform: translateY(-1.1em);
+  }
+  50%,
+  68% {
+    transform: translateY(-2.2em);
+  }
+  75%,
+  93% {
+    transform: translateY(-3.3em);
+  }
+  100% {
+    transform: translateY(-4.4em);
+  }
+}
+.intro-sticker {
+  animation: intro-slap 0.5s var(--ease-slap) both;
+}
+@keyframes intro-slap {
+  from {
+    opacity: 0;
+    transform: scale(1.8) rotate(-12deg);
+  }
+}
+
 /* "Itesh ___" nav panel (docs/design.md §6): rises 12px and fades in; options stagger. */
 .nav-panel {
   transition:
