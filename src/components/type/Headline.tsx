@@ -8,8 +8,8 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { useUI } from "@/store/ui";
 
 /**
- * "Itesh ___" headline (docs/design.md §2.3, docs/spec.md §5.4): a condensed
- * sans line that starts the sentence and a serif line that types itself in.
+ * Two-line headline (docs/design.md §2.3, docs/spec.md §5.4): a condensed
+ * sans statement and a serif line that types itself in.
  * Both lines are fitted to the container width; with `cycle`, it deletes and
  * retypes through every line.
  */
@@ -49,8 +49,10 @@ export function Headline({ lines, as: Tag = "h1", cycle = false, className }: Pr
       const mf = measureSerifRef.current;
       if (!width || !ms || !mf || !sansRef.current || !serifRef.current) return;
       const height = window.innerHeight;
-      const sansMax = Math.min(width * 0.24, height * 0.3);
-      const serifMax = Math.min(width * 0.2, height * 0.26);
+      // Phones get a higher cap so short statements still fill the width.
+      const narrow = width < 640;
+      const sansMax = Math.min(width * (narrow ? 0.36 : 0.24), height * 0.3);
+      const serifMax = Math.min(width * (narrow ? 0.3 : 0.2), height * 0.26);
       const sans = Math.min(...lines.map((l) => fitFontSize(ms, l.sans, width, 20, sansMax)));
       const serif = Math.min(...lines.map((l) => fitFontSize(mf, `${l.serif}_`, width, 18, serifMax)));
       sansRef.current.style.fontSize = `${sans}px`;
