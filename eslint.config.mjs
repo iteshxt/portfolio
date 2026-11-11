@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local tooling: Claude worktrees, Playwright output.
+    ".claude/**",
+    "test-results/**",
+    "playwright-report/**",
   ]),
 ]);
 
