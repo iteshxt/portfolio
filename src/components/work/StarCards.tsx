@@ -16,10 +16,11 @@ export function StarCards({ projects }: { projects: Project[] }) {
           <TransitionLink
             href={`/work/${p.slug}`}
             transitionLabel={p.name}
+            data-fly-card=""
             className={cn("group block border-[10px] transition-transform duration-500 ease-[var(--ease-expo-out)] hover:-translate-y-1.5", FRAME[p.accent ?? "violet"])}
             style={{ rotate: `${[-1.2, 0.8, -0.6][i % 3]}deg` }}
           >
-            <div className="flex aspect-[4/3] items-center justify-center">
+            <div data-fly-source={p.slug} className="flex aspect-[4/3] items-center justify-center">
               <StarVisual slug={p.slug} />
             </div>
             <div className="bg-surface p-5">

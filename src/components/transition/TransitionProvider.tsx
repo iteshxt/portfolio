@@ -14,12 +14,67 @@ import { useUI, type TransitionPhase } from "@/store/ui";
  * (the intro).
  */
 
+export type Flight = {
+  /** Star project slug; the case-study stage marked data-fly-target={slug} is where it lands. */
+  slug: string;
+  /** The card visual that lifts off (marked data-fly-source). */
+  source: HTMLElement;
+};
+
 type GoOptions = {
   /** Completion shown on the sticker while it covers the screen, e.g. "builds agents". */
   label?: string;
   /** Where the sticker slaps in from (viewport px). Defaults to the bottom centre. */
   origin?: { x: number; y: number };
+  /** A star card's visual flies over the sticker and lands in the case-study stage. */
+  fly?: Flight;
 };
+
+type Box = { left: number; top: number; width: number; height: number };
+
+const boxOf = (el: Element): Box => {
+  const r = el.getBoundingClientRect();
+  return { left: r.left, top: r.top, width: r.width, height: r.height };
+};
+
+const px = (b: Box) => ({ left: `${b.left}px`, top: `${b.top}px`, width: `${b.width}px`, height: `${b.height}px` });
+
+const lerpBox = (a: Box, b: Box, t: number): Box => ({
+  left: a.left + (b.left - a.left) * t,
+  top: a.top + (b.top - a.top) * t,
+  width: a.width + (b.width - a.width) * t,
+  height: a.height + (b.height - a.height) * t,
+});
+
+/** Where the flying visual waits, centred, while the route changes under the sticker. */
+function holdBox(): Box {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const width = Math.min(vw * 0.78, 760);
+  const height = Math.min(width * 0.64, vh * 0.56);
+  return { left: (vw - width) / 2, top: (vh - height) / 2, width, height };
+}
+
+/** The first non-transparent background up the tree (the card's accent fill). */
+function backgroundOf(el: Element | null): string {
+  for (let n = el; n; n = n.parentElement) {
+    const bg = getComputedStyle(n).backgroundColor;
+    if (bg && bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)") return bg;
+  }
+  return "var(--violet)";
+}
+
+// Next keeps recently left pages in the DOM, hidden, for back/forward; only visible elements count.
+const isShown = (el: HTMLElement) => el.getClientRects().length > 0 && el.offsetWidth > 0;
+
+/** The visible stage for a slug. */
+function findTarget(slug: string): HTMLElement | null {
+  const all = document.querySelectorAll<HTMLElement>(`[data-fly-target="${CSS.escape(slug)}"]`);
+  return Array.from(all).find(isShown) ?? null;
+}
+
+/** The new page has rendered: its headline is on screen (not a hidden page's). */
+const hasVisibleHeadline = () => Array.from(document.querySelectorAll<HTMLElement>("main h1")).some(isShown);
 
 type Go = (href: string, options?: GoOptions) => void;
 
@@ -33,6 +88,11 @@ const SLAP_MS = 420;
 const PEEL_MS = 720;
 const SAFETY_MS = 7000;
 const READY_WAIT_MS = 1500;
+const LAND_GRACE_MS = 600;
+const HOLD_TILT = -1.5;
+/** A white die-cut edge plus a drop shadow while the visual is lifted (it reads on the violet sticker). */
+const liftShadow = (k: number) =>
+  `0 0 0 ${6 * k}px rgb(255 255 255 / ${k}), 0 ${40 * k}px ${90 * k}px -30px rgb(0 0 0 / ${0.5 * k})`;
 
 export function TransitionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -45,6 +105,9 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const flapRef = useRef<SVGPolygonElement>(null);
   const shadeRef = useRef<SVGPolygonElement>(null);
   const gradRef = useRef<SVGLinearGradientElement>(null);
+  const flyerRef = useRef<HTMLDivElement>(null);
+  const flight = useRef<{ slug: string; box: Box } | null>(null);
+  const flightRaf = useRef(0);
 
   const phase = useRef<TransitionPhase>("covered");
   const pendingPath = useRef<string | null | undefined>(undefined);
@@ -76,6 +139,76 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const clearFlyer = useCallback(() => {
+    const flyer = flyerRef.current;
+    cancelAnimationFrame(flightRaf.current);
+    if (!flyer) return;
+    flyer.getAnimations().forEach((a) => a.cancel());
+    flyer.style.display = "none";
+    flyer.style.opacity = "";
+    flyer.replaceChildren();
+  }, []);
+
+  // Cover: the card's visual lifts off its card and settles in the centre, above the sticker.
+  const launch = useCallback(
+    (fly: Flight) => {
+      const flyer = flyerRef.current;
+      if (!flyer) return;
+      clearFlyer();
+      const card = fly.source.closest("[data-fly-card]") ?? fly.source;
+      const tilt = Number.parseFloat(getComputedStyle(card).rotate) || 0;
+      const from = boxOf(fly.source);
+      const hold = holdBox();
+      flight.current = { slug: fly.slug, box: hold };
+      flyer.style.background = backgroundOf(fly.source);
+      flyer.replaceChildren(...Array.from(fly.source.children, (n) => n.cloneNode(true)));
+      Object.assign(flyer.style, px(hold), { rotate: `${HOLD_TILT}deg`, boxShadow: liftShadow(1), display: "flex" });
+      flyer.animate(
+        [
+          { ...px(from), rotate: `${tilt}deg`, boxShadow: liftShadow(0) },
+          { ...px(hold), rotate: `${HOLD_TILT}deg`, boxShadow: liftShadow(1) },
+        ],
+        { duration: SLAP_MS + 120, easing: "cubic-bezier(.16,1,.3,1)" },
+      );
+    },
+    [clearFlyer],
+  );
+
+  // Reveal: it follows the stage's live position (the headline may still be fitting) as the
+  // sticker peels, then fades into the real one underneath.
+  const land = useCallback(() => {
+    const flyer = flyerRef.current;
+    const f = flight.current;
+    flight.current = null;
+    if (!flyer || !f) return;
+    const fadeOut = (extra: Keyframe = {}) =>
+      flyer
+        .animate([{ opacity: 1 }, { opacity: 0, ...extra }], { duration: 260, easing: "ease-out", fill: "forwards" })
+        .finished.then(clearFlyer, clearFlyer);
+    flyer.getAnimations().forEach((a) => a.cancel());
+    const startedAt = performance.now();
+    let foundAt = 0;
+    const step = (now: number) => {
+      const target = findTarget(f.slug);
+      if (!target) {
+        // Give a late stage a moment; otherwise drop the visual where it is.
+        if (foundAt || now - startedAt > LAND_GRACE_MS) fadeOut({ scale: 0.92 });
+        else flightRaf.current = requestAnimationFrame(step);
+        return;
+      }
+      foundAt ||= now;
+      const t = Math.min(1, (now - foundAt) / PEEL_MS);
+      const e = 1 - (1 - t) ** 4;
+      Object.assign(flyer.style, px(lerpBox(f.box, boxOf(target), e)), {
+        rotate: `${HOLD_TILT * (1 - e)}deg`,
+        boxShadow: liftShadow(1 - e),
+      });
+      if (t < 1) flightRaf.current = requestAnimationFrame(step);
+      else fadeOut();
+    };
+    flightRaf.current = requestAnimationFrame(step);
+  }, [clearFlyer]);
+
   const reveal = useCallback(() => {
     window.clearTimeout(safety.current);
     const root = rootRef.current;
@@ -103,8 +236,9 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
 
     const w = window.innerWidth;
     const h = window.innerHeight;
+    land();
     animatePoint([w - 2, 2], peelEnd(w, h), PEEL_MS, (p) => renderPeel(w, h, p), done);
-  }, [renderPeel, setPhase]);
+  }, [land, renderPeel, setPhase]);
 
   const cover = useCallback(async (options: GoOptions) => {
     const root = rootRef.current;
@@ -112,13 +246,16 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     if (!root || !sheet) return;
     sheet.style.clipPath = "none";
     root.style.display = "block";
-    if (labelRef.current) labelRef.current.textContent = options.label ?? "";
+    // A flying visual is the label; the two would overlap in the centre.
+    if (labelRef.current) labelRef.current.textContent = options.fly ? "" : (options.label ?? "");
 
     if (prefersReducedMotion()) {
       await sheet.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, fill: "forwards" }).finished;
       sheet.getAnimations().forEach((a) => a.cancel());
       return;
     }
+
+    if (options.fly) launch(options.fly);
 
     const x = options.origin?.x ?? window.innerWidth / 2;
     const y = options.origin?.y ?? window.innerHeight - 40;
@@ -137,7 +274,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       ],
       { duration: SLAP_MS, easing: "cubic-bezier(.2,.9,.3,1.2)" },
     ).finished;
-  }, []);
+  }, [launch]);
 
   const go = useCallback<Go>(
     (href, options = {}) => {
@@ -168,7 +305,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     const startedAt = performance.now();
     let raf = 0;
     const waitForContent = () => {
-      const ready = document.querySelector("main h1") !== null;
+      const ready = flight.current ? findTarget(flight.current.slug) !== null : hasVisibleHeadline();
       if (ready || performance.now() - startedAt > READY_WAIT_MS) raf = requestAnimationFrame(reveal);
       else raf = requestAnimationFrame(waitForContent);
     };
@@ -193,6 +330,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
   }, [reveal, setPhase]);
+
+  useEffect(() => () => cancelAnimationFrame(flightRaf.current), []);
 
   // Back/forward: cover instantly, reveal when the route has changed.
   useEffect(() => {
@@ -241,6 +380,12 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
           <polygon ref={shadeRef} points="" fill="url(#slap-shade)" />
         </svg>
       </div>
+      <div
+        ref={flyerRef}
+        data-flyer=""
+        aria-hidden="true"
+        className="pointer-events-none fixed z-[81] hidden items-center justify-center overflow-hidden will-change-[left,top,width,height]"
+      />
     </TransitionContext.Provider>
   );
 }

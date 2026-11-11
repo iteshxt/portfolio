@@ -31,6 +31,7 @@ export function StarStack({ projects }: { projects: Project[] }) {
         return (
           <li key={p.slug} className="md:sticky" style={{ top: `calc(10vh + ${i * 26}px)` }}>
             <article
+              data-fly-card=""
               className={cn(
                 "grid overflow-hidden border-[clamp(8px,1.1vw,16px)] bg-surface shadow-[0_30px_80px_-40px_rgb(0_0_0/0.45)] md:min-h-[min(70vh,620px)] md:grid-cols-[1.15fr_1fr]",
                 FRAME[accent],
@@ -73,7 +74,7 @@ export function StarStack({ projects }: { projects: Project[] }) {
                   </div>
                 </div>
               </div>
-              <div className={cn("relative flex min-h-56 items-center justify-center", FILL[accent])}>
+              <div data-fly-source={p.slug} className={cn("relative flex min-h-56 items-center justify-center", FILL[accent])}>
                 <StarVisual slug={p.slug} />
               </div>
             </article>

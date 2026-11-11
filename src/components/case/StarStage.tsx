@@ -34,7 +34,7 @@ export function StarStage({ slug, className }: { slug: string; className?: strin
   }, []);
 
   return (
-    <div ref={ref} className={cn("relative overflow-hidden", className)}>
+    <div ref={ref} data-fly-target={slug} className={cn("relative overflow-hidden", className)}>
       <div
         className={cn(
           "absolute inset-0 flex items-center justify-center transition-opacity duration-700",

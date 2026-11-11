@@ -40,6 +40,18 @@ test("the nav bar finishes the sentence and navigates", async ({ page }) => {
   await expect(page.locator("main h1:visible").first()).toContainText(/patents/i);
 });
 
+test("a star card's visual flies into the case-study stage", async ({ page }) => {
+  await page.clock.setFixedTime(new Date(2026, 10, 12, 12, 0));
+  await open(page, "/work");
+  // Clicking low on the card also guards against invisible overlays (the closed nav panel once caught these).
+  await page.locator("[data-fly-card]").nth(1).getByText("Case study").click();
+  await expect(page.locator("[data-flyer]")).toBeVisible();
+  await page.waitForURL("**/work/patentiq");
+  await settled(page);
+  await expect(page.locator("[data-flyer]")).toBeHidden();
+  await expect(page.locator('[data-fly-target="patentiq"]')).toBeVisible();
+});
+
 test("peeling the corner switches the shift and remembers it", async ({ page }) => {
   // Midday, so 3am mode (which forces night between 02:00 and 05:00) stays out of it.
   await page.clock.setFixedTime(new Date(2026, 10, 12, 12, 0));
