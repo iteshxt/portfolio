@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
+import { Scribble } from "@/components/motion/Scribble";
 import { SectionHeading } from "@/components/type/SectionHeading";
 import { EmailButton } from "@/components/ui/EmailButton";
 import { SITE } from "@/content/site";
@@ -29,8 +30,8 @@ export function ContactCta() {
               ] as const
             ).map(([label, href]) => (
               <li key={label}>
-                <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[18px] underline decoration-current/30 underline-offset-4 hover:decoration-current">
-                  {label} <ArrowUpRight className="text-[15px]" />
+                <a href={href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[18px]">
+                  <Scribble inverse>{label}</Scribble> <ArrowUpRight className="text-[15px]" />
                 </a>
               </li>
             ))}

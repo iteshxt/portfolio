@@ -1,4 +1,5 @@
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
+import { Scribble } from "@/components/motion/Scribble";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import type { Project } from "@/content/projects";
 import { cn } from "@/lib/cn";
@@ -65,8 +66,8 @@ export function StarStack({ projects }: { projects: Project[] }) {
                       <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
                     </TransitionLink>
                     {p.links.live && (
-                      <a href={p.links.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[15px] underline decoration-line underline-offset-4 hover:decoration-current">
-                        Try it live <ArrowUpRight className="text-[14px]" />
+                      <a href={p.links.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[15px]">
+                        <Scribble>Try it live</Scribble> <ArrowUpRight className="text-[14px]" />
                       </a>
                     )}
                   </div>

@@ -413,6 +413,34 @@
   }
 }
 
+/* Hand-drawn hover underline (Scribble). */
+.scribble {
+  fill: none;
+  stroke: var(--violet);
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.45s var(--ease-expo-out);
+}
+.scribble[data-on="true"] {
+  stroke-dashoffset: 0;
+  transition-duration: 0.55s;
+}
+[data-shift="night"] .scribble {
+  stroke: var(--lavender);
+}
+.scribble.scribble-inverse {
+  stroke: var(--lime);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scribble {
+    transition: none;
+  }
+}
+
 /* Shift-specific content is rendered for both shifts and hidden with CSS. */
 [data-shift="night"] .day-only,
 [data-shift="day"] .night-only,

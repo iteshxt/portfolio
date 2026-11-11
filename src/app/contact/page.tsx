@@ -3,6 +3,7 @@ import { pageMetadata } from "@/lib/metadata";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowUpRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
+import { Scribble } from "@/components/motion/Scribble";
 import { PageHero } from "@/components/shell/PageHero";
 import { EmailButton } from "@/components/ui/EmailButton";
 import { PAGES } from "@/content/pages";
@@ -37,9 +38,7 @@ export default function ContactPage() {
             {CHANNELS.map((c, i) => (
               <Reveal as="li" key={c.label} delay={i * 80} className="border-t border-line">
                 <a href={c.href} target="_blank" rel="noreferrer" className="group flex items-center justify-between gap-6 py-6">
-                  <span className="display-sans text-[clamp(40px,6vw,84px)] transition-colors group-hover:text-accent-text">
-                    {c.label}
-                  </span>
+                  <Scribble className="display-sans text-[clamp(40px,6vw,84px)] transition-colors group-hover:text-accent-text">{c.label}</Scribble>
                   <span className="flex items-center gap-3 text-right text-fg-muted">
                     <span className="day-only hidden sm:inline">{c.day}</span>
                     <span className="night-only hidden sm:inline">{c.night}</span>

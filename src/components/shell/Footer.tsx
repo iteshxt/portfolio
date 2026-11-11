@@ -1,6 +1,7 @@
 import { cacheLife } from "next/cache";
 import { Suspense } from "react";
 import { ArrowUpRight } from "@/components/icons";
+import { Scribble } from "@/components/motion/Scribble";
 import { SITE } from "@/content/site";
 import { NowBuilding } from "./NowBuilding";
 
@@ -38,7 +39,7 @@ export async function Footer() {
                   rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                   className="group inline-flex items-center gap-1.5 text-[18px] hover:text-accent-text"
                 >
-                  {link.label}
+                  <Scribble>{link.label}</Scribble>
                   <ArrowUpRight className="text-[15px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </a>
               </li>
