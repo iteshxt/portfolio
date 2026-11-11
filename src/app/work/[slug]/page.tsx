@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { PageShell } from "@/components/shell/PageShell";
-import { PAGES, STAR_SLUGS, type StarSlug } from "@/content/pages";
-
-const NAMES: Record<StarSlug, string> = { arcee: "Arcee", patentiq: "PatentIQ", diachat: "DiaChat" };
+import { CaseStudyView } from "@/components/case/CaseStudyView";
+import { CASE_STUDIES } from "@/content/case-studies";
+import { STAR_SLUGS, type StarSlug } from "@/content/pages";
+import { STAR_PROJECTS } from "@/content/projects";
 
 function isStarSlug(slug: string): slug is StarSlug {
   return (STAR_SLUGS as readonly string[]).includes(slug);
+}
+
+function projectFor(slug: StarSlug) {
+  const project = STAR_PROJECTS.find((p) => p.slug === slug);
+  if (!project) throw new Error(`Missing star project data for ${slug}`);
+  return project;
 }
 
 export function generateStaticParams() {
@@ -16,7 +22,9 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps<"/work/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  return isStarSlug(slug) ? { title: NAMES[slug] } : {};
+  if (!isStarSlug(slug)) return {};
+  const study = CASE_STUDIES[slug];
+  return { title: study.name, description: study.summary.day };
 }
 
 // `params` is URL data, so it's read behind Suspense to keep the route's App Shell
@@ -32,10 +40,6 @@ export default function StarProjectPage({ params }: PageProps<"/work/[slug]">) {
 async function StarProject({ params }: { params: PageProps<"/work/[slug]">["params"] }) {
   const { slug } = await params;
   if (!isStarSlug(slug)) notFound();
-
-  return (
-    <PageShell copy={PAGES[slug]}>
-      <p>The full case study is being written: the day story, the night story, the works.</p>
-    </PageShell>
-  );
+  const study = CASE_STUDIES[slug];
+  return <CaseStudyView study={study} project={projectFor(slug)} next={projectFor(study.next)} />;
 }

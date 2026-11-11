@@ -197,7 +197,7 @@ type Project = {
 };
 ```
 
-Case studies are MDX files importing `<Day>`, `<Night>`, `<MediaFrame>`, `<Decision>`, `<Metric>`. Static params are generated from projects where `hasCaseStudy` is true.
+Case studies are typed TypeScript content in `content/case-studies.ts` (changed from MDX: all three share one structure — summary, stats, a day story of points, a night story of pipeline steps and decisions, plus an optional rubric breakdown or gated-phase list — so a typed object is simpler than MDX and needs no extra build step). `components/case/CaseStudyView` renders them; both stories are always present and CSS `order` puts the current shift's story first. Static params come from `STAR_SLUGS`.
 
 ## 7. 3D
 
@@ -208,6 +208,8 @@ Case studies are MDX files importing `<Day>`, `<Night>`, `<MediaFrame>`, `<Decis
   - `low` (most phones, `deviceMemory ≤ 4`, Save-Data, or reduced motion) → pre-rendered stills or a lightweight 2D version
 - `frameloop="demand"` when idle; render loops pause off-screen and when the tab is hidden; DPR is clamped to `[1, 1.75]`; drei's `PerformanceMonitor` lowers quality when the frame rate drops.
 - Models are compressed GLB (meshopt) with KTX2 textures where needed. Procedural geometry is preferred (the Arcee orb and the speech bubble are procedural).
+
+*As built (milestone 4):* `components/case/StarStage` server-renders the 2D drawing and, on capable devices, lazy-loads `components/three/StarScene` (`next/dynamic`, `ssr: false`) once the stage is near the viewport, then crossfades to it when the canvas is created. All three objects are procedural (no model files): `ArceeOrb` (six additive torus rings around an icosahedron wireframe), `PatentStamp` (box/cylinder/sphere stamp with a CanvasTexture "VERIFIED" impression drawn in Instrument Serif) and `ChatBubble` (ellipsoid with back-face ink outline and a damped-spring squash). Hover speeds up or tilts the object towards the pointer; a click pokes it. `lib/device.ts` decides `off | lite | full`; `off` (reduced motion, Save-Data, ≤2 GB memory, or no WebGL2) keeps the 2D drawing. three.js ships as a separate ~244 KB gzipped chunk only on case-study pages. R3F currently logs a THREE.Clock deprecation warning from three r187; it's harmless and comes from the library.
 
 ## 8. Arcee chatbot
 
@@ -287,6 +289,8 @@ ArceePanel (useChat, AI SDK)
 | Lighthouse performance (mobile) | ≥ 90 |
 | Fonts | 3 families, subset latin, preload the display fonts only |
 
+*Measured 2026-11-12:* initial JS is about 235 KB gzipped on the home page (React/Next runtime, GSAP with ScrollTrigger and SplitText, Lenis), over the 180 KB budget. To fix in milestone 7: load SplitText/ScrollTrigger only where used, defer Lenis, and audit client components.
+
 Techniques: Server Components by default (only interactive pieces are client components), GSAP plugins registered lazily per feature, 3D lazy-loaded with tiering, `next/image` with AVIF, and no layout-shifting typing (§5.4).
 
 ## 13. Environment variables
@@ -315,8 +319,8 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 1. Foundation: app scaffold, tokens, fonts, shift bootstrap, shell layout ✓
 2. Signature moves: Spike S1 → peel toggle → page transition → nav bar → headline ✓ (stub pages for every route; sound comes in milestone 6)
 3. Content + pages: content files, home, work, about, DiaLabs, contact, 404 ✓ (footer feed, smooth scroll and reveals included)
-4. Star case studies + 3D objects ← *next*
-5. Arcee chatbot (Spike S2: tool-calling reliability of `gpt-oss-20b` on Groq)
+4. Star case studies + 3D objects ✓ (the object flying from its card into the case-study hero is deferred; home and work cards keep the 2D drawings for performance)
+5. Arcee chatbot (Spike S2: tool-calling reliability of `gpt-oss-20b` on Groq) ← *next*
 6. Easter eggs + sound
 7. Polish: performance, accessibility, SEO, mobile, launch
 
