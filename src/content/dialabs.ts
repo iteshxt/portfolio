@@ -29,7 +29,7 @@ export const RELEASES: Release[] = [
     name: "DiaChat",
     kind: "App",
     day: "A private Gen Z AI companion that runs in your browser.",
-    night: "In-browser inference with WebLLM on WebGPU and a Transformers.js CPU fallback.",
+    night: "A Gemma-3 1B fine-tune served in-browser with WebLLM on WebGPU, CPU fallback included.",
     links: [
       { label: "Live", href: "https://chat.dialabs.tech/" },
       { label: "Code", href: "https://github.com/DiaLabs/dia-chat" },

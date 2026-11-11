@@ -29,7 +29,7 @@ export function DiaLabsTeaser() {
               An open-source AI/ML organisation that releases free AI products and developer tools.
             </span>
             <span className="night-only">
-              A fine-tuned Qwen model, a conversation dataset, a patent evaluator, and the apps that run them.
+              Fine-tuned Gemma and Qwen models, a conversation dataset, a patent evaluator, and the apps that run them.
             </span>
           </p>
           <ul className="flex flex-wrap gap-2.5">

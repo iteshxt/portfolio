@@ -42,7 +42,7 @@ export const PAGES = {
   diachat: {
     kicker: { day: "Star project 03 · DiaChat", night: "DiaChat, under the hood" },
     day: [{ sans: "A companion", serif: "in your browser" }],
-    night: [{ sans: "No server,", serif: "just WebGPU" }],
+    night: [{ sans: "Gemma 3, live", serif: "on WebGPU" }],
   },
   work: {
     kicker: { day: "Work, by day", night: "Work, by night" },

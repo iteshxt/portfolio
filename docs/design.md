@@ -182,7 +182,7 @@ Funny with attitude, confident without bragging, short sentences, English only. 
 | Home (cycling) | Agents / that act · Products / people pay for · Models, / fine-tuned · A lab / called DiaLabs | Logs, / read twice · Evals / for everything · Bugs, / fixed at 3am · Docs / that exist |
 | Arcee case | "An agent / for your desktop" | "Plans, guards, / then acts" |
 | PatentIQ | "Patents, / screened by AI" | "Citations first, / then Gemini" |
-| DiaChat | "A companion / in your browser" | "No server, / just WebGPU" |
+| DiaChat | "A companion / in your browser" | "Gemma 3, live / on WebGPU" |
 | Work | "Real products, / real users" | "Payments, logistics, / retries" |
 | DiaLabs | "DiaLabs, / co-founded" | "Open models, / open data" |
 | About | "The human / behind it" | "Evals, edge cases, / failure modes" |

@@ -90,7 +90,7 @@ ML engineer and full-stack developer. Fine-tunes and deploys LLMs (including on-
 |---|---|---|---|---|
 | 1 | **Arcee**: Itesh's magnum opus | A model-agnostic desktop agent for Ubuntu (GNOME/Wayland). You talk or type, it plans the request, carries it out with tools (shell, files, browser, desktop GUI, web, mail, calendar, music, reminders…) and reports back. Wake word, eight local voices. | Planner/executor loop, escalation ladder across models (Groq gpt-oss by default, local Ollama fallback), safety tiers and guards (confirm before change, refuse destructive commands), sandboxed shell, untrusted-content handling, SQLite memory with day/week summaries, eval suite, phase gates and decision records | github.com/iteshxt/arcee-agent |
 | 2 | **PatentIQ** | AI-powered university patent screener | Citation-first pipeline that verifies citations against external sources before Gemini inference (near-zero hallucination); grading across 11 weighted IP dimensions with structured JSON output; a PDF prompt-injection canary | patentiq.dialabs.tech |
-| 3 | **DiaChat** | A privacy-first Gen Z AI companion that runs on your device | In-browser inference with WebLLM/MLC on WebGPU, CPU fallback via Transformers.js. *Model to confirm: the CV says a Gemma-3 1B fine-tune (~40 tokens/s); the repo loads stock Llama-3.2-1B. The site says "a 1B model" until confirmed.* | chat.dialabs.tech, github.com/DiaLabs/dia-chat |
+| 3 | **DiaChat** | A privacy-first Gen Z AI companion that runs on your device | Gemma-3 1B fine-tuned with PyTorch + Unsloth on a curated conversational dataset (~40 tokens/s); in-browser inference with WebLLM/MLC on WebGPU, CPU fallback via Transformers.js. *Model confirmed by Itesh on 2026-11-12 (the public repo's config shows a Llama-3.2-1B build).* | chat.dialabs.tech, github.com/DiaLabs/dia-chat |
 
 Content still needed from Itesh: PatentIQ's story and screenshots (the repo README is empty); an Arcee screen recording or real task log for a replay; DiaChat screenshots.
 
@@ -98,9 +98,9 @@ Content still needed from Itesh: PatentIQ's story and screenshots (the repo READ
 
 From a full audit of all 49 repos in `iteshxt` and `DiaLabs` (Nov 2026). Facts come from the repos, not from marketing copy. The list lives in `src/content/projects.ts`.
 
-- **In the archive (18):** Sutr Clothing (store + admin), Bloom (web + app + backend), Cadence, Stryde, InvestWise, Dia Moderator, FitCheckr, HiClippy, FairShare, CineFlex, CampusQuest, Dr. Swatantra AI (the voice backends Itesh wrote), PEP Timetable, Velo Rapido, Cooksy, LPU Wi-Fi Auto Login, Open in Antigravity, Scuba Cat.
+- **In the archive (19):** Sutr Clothing (store + admin), Bloom (web + app + backend), Cadence, Stryde, InvestWise, Dia Moderator, FitCheckr, UniBites (the one fork included, by Itesh's choice: 13 of its 15 commits are his), HiClippy, FairShare, CineFlex, CampusQuest, Dr. Swatantra AI (the voice backends Itesh wrote), PEP Timetable, Velo Rapido, Cooksy, LPU Wi-Fi Auto Login, Open in Antigravity, Scuba Cat.
 - **DiaLabs page:** PatentIQ, DiaChat, dia-convo-v1.2c (Qwen2.5 7B fine-tune), Stryde, Dia Moderator, the DiaLabs website. Team-only releases (dataset, watermark detector, voice assistant) are credited to the team in one line.
-- **Left out:** forks (register, is-a.bot, UniBites, alok-misra, the Devanagari syllabifier), practice repos (neetcode-250, jenkins-demo), the portfolio and profile repos, empty or code-less repos (One-Auction, dia-fake-detector), small exercises (florist landing page, Sootra prototype), and repos with no commits by Itesh (pii-redaction-tool, watermark-detector, Dia-Assistant).
+- **Left out:** forks (register, is-a.bot, alok-misra, the Devanagari syllabifier), practice repos (neetcode-250, jenkins-demo), the portfolio and profile repos, empty or code-less repos (One-Auction, dia-fake-detector), small exercises (florist landing page, Sootra prototype), and repos with no commits by Itesh (pii-redaction-tool, watermark-detector, Dia-Assistant).
 - **Copy rules from the audit:** Dia Moderator is Node/React (not Python/JWT/MERN as the old site says); FitCheckr has no Chrome extension in the repo; the LPU Wi-Fi copy leaves out the CAPTCHA claim; CineFlex is described as a browser with local watchlists.
 
 ### 5.4 Experience
@@ -232,9 +232,8 @@ Big CTA, channels, "leave Arcee a message", and the resume.
 
 ## 10. Open questions
 
-- **DiaChat's model:** a Gemma-3 1B fine-tune (CV, old site) or the stock Llama-3.2-1B the repo loads? Is the fine-tune hosted somewhere else?
-- **Sutr's customer number:** the CV says 500+ monthly customers, the old site says "hundreds", the GitHub profile says 100+. Which one is current? (The site uses the CV's 500+ for now.)
-- **Forks worth including:** UniBites (13 commits ahead of upstream) and the alok-misra site (all commits by Itesh, client work for Dr. Alok Misra)?
+
+Resolved on 2026-11-12: DiaChat uses a Gemma-3 1B fine-tune; Sutr's number is the CV's (500+ monthly customers); UniBites is in the archive, the alok-misra site is not.
 
 - Should sound be on by default (after the first interaction) or muted until the visitor turns it on?
 - Final project list and order for the archive.

@@ -61,21 +61,18 @@ export const STAR_PROJECTS: Project[] = [
     category: "ai",
     year: "2025–2026",
     day: "A private Gen Z AI companion that runs entirely in your browser.",
-    // Model details pending confirmation: the CV says a Gemma-3 1B fine-tune, the repo loads Llama-3.2-1B.
-    night: "A 1B model runs in your tab through WebLLM on WebGPU, with a Transformers.js CPU fallback.",
-    stack: ["Next.js", "WebLLM", "WebGPU", "Transformers.js", "Firebase"],
-    links: {
-      live: "https://chat.dialabs.tech",
-      repo: "https://github.com/DiaLabs/dia-chat",
-      extra: [{ label: "Model", href: "https://huggingface.co/petrioteer/dia-convo-v1.2c" }],
-    },
+    // Model confirmed by Itesh (2026-11-12): a Gemma-3 1B fine-tune.
+    night: "Gemma-3 1B fine-tuned with PyTorch and Unsloth, running in your tab on WebGPU via WebLLM.",
+    stack: ["PyTorch", "Unsloth", "Gemma-3 1B", "WebLLM", "WebGPU"],
+    links: { live: "https://chat.dialabs.tech", repo: "https://github.com/DiaLabs/dia-chat" },
   },
 ];
 
 /**
- * From the GitHub audit (Nov 2026; docs/prd.md §5.3). Left out: forks,
- * practice repos, and repos with no commits by Itesh (pii-redaction-tool,
- * watermark-detector, Dia-Assistant).
+ * From the GitHub audit (Nov 2026; docs/prd.md §5.3). Left out: forks
+ * (UniBites is the one fork Itesh asked to include), practice repos, and
+ * repos with no commits by him (pii-redaction-tool, watermark-detector,
+ * Dia-Assistant).
  */
 export const ARCHIVE_PROJECTS: Project[] = [
   {
@@ -168,6 +165,20 @@ export const ARCHIVE_PROJECTS: Project[] = [
     night: "A Next.js API route sends both images to Gemini's image model through @google/genai.",
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Gemini"],
     links: { live: "https://fitcheckr.vercel.app", repo: "https://github.com/iteshxt/fitcheckr" },
+  },
+  {
+    slug: "unibites",
+    name: "UniBites",
+    tier: "archive",
+    category: "mobile",
+    year: "2025–2026",
+    day: "Order campus food ahead and skip the canteen queue.",
+    night: "Flutter + Riverpod over MongoDB; guest carts merge on sign-in; orders poll every 3s.",
+    stack: ["Flutter", "Riverpod", "Firebase Auth", "MongoDB", "go_router"],
+    links: {
+      repo: "https://github.com/iteshxt/UniBites",
+      extra: [{ label: "Releases", href: "https://github.com/iteshxt/UniBites/releases" }],
+    },
   },
   {
     slug: "hiclippy",
