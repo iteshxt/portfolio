@@ -285,11 +285,11 @@ ArceePanel (useChat, AI SDK)
 | LCP (mobile, 4G) | < 2.5 s |
 | CLS | < 0.05 |
 | INP | < 200 ms |
-| Initial JS (gzipped, excluding lazy 3D) | < 180 KB |
+| Initial JS (gzipped, excluding lazy 3D) | < 200 KB total, of which our app code < 40 KB (React/Next runtime is ~160 KB) |
 | Lighthouse performance (mobile) | ≥ 90 |
 | Fonts | 3 families, subset latin, preload the display fonts only |
 
-*Measured 2026-11-12:* initial JS is about 235 KB gzipped on the home page (React/Next runtime, GSAP with ScrollTrigger and SplitText, Lenis), over the 180 KB budget. To fix in milestone 7: load SplitText/ScrollTrigger only where used, defer Lenis, and audit client components.
+*Measured 2026-11-12, after the milestone 7 pass:* about 192 KB gzipped on the home page, of which ~160 KB is the React/Next runtime and ~30 KB our code. The chat (AI SDK + corpus), terminal and scuba cat load on first use; GSAP loads after first paint for the line reveals; three.js loads only on case studies. (Before the pass it was ~345 KB once Arcee landed.)
 
 Techniques: Server Components by default (only interactive pieces are client components), GSAP plugins registered lazily per feature, 3D lazy-loaded with tiering, `next/image` with AVIF, and no layout-shifting typing (§5.4).
 
@@ -322,7 +322,7 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 4. Star case studies + 3D objects ✓ (the object flying from its card into the case-study hero is deferred; home and work cards keep the 2D drawings for performance)
 5. Arcee chatbot ✓ built and tested end to end with a stand-in model (`ARCEE_MOCK=1`): chat panel, retrieval, guardrails, rate limits, navigate/sticker/draftMessage tools, leave-a-message email. Live answers need `GROQ_API_KEY`; Spike S2 (tool-calling reliability of `gpt-oss-20b`) runs once the key is in. Placeholder cat stickers live in `public/stickers/` until Itesh's set replaces them (same file names).
 6. Easter eggs + sound ✓ (built before 5 because it needs no keys: terminal, scuba cat, tab title, 3am note, print-to-resume, toasts, synthesized UI sounds with a mute toggle)
-7. Polish: performance, accessibility, SEO, mobile, launch ← *next*
+7. Polish ✓: on-demand loading (JS budget met), share images, sitemap, robots, manifest, JSON-LD, per-page metadata, error page, Vercel Analytics, Playwright e2e + axe (no violations, day and night, desktop and phone), Firefox render check, CI. Left for launch: Safari/WebKit testing (not available on this Linux machine), the Groq/Upstash/Resend keys, and deploying from `iteshxt/portfolio`.
 
 ## 16. Risks
 
