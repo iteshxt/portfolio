@@ -2,20 +2,20 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
-import { filterNav, NAV_ITEMS, type NavItem } from "@/content/nav";
+import { filterNav, NAV_ITEMS, NAV_PROMPT, type NavItem } from "@/content/nav";
 import { cn } from "@/lib/cn";
 import { isTypingTarget } from "@/lib/motion";
 import { useUI } from "@/store/ui";
 
 /**
- * The "Itesh ___" bar (docs/prd.md §6.2, docs/spec.md §5.5): one pill that
- * opens into sentence completions. Each completion is a page; anything else
- * is handed to Arcee (a placeholder until the chatbot milestone).
+ * The "Show me ___" bar (docs/prd.md §6.2, docs/spec.md §5.5): one pill that
+ * opens into sentence completions the visitor picks from. Each completion is
+ * a page; anything else is handed to Arcee (a placeholder until the chatbot
+ * milestone).
  */
 export function NavBar() {
   const open = useUI((s) => s.navOpen);
   const setOpen = useUI((s) => s.setNavOpen);
-  const shift = useUI((s) => s.shift);
   const go = useTransitionGo();
 
   const [query, setQuery] = useState("");
@@ -76,7 +76,7 @@ export function NavBar() {
     const r = pillRef.current?.getBoundingClientRect();
     closeNav();
     go(item.href, {
-      label: `Itesh ${shift === "day" ? item.day : item.night}`,
+      label: item.label,
       origin: r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined,
     });
   }
@@ -104,7 +104,7 @@ export function NavBar() {
           className="nav-panel w-full origin-bottom rounded-2xl border border-line bg-surface p-2 text-fg shadow-[0_24px_60px_-24px_rgb(0_0_0/0.45)]"
         >
           <label className="flex items-baseline gap-2 rounded-xl px-3 pt-2 pb-3">
-            <span className="font-serif text-[22px] italic leading-none">Itesh</span>
+            <span className="shrink-0 font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>
             <input
               ref={inputRef}
               role="combobox"
@@ -139,10 +139,9 @@ export function NavBar() {
                 style={{ transitionDelay: open ? `${i * 30}ms` : "0ms" }}
                 className="nav-option flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2 text-[15px] aria-selected:bg-violet/12"
               >
-                <span>
-                  <span className="text-fg-muted">Itesh </span>
-                  <span className="day-only font-medium">{item.day}</span>
-                  <span className="night-only font-medium">{item.night}</span>
+                <span className="font-medium">
+                  <span className="day-only">{item.day}</span>
+                  <span className="night-only">{item.night}</span>
                 </span>
                 <span
                   className={cn(
@@ -177,7 +176,7 @@ export function NavBar() {
           onClick={() => (open ? closeNav() : setOpen(true))}
           className="group flex min-h-12 items-center gap-3 rounded-full bg-violet px-5 py-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-0.5 active:scale-[0.97]"
         >
-          <span className="font-serif text-[22px] italic leading-none">Itesh</span>
+          <span className="font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>
           <span aria-hidden="true" className="h-[2px] w-12 translate-y-[7px] rounded-full bg-white/70" />
           <svg
             aria-hidden="true"

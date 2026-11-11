@@ -17,7 +17,7 @@ The site is built around one idea: **Itesh has two shifts.**
 - **By day** the site shows *what* he builds: products, outcomes, people using them.
 - **By night** it shows *how* it works: architecture, trade-offs, evals, the 3am debugging.
 
-Visitors switch shifts by peeling the page off like a sticker. Every headline completes the sentence **"Itesh ___"**, and the navigation is that same sentence.
+Visitors switch shifts by peeling the page off like a sticker. Headlines are short, punchy two-line statements. The name appears once (the home page), not in every headline, because repeating it reads as noise. The navigation is a sentence the visitor finishes: **"Show me ___"**.
 
 ## 2. Audience
 
@@ -45,7 +45,7 @@ Anyone can land here. The site must work for all of them without a separate mode
 ### In scope (v1)
 
 1. Day/night "two shifts" experience with the peel toggle (§6.1)
-2. "Itesh ___" autocomplete navigation bar (§6.2)
+2. "Show me ___" navigation bar (§6.2)
 3. Sticker slap + peel page transition (§6.3)
 4. Home (§7.1)
 5. Star project case studies: **Arcee → PatentIQ → DiaChat**, in that order (§7.2)
@@ -137,10 +137,10 @@ Priority: **P0** = must ship in v1, **P1** = should ship in v1, **P2** = nice to
 - Switching shifts = **peeling** the top-right corner of the page (drag or click). It must also be operable by keyboard and announced to screen readers.
 - The URL doesn't change between shifts. A `?shift=night` query param can deep-link a shift.
 
-### 6.2 "Itesh ___" navigation bar (P0)
+### 6.2 "Show me ___" navigation bar (P0)
 
-- One persistent pill reading "Itesh ___" (bottom centre on all screen sizes).
-- Opening it shows sentence completions that map to pages, e.g. "Itesh **builds agents**" → Arcee, "Itesh **wants to hear from you**" → Contact.
+- One persistent pill reading "Show me ___" (bottom centre on all screen sizes).
+- Opening it shows completions the visitor picks from, each mapping to a page, e.g. "Show me **the desktop agent**" → Arcee, "Show me **how to say hi**" → Contact. The prompt is shown once; options don't repeat it.
 - Typing filters the suggestions. Unmatched text is handed to Arcee (§6.4) as a question.
 - Keyboard: `/` or `⌘K`/`Ctrl+K` opens it; arrow keys move; Enter selects; Esc closes.
 - Completions differ by shift (day: what; night: how) but always reach the same pages.
@@ -189,7 +189,7 @@ The name only; it's a separate thing from the Arcee agent project.
 
 ### 7.1 Home
 
-Intro peel → "Itesh ___" hero cycling completions → short who-he-is → star projects (Arcee first) → archive teaser → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
+Intro peel → hero cycling through two-line statements ("AGENTS / that act") → short who-he-is → star projects (Arcee first) → archive teaser → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
 
 ### 7.2 Star case studies (`/work/arcee`, `/work/patentiq`, `/work/diachat`)
 
@@ -223,7 +223,7 @@ Big CTA, channels, "leave Arcee a message", and the resume.
 ## 9. Milestones
 
 1. **Foundation:** Next.js app, tokens, fonts, theme (shift) system, layout shell
-2. **Signature moves:** peel toggle, peel page transition, "Itesh ___" nav, headline typing
+2. **Signature moves:** peel toggle, peel page transition, "Show me ___" nav, headline typing
 3. **Pages + content:** home, work archive, about, contact, DiaLabs
 4. **Star case studies:** Arcee, PatentIQ, DiaChat, with their 3D objects
 5. **Arcee chatbot:** RAG, guardrails, navigation, messages, stickers

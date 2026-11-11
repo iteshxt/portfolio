@@ -9,7 +9,7 @@ export default function NotFound() {
         The model hallucinated this page.{" "}
         <TransitionLink
           href="/"
-          transitionLabel="Itesh starts over"
+          transitionLabel="Home"
           className="text-fg underline decoration-violet decoration-2 underline-offset-4"
         >
           Take me home

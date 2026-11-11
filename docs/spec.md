@@ -53,7 +53,7 @@ src/
     sitemap.ts, robots.ts, opengraph-image.tsx
     globals.css          tokens, shift themes, base styles, print styles
   components/
-    shell/               TopBar, PeelCorner, NavBar ("Itesh ___"), Footer, NowBuilding
+    shell/               TopBar, PeelCorner, NavBar ("Show me ___"), Footer, NowBuilding
     transition/          TransitionProvider, TransitionLink, SlapSticker
     type/                Headline (fit + typing), Kicker, RevealText
     work/                ProjectCard, StickerCard, FeaturedStack, MediaFrame
@@ -155,7 +155,7 @@ Fallback (no View Transitions support, or reduced motion): crossfade the shift c
 The App Router has no exit-animation hook, so transitions are orchestrated by hand:
 
 - `TransitionLink` and the nav bar call `transition.go(href)` instead of navigating directly.
-- `go()`: the slap sticker (a full-screen element in `--violet`, showing the chosen completion, e.g. "Itesh builds agents") slaps in (Web Animations) → `router.push(href)` → waits for the new `usePathname()` value and for `main h1` to exist (content behind Suspense may stream in a moment later; capped at 1.5 s) → peels the sticker away with the §5.1 geometry (the sticker element is the clipped layer, and the flap uses `--lavender`) → the new page's `Headline` starts typing.
+- `go()`: the slap sticker (a full-screen element in `--violet`, showing the destination's name, e.g. "Arcee") slaps in (Web Animations) → `router.push(href)` → waits for the new `usePathname()` value and for `main h1` to exist (content behind Suspense may stream in a moment later; capped at 1.5 s) → peels the sticker away with the §5.1 geometry (the sticker element is the clipped layer, and the flap uses `--lavender`) → the new page's `Headline` starts typing.
 - Back/forward (`popstate`): the reveal peel only, starting from a covered sticker for 120 ms.
 - The first visit runs the same reveal as the intro, with no slap.
 - `router.prefetch(href)` is called on nav hover/focus so the push is instant.
@@ -168,7 +168,7 @@ The App Router has no exit-animation hook, so transitions are orchestrated by ha
 - The serif line is sized for its *final* text before typing starts, so the layout never jumps.
 - Typing uses a GSAP timeline (80 ms/char typing, 35 ms/char deleting). The full text is in `aria-label`, and the animated spans are `aria-hidden`.
 
-### 5.5 "Itesh ___" nav bar (`components/shell/NavBar`)
+### 5.5 "Show me ___" nav bar (`components/shell/NavBar`)
 
 - An accessible combobox (input with `role="combobox"`, a listbox of options, `aria-activedescendant`).
 - Data: `content/nav.ts` → `{ day: string, night: string, href: string, kind: "star" | "page" }[]`. Filtering is a case-insensitive substring match on both phrases and the page name.

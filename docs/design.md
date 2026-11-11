@@ -32,9 +32,10 @@ Reference studied: extrafazant.nl. We learned from its discipline (a few signatu
 
 The same sequence runs as the site intro on first load, starting from a sticker already in place. Reduced motion: a 200 ms crossfade, with no slap or peel.
 
-### 2.3 "Itesh ___" headlines
+### 2.3 Two-line headlines
 
-- Every page headline is two lines: a **sans line** that starts the sentence ("ITESH BUILDS") and a **serif line** that completes it ("AGENTS").
+- Every page headline is two lines: a bold **sans statement** ("AGENTS") and a **serif line** that twists or completes it ("THAT ACT").
+- Don't put the name in headlines. It appears once, in the home kicker; repeating it everywhere reads as noise (Itesh's feedback after seeing it built).
 - The serif line types itself in (80 ms per character) and, on the home page, deletes and retypes through the completions (35 ms per character when deleting, 1.7 s pause).
 - Each line is fitted to the container width (see spec §5.3), so headlines always span the page.
 - Day completions say *what*; night completions say *how* (the table in §11).
@@ -162,7 +163,7 @@ Reduced motion (`prefers-reduced-motion: reduce`): no smooth scroll, no parallax
 | Component | Notes |
 |---|---|
 | Top bar | Logo placeholder (left), sound toggle, peel corner (right). Very minimal; real navigation lives in the nav bar |
-| "Itesh ___" nav bar | Bottom-centre violet pill, white text. Opens upward into a panel (paper-2 / night-2) with input + completion list; star items carry a violet "star" tag. Unmatched input shows an Arcee row |
+| "Show me ___" nav bar | Bottom-centre violet pill, white text. The prompt appears once (pill and input label), never repeated on each option. Opens upward into a panel (paper-2 / night-2) with input + completion list; star items carry a violet "star" tag. Unmatched input shows an Arcee row |
 | Peel corner | 34 px curl at rest, grows on hover |
 | Headline | Fitted sans line + typing serif line + optional kicker |
 | Button | Pill with a label and a square arrow cap in an accent colour; the scribble underline for text links |
@@ -178,14 +179,15 @@ Funny with attitude, confident without bragging, short sentences, English only. 
 
 | Context | Day (what) | Night (how) |
 |---|---|---|
-| Home completions | builds agents · ships real products · fine-tunes models · co-founded DiaLabs | reads the logs · evals everything · debugs at 3am · writes the docs |
-| Arcee case | "Itesh builds agents" | "Plans, guards, then acts" |
-| PatentIQ | "Itesh screens patents" | "Citations first, then Gemini" |
-| DiaChat | "Itesh fine-tunes companions" | "Gemma 3, live on WebGPU" |
-| Work | "Itesh ships real products" | "Payments, logistics, retries" |
-| DiaLabs | "Itesh co-founded DiaLabs" | "Open models, open data" |
-| About | "Itesh worked at Caudal AI" | "Evals, edge cases, failure modes" |
-| Contact | "Itesh wants to hear from you" | "Leave Arcee a message" |
+| Home (cycling) | Agents / that act · Products / people pay for · Models, / fine-tuned · A lab / called DiaLabs | Logs, / read twice · Evals / for everything · Bugs, / fixed at 3am · Docs / that exist |
+| Arcee case | "An agent / for your desktop" | "Plans, guards, / then acts" |
+| PatentIQ | "Patents, / screened by AI" | "Citations first, / then Gemini" |
+| DiaChat | "A companion / in your browser" | "Gemma 3, live / on WebGPU" |
+| Work | "Real products, / real users" | "Payments, logistics, / retries" |
+| DiaLabs | "DiaLabs, / co-founded" | "Open models, / open data" |
+| About | "The human / behind it" | "Evals, edge cases, / failure modes" |
+| Contact | "Say / hello" | "Leave Arcee / a message" |
+| Nav ("Show me ___") | the desktop agent · the patent screener · the AI companion · real products · the lab · the human · how to say hi | how the agent thinks · the citation pipeline · the WebGPU bits · the payment flows · the open models · the edge cases · the inbox |
 
 Microcopy examples:
 - 404: "The model hallucinated this page."

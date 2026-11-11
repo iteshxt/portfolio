@@ -1,6 +1,6 @@
 # iteshxt.me v4
 
-Itesh Singh Tomar's portfolio. Itesh has two shifts: **by day** the site shows what he builds, **by night** it shows how it works. You switch shifts by peeling the page off like a sticker, and the navigation completes the sentence "Itesh ___".
+Itesh Singh Tomar's portfolio. Itesh has two shifts: **by day** the site shows what he builds, **by night** it shows how it works. You switch shifts by peeling the page off like a sticker, and the navigation is a sentence you finish: "Show me ___".
 
 ## Docs
 

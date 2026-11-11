@@ -7,13 +7,13 @@ describe("filterNav", () => {
   });
 
   it("matches day completions, night completions and page names", () => {
-    expect(filterNav(NAV_ITEMS, "agents").map((i) => i.label)).toEqual(["Arcee"]);
+    expect(filterNav(NAV_ITEMS, "agent").map((i) => i.label)).toEqual(["Arcee"]);
     expect(filterNav(NAV_ITEMS, "webgpu").map((i) => i.label)).toEqual(["DiaChat"]);
     expect(filterNav(NAV_ITEMS, "dialabs").map((i) => i.label)).toEqual(["DiaLabs"]);
   });
 
-  it("ignores a typed 'Itesh' prefix", () => {
-    expect(filterNav(NAV_ITEMS, "Itesh ships").map((i) => i.label)).toEqual(["Work"]);
+  it("ignores a typed 'Show me' prefix", () => {
+    expect(filterNav(NAV_ITEMS, "Show me real products").map((i) => i.label)).toEqual(["Work"]);
   });
 
   it("returns nothing for unrelated text (handed to Arcee instead)", () => {

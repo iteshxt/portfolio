@@ -1,7 +1,7 @@
 /**
- * "Itesh ___" navigation: every page is a way to finish the sentence
- * (docs/prd.md §6.2, docs/design.md §11). Day completions say what,
- * night completions say how; both lead to the same page.
+ * "Show me ___" navigation: the visitor finishes the sentence (docs/prd.md
+ * §6.2, docs/design.md §11). Day completions point at what, night
+ * completions at how; both lead to the same page.
  */
 
 export type NavItem = {
@@ -12,20 +12,22 @@ export type NavItem = {
   night: string;
 };
 
+export const NAV_PROMPT = "Show me";
+
 export const NAV_ITEMS: NavItem[] = [
-  { href: "/work/arcee", label: "Arcee", kind: "star", day: "builds agents", night: "plans, guards, then acts" },
-  { href: "/work/patentiq", label: "PatentIQ", kind: "star", day: "screens patents", night: "checks citations first" },
-  { href: "/work/diachat", label: "DiaChat", kind: "star", day: "fine-tunes companions", night: "runs Gemma on WebGPU" },
-  { href: "/work", label: "Work", kind: "page", day: "ships real products", night: "handles payments and retries" },
-  { href: "/dialabs", label: "DiaLabs", kind: "page", day: "co-founded DiaLabs", night: "open-sources models" },
-  { href: "/about", label: "About", kind: "page", day: "worked at Caudal AI", night: "evals the edge cases" },
-  { href: "/contact", label: "Contact", kind: "page", day: "wants to hear from you", night: "reads every message" },
-  { href: "/", label: "Home", kind: "page", day: "starts over", night: "goes back home" },
+  { href: "/work/arcee", label: "Arcee", kind: "star", day: "the desktop agent", night: "how the agent thinks" },
+  { href: "/work/patentiq", label: "PatentIQ", kind: "star", day: "the patent screener", night: "the citation pipeline" },
+  { href: "/work/diachat", label: "DiaChat", kind: "star", day: "the AI companion", night: "the WebGPU bits" },
+  { href: "/work", label: "Work", kind: "page", day: "real products", night: "the payment flows" },
+  { href: "/dialabs", label: "DiaLabs", kind: "page", day: "the lab", night: "the open models" },
+  { href: "/about", label: "About", kind: "page", day: "the human", night: "the edge cases" },
+  { href: "/contact", label: "Contact", kind: "page", day: "how to say hi", night: "the inbox" },
+  { href: "/", label: "Home", kind: "page", day: "the start", night: "the start" },
 ];
 
 /** Case-insensitive match on either completion or the page name. */
 export function filterNav(items: NavItem[], query: string): NavItem[] {
-  const q = query.trim().toLowerCase().replace(/^itesh\s*/, "");
+  const q = query.trim().toLowerCase().replace(/^show\s*me\s*/, "");
   if (!q) return items;
   return items.filter((item) =>
     [item.day, item.night, item.label].some((text) => text.toLowerCase().includes(q)),
