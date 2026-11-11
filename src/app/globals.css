@@ -145,6 +145,11 @@
   --ease-slap: cubic-bezier(0.2, 0.9, 0.3, 1.2);
 }
 
+/* Layout helpers (docs/design.md §5). */
+@utility px-gutter {
+  padding-inline: clamp(16px, 4vw, 48px);
+}
+
 /* Headline pair (docs/design.md §2.3, §4): condensed heavy sans + light serif. */
 @utility display-sans {
   font-family: var(--font-sans);
@@ -185,6 +190,48 @@
 @media (prefers-reduced-motion: reduce) {
   .headline-caret {
     display: none;
+  }
+}
+
+/* Scroll reveals (docs/design.md §6). Hidden only when JS runs (data-js). */
+[data-js] [data-reveal] {
+  transition:
+    opacity 0.8s var(--ease-expo-out) var(--reveal-delay, 0ms),
+    transform 0.9s var(--ease-expo-out) var(--reveal-delay, 0ms);
+}
+[data-js] [data-reveal]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(40px);
+}
+[data-js] [data-reveal-text] {
+  visibility: hidden;
+}
+.reveal-line-mask {
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-js] [data-reveal]:not([data-in]) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Archive sticker marquee: seamless loop over a doubled list. */
+.marquee-track {
+  animation: marquee 60s linear infinite;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(calc(-50% - 10px));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+  }
+  .marquee-track {
+    animation: none;
   }
 }
 

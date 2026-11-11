@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, JetBrains_Mono, Mona_Sans } from "next/font/google";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { Footer } from "@/components/shell/Footer";
 import { NavBar } from "@/components/shell/NavBar";
 import { PeelCorner } from "@/components/shell/PeelCorner";
 import { TopBar } from "@/components/shell/TopBar";
@@ -60,8 +62,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         <TransitionProvider>
+          <SmoothScroll />
           <TopBar />
           {children}
+          <Footer />
           <NavBar />
         </TransitionProvider>
         <PeelCorner />
