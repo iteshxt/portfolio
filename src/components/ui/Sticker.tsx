@@ -1,7 +1,10 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { useFlick } from "@/lib/flick";
 
-/** Die-cut sticker chip (docs/design.md §8): white border, slight tilt, soft shadow. */
+/** Die-cut sticker chip (docs/design.md §8): white border, slight tilt, soft shadow. Flickable. */
 const TONES = {
   lime: "bg-lime text-[#2B3600]",
   sunflower: "bg-sunflower text-[#4A3A00]",
@@ -24,10 +27,12 @@ export function Sticker({
   className?: string;
   children: ReactNode;
 }) {
+  const ref = useFlick<HTMLSpanElement>();
   return (
     <span
+      ref={ref}
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border-[3px] border-white px-4 py-1.5 text-[15px] font-medium shadow-[0_6px_18px_-8px_rgb(0_0_0/0.35)] transition-transform duration-300 ease-[var(--ease-expo-out)] hover:scale-105 hover:rotate-0",
+        "inline-flex items-center gap-2 rounded-full border-[3px] border-white px-4 py-1.5 text-[15px] font-medium shadow-[0_6px_18px_-8px_rgb(0_0_0/0.35)] transition-[scale] duration-300 ease-[var(--ease-expo-out)] will-change-transform hover:scale-105",
         TONES[tone],
         className,
       )}
