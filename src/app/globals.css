@@ -1072,14 +1072,83 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     translate: -50% -50%;
   }
 }
-/* Guest passes hang a touch askew and straighten when you point at them. */
+/* Guest passes hang straight on lanyards. Scrolling in: the strap drops, the clip snaps on,
+   then the pass falls from it and swings to rest around the clip. */
 .pass {
-  rotate: var(--tilt);
-  transition: rotate 0.5s var(--ease-slap), translate 0.5s var(--ease-expo-out);
+  transform-origin: 50% 0;
+  transition: translate 0.5s var(--ease-expo-out);
 }
 .pass:hover {
-  rotate: 0deg;
   translate: 0 -4px;
+}
+.lanyard {
+  z-index: 1;
+}
+.lanyard-strap {
+  transform-origin: top;
+  box-shadow: inset -6px 0 8px -6px rgb(0 0 0 / 0.35);
+}
+.lanyard-clip {
+  width: 34px;
+  height: 22px;
+  margin-top: -2px;
+  border-radius: 6px 6px 10px 10px;
+  background: linear-gradient(180deg, #e9e9ee, #a7a7b0 60%, #d4d4da);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.8),
+    0 3px 6px -2px rgb(0 0 0 / 0.4);
+  translate: 0 0;
+}
+[data-animate="lanyard"][data-in] .lanyard-strap {
+  animation: lanyard-drop 0.7s var(--ease-expo-out) var(--d, 0ms) backwards;
+}
+[data-animate="lanyard"][data-in] .lanyard-clip {
+  animation: lanyard-clip 0.35s var(--ease-slap) calc(var(--d, 0ms) + 0.5s) backwards;
+}
+[data-animate="lanyard"][data-in] .pass {
+  animation: pass-swing 1.5s var(--ease-expo-out) calc(var(--d, 0ms) + 0.7s) backwards;
+}
+@keyframes lanyard-drop {
+  from {
+    scale: 1 0;
+  }
+}
+@keyframes lanyard-clip {
+  from {
+    opacity: 0;
+    translate: 0 -24px;
+  }
+}
+@keyframes pass-swing {
+  0% {
+    opacity: 0;
+    translate: 0 -70px;
+    rotate: -7deg;
+  }
+  30% {
+    opacity: 1;
+    translate: 0 0;
+    rotate: 5deg;
+  }
+  52% {
+    rotate: -3deg;
+  }
+  72% {
+    rotate: 1.4deg;
+  }
+  88% {
+    rotate: -0.5deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-animate="lanyard"][data-in] .lanyard-strap,
+  [data-animate="lanyard"][data-in] .lanyard-clip,
+  [data-animate="lanyard"][data-in] .pass {
+    animation: none;
+  }
 }
 .pass-hole {
   background: var(--bg);
