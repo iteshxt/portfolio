@@ -3,7 +3,7 @@
 import type Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { prefersReducedMotion } from "@/lib/motion";
+import { prefersReducedMotion, setScroller } from "@/lib/motion";
 import { useUI } from "@/store/ui";
 
 const frozen = (phase: string) => phase === "covering" || phase === "covered";
@@ -28,9 +28,11 @@ export function SmoothScroll() {
       // It may arrive while a transition covers the screen.
       if (frozen(useUI.getState().transitionPhase)) lenis.stop();
       lenisRef.current = lenis;
+      setScroller(lenis);
     });
     return () => {
       cancelled = true;
+      setScroller(null);
       lenisRef.current?.destroy();
       lenisRef.current = null;
     };

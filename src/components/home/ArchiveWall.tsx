@@ -12,7 +12,7 @@ const TONES = [
   "bg-lavender text-violet-ink",
   "bg-tomato text-[#2A0700]",
 ];
-const TILTS = [-2, 1.5, -1, 2, -1.5, 1];
+const TILTS = [-0.8, 0.6, -0.4, 0.8, -0.6, 0.4];
 const FIRST = 8;
 
 /**

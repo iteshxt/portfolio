@@ -53,6 +53,11 @@ export function MotionLayer() {
     if (prefersReducedMotion()) return;
     let raf = 0;
     const update = () => {
+      // The hero sheet's corner curls further as you scroll away from it.
+      document.querySelectorAll<HTMLElement>("[data-curl]").forEach((el) => {
+        const p = Math.min(1, window.scrollY / (window.innerHeight * 0.9));
+        el.style.setProperty("--curl", `${(1 + p * 1.6).toFixed(3)}`);
+      });
       document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
         const f = Number(el.dataset.parallax) || 0.2;
         const y = window.scrollY;

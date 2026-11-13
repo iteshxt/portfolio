@@ -16,7 +16,7 @@ import { StarVisual } from "./StarVisual";
 export function StarPosters({ projects, header }: { projects: Project[]; header: React.ReactNode }) {
   return (
     <PinnedTrack header={header}>
-      {projects.map((p, i) => {
+      {projects.map((p) => {
         const brand = brandOf(p);
         return (
           <article
@@ -27,7 +27,6 @@ export function StarPosters({ projects, header }: { projects: Project[]; header:
               brand.fill,
               brand.onFill,
             )}
-            style={{ rotate: `${i % 2 ? 0.8 : -0.8}deg` }}
           >
             <div className="relative z-10 flex flex-col justify-between gap-8 p-[clamp(22px,3vw,44px)]">
               <div>

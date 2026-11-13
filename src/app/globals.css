@@ -334,7 +334,7 @@
       color 0.2s ease;
   }
   .btn:hover {
-    transform: translateY(-3px) rotate(-1.5deg);
+    transform: translateY(-3px);
     box-shadow: 0 16px 28px -14px rgb(0 0 0 / 0.5);
   }
   .btn:active {
@@ -410,7 +410,6 @@ html {
 }
 
 .status-pill {
-  rotate: -1.5deg;
   box-shadow: 0 10px 22px -12px rgb(0 0 0 / 0.45);
 }
 /* Section name in the top-centre status pill slides in when it changes. */
@@ -449,13 +448,12 @@ html {
     background-color 0.2s ease;
 }
 .filter-chip:hover {
-  transform: translateY(-2px) rotate(-2deg);
+  transform: translateY(-2px);
 }
 .filter-chip.is-on {
   background: var(--violet);
   color: #fff;
   box-shadow: 0 8px 16px -10px rgb(122 44 255 / 0.7);
-  rotate: -2deg;
 }
 .wall-sticker {
   rotate: var(--tilt);
@@ -547,7 +545,6 @@ html {
   mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%;
 }
 .top-tab {
-  rotate: -2deg;
   box-shadow: 0 10px 22px -12px rgb(0 0 0 / 0.5);
   transition: transform 0.35s var(--ease-expo-out);
 }
@@ -695,6 +692,68 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* Hero backdrop: a lifted sheet on the page (components/home/HeroBackdrop). */
+.hero-backdrop {
+  --corner: clamp(64px, 7vw, 112px);
+  --c: calc(var(--corner) * var(--curl, 1));
+  filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.08));
+}
+.hero-sheet {
+  border-radius: 32px;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  overflow: hidden;
+  /* The curled corner is cut away from the sheet. */
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%);
+}
+.hero-mat {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center;
+  -webkit-mask: radial-gradient(ellipse 70% 62% at 50% 52%, #000 25%, transparent 78%);
+  mask: radial-gradient(ellipse 70% 62% at 50% 52%, #000 25%, transparent 78%);
+  opacity: 0.9;
+}
+.hero-glow {
+  width: min(78vw, 1100px);
+  aspect-ratio: 2 / 1;
+  translate: -50% -50%;
+  background:
+    radial-gradient(closest-side at 38% 48%, rgb(122 44 255 / 0.22), transparent),
+    radial-gradient(closest-side at 64% 56%, rgb(204 255 51 / 0.28), transparent),
+    radial-gradient(closest-side at 54% 36%, rgb(255 199 0 / 0.18), transparent);
+  filter: blur(40px);
+  animation: hero-glow 14s ease-in-out infinite alternate;
+}
+[data-shift="night"] .hero-glow {
+  opacity: 0.85;
+}
+@keyframes hero-glow {
+  from {
+    scale: 1;
+    rotate: 0deg;
+  }
+  to {
+    scale: 1.12;
+    rotate: 8deg;
+  }
+}
+/* The corner, folded up over the sheet: lavender underside, shaded at the fold. */
+.hero-flap {
+  width: var(--c);
+  height: var(--c);
+  border-top-left-radius: 18px;
+  clip-path: polygon(0 100%, 100% 0, 0 0);
+  background: linear-gradient(315deg, rgb(0 0 0 / 0.22) 0%, var(--lavender) 30%, #f3eeff 100%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow {
+    animation: none;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);
@@ -792,7 +851,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   transition: transform 0.3s var(--ease-expo-out);
 }
 .nav-pill:hover {
-  transform: translateY(-2px) rotate(-1deg);
+  transform: translateY(-2px);
 }
 .nav-pill:active {
   transform: scale(0.97);

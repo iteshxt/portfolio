@@ -12,11 +12,11 @@ async function currentYear() {
   return new Date().getFullYear();
 }
 
-const LINKS: { label: string; href: string; tone: StickerTone; tilt: number }[] = [
-  { label: "Email", href: `mailto:${SITE.email}`, tone: "lime", tilt: -3 },
-  { label: "LinkedIn", href: SITE.socials.linkedin, tone: "lavender", tilt: 2.5 },
-  { label: "GitHub", href: SITE.socials.github, tone: "sunflower", tilt: -1.5 },
-  { label: "X", href: SITE.socials.x, tone: "tomato", tilt: 3 },
+const LINKS: { label: string; href: string; tone: StickerTone }[] = [
+  { label: "Email", href: `mailto:${SITE.email}`, tone: "lime" },
+  { label: "LinkedIn", href: SITE.socials.linkedin, tone: "lavender" },
+  { label: "GitHub", href: SITE.socials.github, tone: "sunflower" },
+  { label: "X", href: SITE.socials.x, tone: "tomato" },
 ];
 
 /**
@@ -28,7 +28,7 @@ export async function Footer() {
   const year = await currentYear();
 
   return (
-    <footer className="cutting-mat px-gutter mt-auto border-t border-line pt-[clamp(36px,4.5vw,56px)] pb-28">
+    <footer className="cutting-mat px-gutter mt-auto border-t border-line pt-[clamp(32px,4vw,48px)] pb-[88px]">
       <div className="mx-auto grid max-w-[1440px] items-center gap-8 md:grid-cols-[auto_1fr_auto] md:gap-12">
         <div className="flex items-center gap-5">
           <p data-animate="slap" className="wordmark-sticker inline-block rounded-[20px] border-[5px] border-white bg-violet px-5 pt-1.5 pb-3 font-serif text-[clamp(42px,4.4vw,64px)] leading-none text-white italic">
@@ -46,7 +46,7 @@ export async function Footer() {
                   target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel={link.href.startsWith("http") ? "noreferrer" : undefined}
                 >
-                  <Sticker tone={link.tone} tilt={link.tilt} className="text-[16px] font-semibold">
+                  <Sticker tone={link.tone} className="text-[16px] font-semibold">
                     {link.label} <ArrowUpRight className="text-[13px]" />
                   </Sticker>
                 </a>
@@ -56,7 +56,7 @@ export async function Footer() {
         </nav>
 
         {/* The shadow sits on a wrapper: the receipt's torn-edge mask would clip it. */}
-        <div className="w-full max-w-[300px] rotate-[1.5deg] drop-shadow-[0_12px_18px_rgb(0_0_0/0.18)]">
+        <div className="w-full max-w-[300px] drop-shadow-[0_12px_18px_rgb(0_0_0/0.18)]">
           <div className="receipt bg-surface px-4 pt-4 pb-7">
             <Suspense fallback={<p className="font-mono text-[13px] text-fg-muted">Fetching the latest push…</p>}>
               <NowBuilding />
@@ -65,9 +65,9 @@ export async function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto mt-8 flex max-w-[1440px] items-center justify-between gap-6 border-t border-line pt-5">
+      <div className="mx-auto mt-6 flex max-w-[1440px] items-center justify-between gap-6 border-t border-line pt-4">
         <p className="text-[13px] text-fg-muted">
-          © {year} {SITE.name}
+          © {year} iteshxt
         </p>
         <BackToTop />
       </div>

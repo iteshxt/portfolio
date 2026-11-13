@@ -10,6 +10,7 @@ import { ArrowDown, ArrowRight, Spark } from "@/components/icons";
 import { RevealText } from "@/components/motion/RevealText";
 import { NowBuilding } from "@/components/shell/NowBuilding";
 import { PeelHint } from "@/components/shell/PeelHint";
+import { HeroBackdrop } from "@/components/home/HeroBackdrop";
 import { Sticker } from "@/components/ui/Sticker";
 import { ReactiveHeadline } from "@/components/type/ReactiveHeadline";
 import { TransitionLink } from "@/components/transition/TransitionLink";
@@ -23,7 +24,8 @@ export default function Home() {
   return (
     <main className="flex-1">
       {/* Hero */}
-      <section data-section="Hello" className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
+      <section data-section="Hello" className="px-gutter relative isolate flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
+        <HeroBackdrop />
         <PeelHint />
 
         <div data-parallax="0.28" data-parallax-fade="" className="flex flex-col items-center">
@@ -71,7 +73,7 @@ export default function Home() {
           <ArrowDown className="animate-bounce motion-reduce:animate-none" />
           Scroll for the good stuff
         </p>
-        <div className="absolute right-[clamp(16px,4vw,48px)] bottom-9 hidden max-w-[min(340px,calc(50vw-260px))] lg:block">
+        <div className="absolute right-[clamp(104px,9vw,150px)] bottom-12 hidden max-w-[min(340px,calc(50vw-300px))] lg:block">
           <Suspense fallback={null}>
             <NowBuilding compact />
           </Suspense>

@@ -16,7 +16,6 @@ const COVERS = [
   "bg-tomato text-[#2A0700]",
   "bg-lavender text-violet-ink",
 ];
-const TILTS = [-2.5, 2, 1.5, -2, -1.5, 2.5];
 
 /**
  * DiaLabs as one chapter (docs/design.md §2.11): a violet band that grows from a
@@ -46,7 +45,7 @@ export function DiaLabsTeaser() {
           </div>
           <ul className="grid gap-x-5 gap-y-6 sm:grid-cols-2">
             {RELEASES.map((r, i) => (
-              <li key={r.name} data-animate="slap" style={{ rotate: `${TILTS[i % TILTS.length]}deg`, "--d": `${i * 70}ms` } as CSSProperties}>
+              <li key={r.name} data-animate="slap" style={{ "--d": `${i * 70}ms` } as CSSProperties}>
                 <PeelReveal label={r.name} eyebrow={r.kind} cover={COVERS[i % COVERS.length]} className="h-full [&>div:first-child]:min-h-[128px] [&>div:first-child]:border-white/30">
                   <p className="text-[15px] leading-snug">{r.day}</p>
                   <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px] font-semibold">
