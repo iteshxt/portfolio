@@ -130,7 +130,7 @@ export function NavBar() {
       {/* Clicks pass through the column; only the open panel and the pill take them. */}
       <div ref={shellRef} className="flex w-full max-w-[560px] flex-col items-center gap-3">
         <div id={panelId} data-open={open} inert={!open} className="nav-panel pointer-events-auto flex w-full flex-col gap-3">
-          <ul id={listId} role="listbox" aria-label="Pages" className="grid grid-cols-2 gap-x-3 gap-y-3 px-1">
+          <ul id={listId} role="listbox" aria-label="Pages" className="nav-hand grid grid-cols-2 gap-x-3 gap-y-3 px-1">
             {items.map((item, i) => (
               <li
                 key={item.href}
@@ -142,8 +142,10 @@ export function NavBar() {
                 style={
                   {
                     "--r": "0deg",
+                    // Fanned like a hand of cards from tablet width up (globals.css .nav-hand).
+                    "--o": i - (items.length - 1) / 2,
                     "--from-x": `${(i % 2 ? -1 : 1) * 40}%`,
-                    transitionDelay: open ? `${(items.length - 1 - i) * 35}ms` : "0ms",
+                    transitionDelay: open ? `${Math.abs(i - (items.length - 1) / 2) * 40}ms` : "0ms",
                   } as CSSProperties
                 }
                 className="nav-sticker flex min-h-[64px] cursor-pointer flex-col justify-center rounded-[18px] border-[3px] border-white bg-surface px-4 py-2.5 text-fg"

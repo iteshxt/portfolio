@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type CSSProperties } from "react";
 import { ArrowUpRight } from "@/components/icons";
+import { Scribble } from "@/components/motion/Scribble";
 import { CATEGORY_LABELS, type Project, type ProjectCategory } from "@/content/projects";
 import { cn } from "@/lib/cn";
 
@@ -17,8 +18,8 @@ const FIRST = 8;
 
 /**
  * Archive projects as a wall of die-cut stickers (docs/design.md §2.10): category
- * chips filter it, each sticker links to the live project (or its code) and
- * straightens and lifts on hover. First 8, then "Show all".
+ * chips filter it; each sticker has its live and GitHub links, and straightens
+ * and lifts on hover. First 8, then "Show all".
  */
 export function ArchiveWall({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState<ProjectCategory | "all">("all");
@@ -54,23 +55,28 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
       <ul className="mt-10 grid gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
         {visible.map((p, i) => (
           <li key={`${filter}-${p.slug}`} data-animate="slap" style={{ "--d": `${(i % 4) * 60}ms` } as CSSProperties}>
-            <a
-              href={p.links.live ?? p.links.repo}
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="Open"
+            <article
               style={{ "--tilt": `${TILTS[i % TILTS.length]}deg` } as CSSProperties}
               className={cn("wall-sticker flex h-full flex-col gap-3 rounded-[22px] border-[5px] border-white p-5", TONES[i % TONES.length])}
             >
               <span className="text-[12px] font-semibold tracking-wide uppercase">
                 {CATEGORY_LABELS[p.category]} · {p.year}
               </span>
-              <span className="text-[30px] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_82]">{p.name}</span>
-              <span className="text-[14px] leading-snug">{p.day}</span>
-              <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-semibold">
-                {p.links.live ? "Live" : "Code"} <ArrowUpRight />
-              </span>
-            </a>
+              <h3 className="text-[30px] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_82]">{p.name}</h3>
+              <p className="text-[14px] leading-snug">{p.day}</p>
+              <p className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[13px] font-semibold">
+                {p.links.live && (
+                  <a href={p.links.live} target="_blank" rel="noreferrer" data-cursor="Live" className="inline-flex items-center gap-1">
+                    <Scribble>Live</Scribble> <ArrowUpRight />
+                  </a>
+                )}
+                {p.links.repo && (
+                  <a href={p.links.repo} target="_blank" rel="noreferrer" data-cursor="Code" className="inline-flex items-center gap-1">
+                    <Scribble>GitHub</Scribble> <ArrowUpRight />
+                  </a>
+                )}
+              </p>
+            </article>
           </li>
         ))}
       </ul>

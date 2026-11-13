@@ -464,7 +464,7 @@ html {
     box-shadow 0.4s var(--ease-expo-out);
 }
 .wall-sticker:hover,
-.wall-sticker:focus-visible {
+.wall-sticker:focus-within {
   rotate: 0deg;
   translate: 0 -6px;
   box-shadow: 0 24px 40px -20px rgb(0 0 0 / 0.5);
@@ -472,7 +472,7 @@ html {
 .wall-sticker svg {
   transition: transform 0.3s var(--ease-expo-out);
 }
-.wall-sticker:hover svg {
+.wall-sticker a:hover svg {
   transform: translate(2px, -2px);
 }
 @media (prefers-reduced-motion: reduce) {
@@ -522,6 +522,26 @@ html {
   }
 }
 
+/* A faint cutting-mat grid that fades out towards the edges, drawn behind the content. */
+.faded-mat {
+  position: relative;
+  isolation: isolate;
+}
+.faded-mat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 34px 34px;
+  background-position: center;
+  -webkit-mask: radial-gradient(ellipse 72% 70% at 50% 50%, #000 15%, transparent 78%);
+  mask: radial-gradient(ellipse 72% 70% at 50% 50%, #000 15%, transparent 78%);
+  opacity: 0.75;
+}
 /* Footer sticker sheet (components/shell/Footer). */
 .cutting-mat {
   background-color: var(--bg);
@@ -696,6 +716,8 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 .hero-backdrop {
   --corner: clamp(64px, 7vw, 112px);
   --c: calc(var(--corner) * var(--curl, 1));
+  overflow: clip;
+  overflow-clip-margin: 24px;
   filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.08));
 }
 .hero-sheet {
@@ -717,27 +739,24 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   opacity: 0.9;
 }
 .hero-glow {
-  width: min(78vw, 1100px);
-  aspect-ratio: 2 / 1;
+  /* One large, very soft violet glow, low and centred. */
+  top: 62%;
+  width: min(120vw, 1500px);
+  aspect-ratio: 1.6 / 1;
   translate: -50% -50%;
-  background:
-    radial-gradient(closest-side at 38% 48%, rgb(122 44 255 / 0.22), transparent),
-    radial-gradient(closest-side at 64% 56%, rgb(204 255 51 / 0.28), transparent),
-    radial-gradient(closest-side at 54% 36%, rgb(255 199 0 / 0.18), transparent);
-  filter: blur(40px);
-  animation: hero-glow 14s ease-in-out infinite alternate;
+  background: radial-gradient(closest-side, rgb(122 44 255 / 0.13), rgb(122 44 255 / 0.05) 55%, transparent);
+  filter: blur(60px);
+  animation: hero-glow 16s ease-in-out infinite alternate;
 }
 [data-shift="night"] .hero-glow {
-  opacity: 0.85;
+  opacity: 1.4;
 }
 @keyframes hero-glow {
   from {
     scale: 1;
-    rotate: 0deg;
   }
   to {
-    scale: 1.12;
-    rotate: 8deg;
+    scale: 1.1;
   }
 }
 /* The corner, folded up over the sheet: lavender underside, shaded at the fold. */
@@ -865,6 +884,36 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 .nav-search {
   transition-delay: 0s;
+}
+/* From tablet width up the page stickers fan like a hand of cards above the pill: even steps
+   that overlap a little, a shallow arc and a small tilt each (--o = offset from the middle). */
+@media (min-width: 640px) {
+  .nav-hand {
+    position: relative;
+    display: block;
+    height: 250px;
+  }
+  .nav-hand > li {
+    --gap: min(118px, calc((100vw - 240px) / 9));
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    width: 156px;
+    margin-left: -78px;
+    min-height: 100px;
+    translate: calc(var(--o) * var(--gap)) calc(var(--o) * var(--o) * 5px);
+    rotate: calc(var(--o) * 5deg);
+  }
+  .nav-hand > li[aria-selected="true"] {
+    z-index: 5;
+    translate: calc(var(--o) * var(--gap)) calc(var(--o) * var(--o) * 5px - 28px);
+    scale: 1.06;
+  }
+  .nav-panel[data-open="false"] .nav-hand > li {
+    translate: 0 40px;
+    rotate: 0deg;
+    transform: scale(0.5);
+  }
 }
 /* The pill's mini stack fans when hovered or open. */
 .nav-pill {
