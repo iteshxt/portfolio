@@ -224,4 +224,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13). Still to do: DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
+Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13). Still to do: Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
