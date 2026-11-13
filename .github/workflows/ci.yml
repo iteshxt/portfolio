@@ -42,7 +42,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: next-build
           path: .next
