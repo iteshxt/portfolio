@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
  * The star projects on the work page as case files (docs/design.md §2.10): a
  * folder with a tab in the project's colours, the artwork on one side and the
  * what, the how and the stack on the other, alternating sides as you go down.
- * The "how" is shown openly here, unlike the home posters.
+ * The "how" is shown openly here, unlike the home posters. They stack as you scroll.
  */
 export function CaseFiles({ projects }: { projects: Project[] }) {
   return (
@@ -19,7 +19,8 @@ export function CaseFiles({ projects }: { projects: Project[] }) {
       {projects.map((p, i) => {
         const brand = brandOf(p);
         return (
-          <li key={p.slug} data-animate="rise" style={{ "--d": "60ms" } as CSSProperties}>
+          // From tablet width up the files pile up as you scroll: each sticks a little lower than the last.
+          <li key={p.slug} data-animate="rise" style={{ "--d": "60ms", top: `${88 + i * 24}px` } as CSSProperties} className="case-file-slot md:sticky">
             <article data-fly-card="" className={cn("case-file group relative pt-11", i % 2 === 1 && "case-file-flip")}>
               <p
                 className={cn(
