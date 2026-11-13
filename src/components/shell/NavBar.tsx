@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { filterNav, NAV_ITEMS, type NavItem } from "@/content/nav";
+import { ArrowRight } from "@/components/icons";
 import { cn } from "@/lib/cn";
 import { isTypingTarget } from "@/lib/motion";
 import { play } from "@/lib/sound";
@@ -155,8 +156,18 @@ export function NavBar() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
       {/* Clicks pass through the column; only the open panel and the pill take them. */}
-      <div ref={shellRef} className="flex w-full max-w-[560px] flex-col items-center gap-3">
-        <div id={panelId} data-open={open} inert={!open} className="nav-panel pointer-events-auto w-full">
+      {/* The page softly blurs behind the open navigator; a tap on it closes the navigator. */}
+      <div aria-hidden="true" data-open={open} className="nav-scrim pointer-events-auto fixed inset-0" />
+      <div ref={shellRef} className="relative flex w-full max-w-[560px] flex-col items-center gap-3">
+        <div id={panelId} data-open={open} inert={!open} className="nav-panel pointer-events-auto relative w-full">
+          {/* A handwritten nudge, like "peel here": the stickers are links. */}
+          <p aria-hidden="true" className="nav-note pointer-events-none flex items-end justify-center gap-1 text-accent-text">
+            <span className="-rotate-[6deg] font-hand text-[24px] leading-none whitespace-nowrap">pick a page</span>
+            <svg viewBox="0 0 60 48" className="nav-note-arrow w-[46px] overflow-visible">
+              <path className="nav-note-stroke" pathLength={1} d="M4 6 C 20 4, 34 10, 38 22 C 41 31, 36 38, 30 34 C 24 30, 34 22, 44 30 C 50 35, 53 40, 55 44" />
+              <path className="nav-note-stroke nav-note-head" pathLength={1} d="M46 41 L 56 45 L 58 34" />
+            </svg>
+          </p>
           <ul id={listId} role="listbox" aria-label="Pages" className="nav-hand flex flex-wrap justify-center gap-2.5">
             {items.map((item, i) => (
               <li
@@ -182,7 +193,10 @@ export function NavBar() {
                   TONE[item.label] ?? "bg-paper text-ink",
                 )}
               >
-                <span aria-hidden="true">{item.label}</span>
+                <span aria-hidden="true" className="flex items-center gap-1.5">
+                  {item.label}
+                  <ArrowRight className="nav-word-arrow text-[0.7em] opacity-70" />
+                </span>
               </li>
             ))}
           </ul>
@@ -198,16 +212,16 @@ export function NavBar() {
           data-open={open}
           hidden={open}
           onClick={openNav}
-          className="nav-pill group pointer-events-auto flex min-h-12 items-center gap-3 rounded-full border-[3px] border-white bg-violet py-2.5 pr-5 pl-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)]"
+          className="nav-pill group pointer-events-auto flex min-h-12 items-center gap-3 rounded-full border-[3px] border-[var(--die)] bg-fg py-2.5 pr-5 pl-3 text-bg shadow-[0_12px_26px_-12px_rgb(0_0_0/0.55)]"
         >
           {miniStack}
-          <span className="font-serif text-[22px] italic leading-none">Where to?</span>
+          <span className="text-[16px] leading-none font-semibold">Where to?</span>
           <span className="sr-only">Open navigation</span>
         </button>
         <div
           hidden={!open}
           data-open={open}
-          className="nav-pill nav-field pointer-events-auto flex min-h-12 w-[min(380px,100%)] items-center gap-2.5 rounded-full border-[3px] border-white bg-violet py-1 pr-1 pl-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)]"
+          className="nav-pill nav-field pointer-events-auto flex min-h-12 w-[min(440px,100%)] items-center gap-2.5 rounded-full border-[3px] border-[var(--die)] bg-fg py-1 pr-1 pl-3 text-bg shadow-[0_12px_26px_-12px_rgb(0_0_0/0.55)]"
         >
           <button type="button" onClick={() => closeNav(true)} aria-label="Close navigation" className="flex items-center">
             {miniStack}
@@ -220,7 +234,7 @@ export function NavBar() {
             aria-autocomplete="list"
             aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined}
             aria-label="Type a page to go to, or ask Arcee"
-            placeholder="Where to?"
+            placeholder="Where to? Or ask me anything…"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -229,10 +243,7 @@ export function NavBar() {
             onKeyDown={onInputKeyDown}
             autoComplete="off"
             spellCheck={false}
-            className={cn(
-              "w-full min-w-0 bg-transparent leading-none outline-none placeholder:text-white/80",
-              query ? "text-[17px]" : "font-serif text-[22px] italic",
-            )}
+            className="w-full min-w-0 bg-transparent text-[16px] leading-none outline-none placeholder:text-bg/65"
           />
           {/* Arcee answers anything that isn't a page. */}
           <button
@@ -244,7 +255,7 @@ export function NavBar() {
             }}
             aria-label="Ask Arcee"
             className={cn(
-              "flex shrink-0 items-center gap-2 rounded-full border-2 border-white bg-ink text-[13px] font-semibold text-white transition-[padding] duration-300",
+              "flex shrink-0 items-center gap-2 rounded-full border-2 border-[var(--die)] bg-ink text-[13px] font-semibold text-white transition-[padding] duration-300",
               askArcee ? "py-0.5 pr-3 pl-0.5" : "p-0",
             )}
           >

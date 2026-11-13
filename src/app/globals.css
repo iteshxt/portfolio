@@ -933,23 +933,55 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     0 0 0 2px var(--fg),
     0 16px 26px -14px rgb(0 0 0 / 0.5);
 }
-/* A soft frosted backdrop keeps the stickers off the page underneath. */
-.nav-hand {
-  position: relative;
+/* The page blurs softly behind the open navigator (no halo shape). */
+.nav-scrim {
+  background: color-mix(in srgb, var(--bg) 58%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition:
+    opacity 0.3s ease,
+    visibility 0s linear 0s;
 }
-.nav-hand::before {
-  content: "";
-  position: absolute;
-  inset: -14px -10px;
-  z-index: -1;
-  border-radius: 28px;
-  background: color-mix(in srgb, var(--bg) 72%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: opacity 0.3s ease;
-}
-.nav-panel[data-open="false"] .nav-hand::before {
+.nav-scrim[data-open="false"] {
   opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease,
+    visibility 0s linear 0.25s;
+}
+/* "pick a page", handwritten like "peel here"; it writes itself in when the navigator opens. */
+.nav-note {
+  margin-bottom: 10px;
+}
+.nav-note-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.nav-panel[data-open="true"] .nav-note-stroke {
+  animation: peel-hint-draw 0.6s ease-out 0.35s forwards;
+}
+.nav-panel[data-open="true"] .nav-note-head {
+  animation-duration: 0.2s;
+  animation-delay: 0.9s;
+}
+.nav-note > span {
+  transition: opacity 0.3s ease 0.25s;
+}
+.nav-panel[data-open="false"] .nav-note > span {
+  opacity: 0;
+  transition-delay: 0s;
+}
+/* The little arrow on each sticker nudges forward when it is the chosen one. */
+.nav-word-arrow {
+  transition: translate 0.3s var(--ease-expo-out);
+}
+.nav-word[aria-selected="true"] .nav-word-arrow {
+  translate: 3px 0;
 }
 /* From tablet width up the pages fan out of the pill on two semicircles (--a = angle, --R = radius):
    star projects close in, the other pages further out. Each sticker sits at the pill's centre and is
@@ -960,17 +992,13 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     display: block;
     height: 230px;
   }
-  .nav-hand::before {
-    inset: auto;
+  /* The note sits up and to the left of the fan, its arrow pointing down at the outer ring. */
+  .nav-note {
+    position: absolute;
     left: 50%;
-    bottom: -36px;
-    width: 680px;
-    height: 680px;
-    translate: -50% 50%;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--bg) 90%, transparent);
-    -webkit-mask: radial-gradient(closest-side, #000 82%, transparent);
-    mask: radial-gradient(closest-side, #000 82%, transparent);
+    bottom: 205px;
+    margin: 0;
+    translate: calc(-50% - 270px) 0;
   }
   .nav-hand > li,
   .nav-hand > li[aria-selected="true"] {
@@ -1030,6 +1058,10 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
   .nav-field:not([hidden]) {
     animation: none;
+  }
+  .nav-note-stroke {
+    animation: none !important;
+    stroke-dashoffset: 0;
   }
 }
 
