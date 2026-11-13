@@ -111,11 +111,16 @@ const STICKERS: LidSticker[] = [
     label: "Caudal AI Labs",
     at: [68, 49, 4],
     shape: "badge",
-    className: "rounded-[12px] bg-surface px-4 py-2 text-fg",
+    className: "rounded-full bg-white py-1.5 pr-4 pl-1.5 text-[#0E0E10]",
     face: (
-      <span className="flex flex-col items-start leading-tight">
-        <span className="font-mono text-[10px] tracking-widest text-fg-muted uppercase">guest pass</span>
-        <span className="text-[clamp(15px,1.4vw,19px)] font-semibold">Caudal AI Labs</span>
+      <span className="flex items-center gap-2">
+        {/* Caudal's own mark, from its site's icon: a bullseye. */}
+        <svg viewBox="0 0 32 32" className="size-[clamp(30px,2.8vw,40px)]" aria-hidden="true">
+          <circle cx="16" cy="16" r="13" fill="none" stroke="#000" strokeWidth="1.5" />
+          <circle cx="16" cy="16" r="6" fill="none" stroke="#000" strokeWidth="6" />
+          <circle cx="16" cy="16" r="1.5" fill="#fff" />
+        </svg>
+        <span className="text-[clamp(16px,1.5vw,21px)] font-semibold tracking-[-0.02em]">Caudal</span>
       </span>
     ),
     story: { title: "Evaluating LLMs at Caudal AI Labs", body: "Summer 2026: tested LLM systems for accuracy, originality and instruction-following, and turned their failure modes into feedback for the next model." },
@@ -130,13 +135,14 @@ const STICKERS: LidSticker[] = [
     story: { title: "Fine-tuning, on purpose", body: "Small models tuned for one job beat big ones guessing at it, as long as there's an eval to prove it." },
   },
   {
-    id: "commits",
-    label: "small commits",
-    at: [21, 61, -5],
-    shape: "word",
-    className: "rounded-[14px] bg-surface px-4 pt-1.5 pb-2.5 text-fg",
-    face: <span className="font-mono text-[clamp(14px,1.3vw,17px)]">git commit -m &ldquo;small&rdquo;</span>,
-    story: { title: "Small commits, often", body: "377 commits in Arcee's first 18 days, each one small enough to read and undo." },
+    id: "cat-thinking",
+    label: "A thinking cat",
+    at: [22, 60, -10],
+    shape: "round",
+    className: "lid-bare size-[clamp(62px,6vw,88px)]",
+    // eslint-disable-next-line @next/next/no-img-element -- a tiny local SVG, nothing to optimise
+    face: <img src="/stickers/thinking.svg" alt="" width={88} height={88} className="size-full" />,
+    story: { title: "Seven moods, seven cats", body: "Arcee picks a cat for how it feels about your question: happy, smug, thinking, shocked, sleepy, love or nope." },
   },
   {
     id: "nextjs",
@@ -179,10 +185,20 @@ const STICKERS: LidSticker[] = [
     face: <StarVisual slug="diachat" />,
     story: {
       title: "DiaChat, a model in your tab",
-      body: "A companion that runs a 1B chat model in the browser on your own GPU, with a CPU fallback for everyone else.",
+      body: "A Gen Z companion running a fine-tuned Gemma 3 1B right in your browser, on your own GPU, so conversations never leave your device.",
       href: "/work/diachat",
       link: "Open the case file",
     },
+  },
+  {
+    id: "cat-sleepy",
+    label: "A sleepy cat",
+    at: [53, 91, 8],
+    shape: "round",
+    className: "lid-bare size-[clamp(58px,5.4vw,80px)]",
+    // eslint-disable-next-line @next/next/no-img-element -- a tiny local SVG, nothing to optimise
+    face: <img src="/stickers/sleepy.svg" alt="" width={80} height={80} className="size-full" />,
+    story: { title: "Awake at 3am?", body: "Open this site between 2 and 5 in the morning and it switches to night by itself, and admits it's awake too." },
   },
   {
     id: "local",
