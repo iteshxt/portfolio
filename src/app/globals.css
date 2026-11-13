@@ -426,6 +426,64 @@ html {
   }
 }
 
+/* Archive index (components/home/ArchiveIndex). */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 3px solid #fff;
+  border-radius: 9999px;
+  background: var(--surface);
+  padding: 0.4rem 1rem;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow:
+    inset 0 0 0 1.5px var(--line),
+    0 6px 14px -10px rgb(0 0 0 / 0.4);
+  transition:
+    transform 0.3s var(--ease-expo-out),
+    background-color 0.2s ease;
+}
+.filter-chip:hover {
+  transform: translateY(-2px) rotate(-2deg);
+}
+.filter-chip.is-on {
+  background: var(--violet);
+  color: #fff;
+  box-shadow: 0 8px 16px -10px rgb(122 44 255 / 0.7);
+  rotate: -2deg;
+}
+.index-name {
+  transition: transform 0.4s var(--ease-expo-out), color 0.2s ease;
+}
+.index-row:hover .index-name,
+.index-row:focus-visible .index-name {
+  transform: translateX(10px);
+  color: var(--violet);
+}
+[data-shift="night"] .index-row:hover .index-name,
+[data-shift="night"] .index-row:focus-visible .index-name {
+  color: var(--lavender);
+}
+.index-preview {
+  opacity: 0;
+  scale: 0.85;
+  transition:
+    opacity 0.2s ease,
+    scale 0.3s var(--ease-slap);
+}
+.index-preview.is-on {
+  opacity: 1;
+  scale: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .index-name,
+  .index-preview,
+  .filter-chip {
+    transition: none;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);
@@ -662,24 +720,6 @@ html {
   [data-js] [data-reveal]:not([data-in]) {
     opacity: 1;
     transform: none;
-  }
-}
-
-/* Archive sticker marquee: seamless loop over a doubled list. */
-.marquee-track {
-  animation: marquee 60s linear infinite;
-}
-@keyframes marquee {
-  to {
-    transform: translateX(calc(-50% - 10px));
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .marquee {
-    overflow-x: auto;
-  }
-  .marquee-track {
-    animation: none;
   }
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArchiveMarquee } from "@/components/home/ArchiveMarquee";
+import { ArchiveIndex } from "@/components/home/ArchiveIndex";
 import { ContactCta } from "@/components/home/ContactCta";
 import { DiaLabsTeaser } from "@/components/home/DiaLabsTeaser";
 import { ExperienceList } from "@/components/home/ExperienceList";
@@ -129,7 +129,7 @@ export default function Home() {
                 <ArrowRight />
               </TransitionLink>
             </div>
-            <ArchiveMarquee projects={ARCHIVE_PROJECTS} />
+            <ArchiveIndex projects={ARCHIVE_PROJECTS} />
           </div>
         </section>
       )}
