@@ -1,7 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
-import { Instrument_Serif, JetBrains_Mono, Mona_Sans } from "next/font/google";
+import { Caveat, Instrument_Serif, JetBrains_Mono, Mona_Sans } from "next/font/google";
 import { QuietEggs } from "@/components/eggs/QuietEggs";
 import { Toaster } from "@/components/eggs/Toaster";
 import { LazyOverlays } from "@/components/shell/LazyOverlays";
@@ -36,6 +36,15 @@ const instrumentSerif = Instrument_Serif({
 const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
+});
+
+// Only the home page's "peel here" hint uses it; not preloaded, so it downloads when the hint shows.
+const caveat = Caveat({
+  variable: "--font-caveat",
+  subsets: ["latin"],
+  weight: "600",
   display: "swap",
   preload: false,
 });
@@ -92,7 +101,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       data-shift="day"
       suppressHydrationWarning
-      className={`${monaSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} h-full`}
+      className={`${monaSans.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable} ${caveat.variable} h-full`}
     >
       <head>
         {/* Picks the day/night shift before first paint (docs/spec.md §3.2). */}

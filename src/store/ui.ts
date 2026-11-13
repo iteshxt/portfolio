@@ -73,6 +73,8 @@ export const useUI = create<UIState>((set, get) => ({
       } catch {
         // Storage can be unavailable (private mode); the shift still applies.
       }
+      // A completed peel: the "peel here" hint has done its job.
+      document.documentElement.dataset.peeled = "";
     }
     set({ shift });
   },

@@ -9,6 +9,7 @@ import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowDown, ArrowRight, Spark } from "@/components/icons";
 import { RevealText } from "@/components/motion/RevealText";
 import { NowBuilding } from "@/components/shell/NowBuilding";
+import { PeelHint } from "@/components/shell/PeelHint";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionHeading } from "@/components/type/SectionHeading";
 import { ShiftHeadline } from "@/components/type/ShiftHeadline";
@@ -23,6 +24,7 @@ export default function Home() {
     <main className="flex-1">
       {/* Hero */}
       <section className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
+        <PeelHint />
         <ShiftHeadline copy={HOME} cycle heightScale={0.85} />
 
         <div className="mt-[clamp(20px,3.2vh,40px)] flex flex-col items-center gap-6">

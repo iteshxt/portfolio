@@ -120,6 +120,66 @@
   }
 }
 
+/* "Peel here" hint on the home hero (components/shell/PeelHint). */
+.font-hand {
+  font-family: var(--font-hand);
+  font-weight: 600;
+}
+[data-peeled] .peel-hint {
+  display: none;
+}
+.peel-hint {
+  animation: peel-hint-in 0.5s var(--ease-expo-out) 2.2s both;
+}
+.peel-hint-stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: peel-hint-draw 0.8s ease-out 2.4s forwards;
+}
+.peel-hint-head {
+  animation-duration: 0.25s;
+  animation-delay: 3.15s;
+}
+.peel-hint-arrow {
+  animation: peel-hint-nudge 2.6s ease-in-out 3.6s infinite;
+}
+@keyframes peel-hint-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes peel-hint-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes peel-hint-nudge {
+  0%,
+  55%,
+  100% {
+    transform: translate(0, 0);
+  }
+  72% {
+    transform: translate(4px, -4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .peel-hint,
+  .peel-hint-arrow {
+    animation: none;
+  }
+  .peel-hint-stroke {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
 /* "Itesh ___" nav panel (docs/design.md §6): rises 12px and fades in; options stagger. */
 .nav-panel {
   transition:
@@ -178,6 +238,7 @@
   --font-sans: var(--font-mona), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  --font-hand: var(--font-caveat), "Comic Sans MS", cursive;
 
   --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-slap: cubic-bezier(0.2, 0.9, 0.3, 1.2);
