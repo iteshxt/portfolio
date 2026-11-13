@@ -1,86 +1,70 @@
-# Design: iteshxt.me v4
+# Design: iteshxt.me v7
 
 How the site looks, moves, sounds and speaks. Requirements live in [prd.md](./prd.md); implementation lives in [spec.md](./spec.md).
 
-Reference studied: extrafazant.nl. We learned from its discipline (a few signature moves repeated everywhere, big confident type, saturated colour on neutral ground, humour in the copy). We don't copy its layout, nav, transitions or assets.
+The home page (finished 2026-11-14) is the reference for every other page. When a page is redesigned, it borrows the pieces below rather than inventing new ones. Reference studied early on: extrafazant.nl (discipline, big type, saturated colour on neutral ground, humour). We don't copy its layout, nav, transitions or assets.
 
 ## 1. Principles
 
-1. **One idea, everywhere.** Two shifts (day = what, night = how). Every page, headline and interaction serves it.
-2. **A few signature moves, repeated.** The peel, the slap, the typing headline. Repetition is what makes it recognisable.
-3. **Type does the heavy lifting.** Huge, tight, confident headlines. Decoration is secondary.
-4. **Saturated colour on neutral ground.** Paper and ink are neutral; colour arrives in bold blocks, never as a pastel wash.
-5. **Playful, never confusing.** Every creative control (peel, nav bar, terminal) has an obvious affordance and a plain fallback.
-6. **Fast is part of the design.** If an effect costs the frame rate or the load time, it gets simplified.
+1. **Stickers on a cutting mat.** The whole site is a sheet of die-cut stickers: white die-cut edges, soft shadows, bold flat colour, laid on paper with a faint mat grid. Every new element should look like it could be peeled off.
+2. **Motion first, but calm.** It should feel like an interactive piece (reveals, slaps, peels, parallax, a sticker cursor), not a static page. Fast still matters: lazy-load heavy bits, keep 60 fps. There is no strict JS budget; don't drop motion to save kilobytes.
+3. **Tilts are accents, not the rule.** Heading word stickers, the footer wordmark, handwritten notes, the Arcee stamp and the loader may tilt. Rows, cards, buttons, pills and the status bar sit straight.
+4. **Real artefacts over decoration.** Project artwork, live links, the latest commit. No AI-looking clip-art, no placeholder illustrations.
+5. **No CV dump.** No degrees, LeetCode counts, "open to roles", location, local time or colophon anywhere.
+6. **The name appears once.** "Hi, I'm Itesh." on the home hero; never in headlines or the nav.
+7. **Playful, never confusing.** Every creative control (peel, navigator, terminal) has an obvious affordance and a plain fallback.
 
 ## 2. Signature moves
 
-### 2.1 The peel (theme toggle)
+### 2.1 The peel corner (theme toggle)
 
-- The top-right corner of the page is always slightly curled up, showing a sliver of the sticker's back in the owned violet.
-- Dragging the corner peels the whole page like a sticker, revealing the other shift underneath. Releasing once the corner has travelled about 35% of the screen diagonal completes the peel; otherwise it springs back. A click or tap completes it automatically.
-- Geometry: the fold line is the perpendicular bisector between the corner and the pointer. The top layer is clipped to the far side of the fold, and the peeled part is reflected across the fold to draw the flap (see spec §5.1).
-- Flap: the sticker back is solid owned violet in day→night, lavender tint in night→day, with a soft shading gradient near the fold in the real build.
-- Duration of the auto-peel: 650 ms, ease `power2.inOut`. Sound: peel (§9).
+- The top-right corner is always slightly curled, showing a sliver of violet sticker back. Dragging peels the whole page like a sticker to reveal the other theme; past ~35% of the diagonal it completes, otherwise it springs back. A click or tap completes it. Geometry: the fold is the perpendicular bisector between corner and pointer (spec §5.1). 650 ms, `power2.inOut`, peel sound.
+- Light and dark are a plain theme now: the same content in both (the old day = what / night = how split is retired; remove leftover shift copy as each page is redone).
+- On the home hero a handwritten "peel here" (Caveat) with a squiggly arrow points at the corner; it writes itself in after the intro and nudges now and then. Always shown on home.
 
-### 2.2 The slap + peel (page transition)
+### 2.2 Intro loader and page transitions
 
-1. On navigation, a full-screen sticker in owned violet slaps on from the nav bar: scale 0.08 → 1.06 → 1, rotate -14° → 2° → 0°, corners 40 px → 0, 420 ms with a slight overshoot. Sound: slap.
-2. The new page mounts underneath.
-3. The sticker peels off from the top-right corner (same geometry as §2.1) in about 620 ms, its back in lavender tint. Sound: peel.
-4. The new page's headline types its serif line in.
+- **Loader:** a violet sticker covers the screen with the "itesh" wordmark top-left, wordless die-cut shapes (burst, blob, squiggle, arch, sparkle, zigzag, capsule) landing at random spots, a rotating "Warming up agents / models / products / evals / a lab" line and a 000→100 counter with a bar. No corner texts. Then it peels off from the top-right.
+- **Page transition (slap + peel):** a full-screen violet sticker slaps on from the navigator (scale 0.08 → 1.06 → 1, rotate -14° → 2° → 0°), the new page mounts underneath, the sticker peels off (~620 ms). While covered it shows small "Going to *Page*" (serif italic) above a big centred counter in the site's display sans, a lime bar and three random stickers. From a star poster, the project's artwork lifts off with a die-cut edge and flies into the case-study stage instead.
+- Reduced motion: a 200 ms crossfade.
 
-From a star card (home stack or work grid), the card's drawing lifts off its card with a white die-cut edge and a shadow, settles in the centre over the slapping sticker (in place of the destination's name), then flies into the case-study stage as the sticker peels, and fades into the real one.
+### 2.3 Section titles
 
-The same sequence runs as the site intro on first load, starting from a sticker already in place. While it covers the page, the intro sticker shows a loader: the wordmark, a 000→100 counter with a lime progress bar, a rotating "Warming up agents / models / …" line (night: logs / evals / …), and four wordless die-cut shapes (a sunflower burst, a lime blob, a tomato squiggle, a lavender arch) slapping on like a sticker sheet. No words on them: the loader isn't a CV. It runs at least 1.1 s on a first visit (0.35 s on repeat visits in the same tab), finishes once fonts are ready (capped at 1.2 s), fades its content out, then peels. Reduced motion: a 200 ms crossfade, with no slap or peel.
+Sections use `SectionTitle`: a small serif italic kicker ("Selected work") over one sentence-case line in the display sans with **one** word sticker in it ("Three I'm most *proud* of."). Headings rise from a blur and their word sticker slaps on. This replaces the old uppercase two-line fitted headlines; redo page headlines in this style.
 
-### 2.3 Two-line headlines
+### 2.4 The lifted sheet (home hero)
 
-- Every page headline is two lines: a bold **sans statement** ("AGENTS") and a **serif line** that twists or completes it ("THAT ACT").
-- Don't put the name in headlines. It appears once, in the home kicker; repeating it everywhere reads as noise (Itesh's feedback after seeing it built).
-- The serif line types itself in (80 ms per character) and, on the home page, deletes and retypes through the completions (35 ms per character when deleting, 1.7 s pause).
-- Each line is fitted to the container width (see spec §5.3), so headlines always span the page.
-- Day completions say *what*; night completions say *how* (the table in §11).
+The hero sits on a rounded paper sheet lifted off the page: a cutting-mat grid that fades towards its edges (`.faded-mat` idea), one soft low violet glow, and a folded bottom-right corner (the flap). The hero's content is clipped along the same fold (`.hero-peel`), so it peels away with the sheet as you scroll (the curl grows with scroll). No paper grain (tried, removed). Content parallaxes and fades on scroll.
 
-### 2.4 "Peel here" hint
+Hero copy: "Hi, I'm Itesh." (serif) → "I build *agents*, train *models* and ship *products*." (word stickers in violet, lime, sunflower; letters swell towards the cursor) → one "Right now: …" line → "See the work" (ink) + "Ask Arcee" (lime) → latest push (bottom-right) and "Scroll for the good stuff" (bottom-left).
 
-On the home hero, a handwritten "peel here" (Caveat) with a squiggly arrow points at the corner. It writes itself in once the intro has peeled (2.2 s), then the arrow nudges towards the corner every few seconds. It's hidden for good once the visitor has peeled (the saved shift sets `data-peeled` on `<html>`). Reduced motion: shown still.
+### 2.5 The "Where to?" navigator
 
-### 2.5 Home hero (2026-11-13)
+- Closed: an ink pill bottom-centre in the `.btn` style (white die-cut edge, sans "Where to?", a tiny three-sticker stack that fans on hover).
+- Open: the pages fan out of the pill on two semicircles as word stickers like the hero's: star projects (Arcee, PatentIQ, DiaChat) on the inner ring in their own app colours, the other pages (Work, DiaLabs, About, Chat, Contact, Home) on the outer ring in the hero tones. Each carries a small → so it reads as a link; each tilts only slightly with its angle; the chosen one slides further out along its angle. A handwritten "pick a page" note with an arrow sits beside the fan. Hovering a sticker shows a one-line hint by the cursor ("the human", "the lab"…).
+- The page behind fades a little and blurs slightly (no halo shape).
+- The pill itself becomes the field: "Where to? Or ask me anything…", with the Arcee stamp at its end. Typing filters; Enter goes; anything that isn't a page goes to Arcee ("terminal" opens the terminal). "/" or ⌘K toggles, Esc closes.
+- Phones: the same stickers in a wrapped cloud above the field.
+- Tried and dropped: playing cards, a full-screen sheet, tilted coloured nav stickers, a separate search box.
 
-No giant cycling headline and no day/night copy. A small serif "Hi, I'm Itesh." then one medium statement, "I build agents, train models and ship products.", where the three nouns are tilted, flickable word stickers (violet, lime, sunflower). Below: the "right now" line, "See the work" / "Ask Arcee", the latest push and the scroll hint. The loader's four die-cut shapes stay stuck around the edges once it peels (slap in, then drift; hidden on phones). The "peel here" hint rests after a peel for the rest of the visit and returns on the next one.
+### 2.6 Peel to reveal
 
-### 2.6 Peel to reveal (replaces day/night content, 2026-11-13)
+Detail that used to live in the night shift hides under small stickers now: e.g. on each star poster, a sticker in the project's colours ("Peel for how it works") peels off to show the approach and stack, with "Stick it back" (`components/ui/PeelReveal`). Use the same move on other pages for "how" detail.
 
-The day/night content split is being retired page by page: light and dark become a plain theme switched by the peel corner, with the same text in both. "How it works" now hides under small stickers instead: on each home star card, a sticker in the project's colours ("Peel for how it works") peels off on click or tap to show the how (approach summary and stack), with "Stick it back" to cover it again (`components/ui/PeelReveal`). Home sections use `SectionTitle`: a serif italic kicker over one sentence-case line with one word sticker. Hero stickers are field-themed (terminal, braces, neural net, chip, git branch, sparkle); the loader keeps its abstract shapes. The "peel here" hint always shows.
+### 2.7 Home page sections (as built)
 
-### 2.7–2.12 Home page, round of 2026-11-13
+- **Status pill:** fixed top-centre straight pill: a progress ring, the current section name (from `[data-section]`) and clickable section dots.
+- **In short:** a serif kicker and one large statement that reveals word by word.
+- **Selected work:** each star project is a big die-cut poster in its app's colours (artwork large, name huge, peel sticker for how it works). Desktop pins the section and scroll slides the posters sideways (`PinnedTrack`); phones get a swipeable snap carousel of compact posters (art on top, stack chips hidden).
+- **More projects:** a wall of project tiles with category filter chips, each tile with Live and GitHub links; phones show four before "Show all".
+- **DiaLabs:** a violet band that grows from an inset rounded sticker to full width on scroll (`GrowIn`); releases are peelable stickers.
+- **Experience:** rows with a link to the full story.
+- **Contact:** ink block (dark surface at night): "Got something *worth building*?", copy-email button, "Or leave Arcee a message", channel rows with scribble underlines.
+- **Footer:** compact, on a faded mat: the "itesh" wordmark sticker (tilted), link stickers (straight), the latest push as a torn receipt, "© {year} iteshxt" and back to top. No colophon.
 
-- **2.7 Status pill:** a fixed top-centre sticker pill with the current section ("03 · Selected work / 07", from `[data-section]`, picked by scroll position) and a violet line filling with page scroll.
-- **2.8 "Where to?" navigator:** the pill carries a tiny sticker stack and "Where to?" (no underscore). Opening fans out die-cut page stickers from the pill, each in its page's colour (stars in their brand colours), tilted, over a sticker search field; typing filters, Enter goes, anything else asks Arcee.
-- **2.9 Star posters:** each star project is a big die-cut poster in its app's colours (artwork large, name huge, peel sticker for how it works). "Selected work" pins while scroll slides the posters sideways (`PinnedTrack`); phones and reduced motion stack them.
-- **2.10 More projects:** a filterable index (category chips, one link row per project); on desktop a tilted preview sticker trails the cursor.
-- **2.11 DiaLabs:** the violet band grows from an inset rounded sticker to full width on scroll (`GrowIn`); releases are peelable stickers (name and kind; what it is and links underneath).
-- **2.12 Footer:** a sticker sheet on a cutting mat: wordmark sticker, link stickers, the latest push as a torn receipt, a peel tab back to the top.
-- **Hero type:** letters in the headline swell (weight up, width down) towards the cursor.
-- **Buttons:** `.btn` sticker buttons (ink, paper, lime, violet), magnetic towards the cursor. Scrollbar: rounded violet strip.
-- **Motion:** headings rise from a blur and their word stickers slap on; rows and sticker groups stagger; hero parallax; a sticker cursor with labels. All rest for reduced motion.
+### 2.8 Arcee
 
-### 2.13 Arcee, full page (2026-11-13)
-
-`/arcee` is itself the conversation (the same one as the floating panel, via a shared chat instance): a slim "Ask Arcee" intro with its animated ring, messages flowing down a faded mat, and a sticky message box docked above the navigator. Arcee's opening postcard holds what it knows, questions to try and a P.S. on leaving a message. Arcee uses the site's colours (violet, paper), not the Arcee project's amber. Tilts are reserved for accents: heading word stickers, the footer wordmark, the peel hint, the stamp, the loader.
-
-### 2.14 Night
-
-The die-cut edge is a token (`--die`): white by day, a soft translucent white at night (also applied to `border-white`). At night, bright tiles become dark tinted tiles with coloured names (`night:` variants; covers that hide content use opaque color-mix tints), the DiaLabs band turns deep violet, the contact block a dark surface, and posters are toned down slightly. Heading word stickers stay bright as accents.
-
-### 2.15 Round of 2026-11-13, evening
-
-- **Hero peel:** the hero section is clipped along the sheet's fold (`.hero-peel`), so its content peels away with the sheet, and the folded flap lies over it. No paper grain: it was tried and removed; the sheet stays clean.
-- **Loader:** no corner texts; eight wordless shapes land at random spots (an inline script sets `--isN*` variables on `<html>` before first paint), the "Warming up …" word keeps rotating.
-- **Page transitions:** the violet sticker shows "Going to" + the page name bottom-left, a 000→100% counter bottom-right that reaches 100 as it peels, a lime bar, and three random stickers. Not shown during the intro.
-- **Navigator (decided):** an ink "Where to?" pill in the same style as the site's sticker buttons. Opening it fans the pages out of it on two semicircles as word stickers like the hero's (star projects close in, in their own app colours; the other pages further out, in the hero tones), each with a small arrow so it reads as a link, and a handwritten "pick a page" note like "peel here". The page behind softly fades and blurs a little (no halo shape). Hovering a sticker shows its one-line hint by the custom cursor ("the human", "the lab"…). Each sticker tilts only a little with its angle; the chosen one slides further out along its angle. The pill itself becomes the field, "Where to? Or ask me anything…", with the Arcee stamp at its end for anything that isn't a page. Phones get a wrapped cloud of the same stickers. Playing cards and a full-screen sheet were tried and dropped.
-- **Phones:** star posters become a swipeable snap carousel of compact posters; More projects shows four before "Show all".
+`/arcee` is the conversation itself (shared chat instance with the floating panel): a slim intro with Arcee's animated ring, messages on a faded mat, a sticky composer above the navigator. Arcee's opening postcard holds what it knows, questions to try and a P.S. about leaving a message. Arcee uses the site's colours (violet, paper, ink), not the Arcee project's amber. The Arcee stamp (animated ring on ink) is its avatar everywhere.
 
 ## 3. Colour
 
@@ -88,173 +72,118 @@ The die-cut edge is a token (`--die`): white by day, a soft translucent white at
 
 | Token | Hex | Use |
 |---|---|---|
-| `violet` (owned) | `#7A2CFF` (electric violet) | Signature colour: the peel back, the slap sticker, nav pill, key buttons, star tags, highlights |
-| `violet-ink` | `#3A0E8C` | Text on violet tints, pressed states |
-| `lavender` | `#CBB8FF` | Support tint: night accents, the flap back on night→day, quiet fills |
-| `lime` | `#CCFF33` | Accent: stickers, terminal prompt, "new" or "live" markers |
-| `tomato` | `#FF4B2B` | Accent: frames, warnings with attitude, hover hits |
-| `sunflower` | `#FFC700` | Accent: stickers, frames, highlights |
-| `paper` | `#F5F5F4` | Day background |
-| `paper-2` | `#FFFFFF` | Day raised surfaces |
-| `ink` | `#0E0E10` | Day text |
-| `night` | `#0B0A10` | Night background |
-| `night-2` | `#15121D` | Night raised surfaces |
-| `night-ink` | `#F4F2FF` | Night text |
-| `line-day` / `line-night` | `#E3E2E6` / `#2A2535` | Hairlines |
+| `violet` (owned) | `#7A2CFF` | Signature: peel back, transition sticker, DiaLabs band, key accents |
+| `violet-ink` | `#3A0E8C` | Text on violet tints |
+| `lavender` | `#CBB8FF` | Support tint, night accents |
+| `lime` | `#CCFF33` | Accent stickers, "live", progress bars |
+| `tomato` | `#FF4B2B` | Accent stickers |
+| `sunflower` | `#FFC700` | Accent stickers |
+| `paper` / `paper-2` | `#F5F5F4` / `#FFFFFF` | Light background / raised surfaces |
+| `ink` | `#0E0E10` | Light text, ink buttons and blocks |
+| `night` / `night-2` | `#0B0A10` / `#15121D` | Dark background / raised surfaces |
+| `night-ink` | `#F4F2FF` | Dark text |
+| `line` | `#E3E2E6` / `#2A2535` | Hairlines, mat grid |
 
-Electric violet is the default. Ultraviolet `#5A2BFF` and grape pop `#A032FF` stay as fallbacks if it doesn't hold up on real screens.
+Text on accent fills: violet → white, lime → `#2B3600`, sunflower → `#4A3A00`, tomato → `#2A0700`, lavender → `violet-ink`.
 
-### 3.4 Star project colours
+### 3.2 Star project colours
 
-Each star project uses its own app's colours in both themes (tokens `--arcee`, `--arcee-deep`, `--patentiq`, `--diachat`; classes in `lib/brand.ts`): Arcee is an amber (#FF8C1A) frame around its warm near-black (#1C1108), PatentIQ its logo indigo (#452CF9), DiaChat its amber (#FFB000). Share images use the darker shades for headline text.
+Each star project wears its own app's colours in both themes (tokens `--arcee`, `--arcee-deep`, `--patentiq`, `--diachat`; classes in `lib/brand.ts`): Arcee amber (#FF8C1A) on its warm near-black (#1C1108), PatentIQ indigo (#452CF9), DiaChat amber (#FFB000). Only for the projects themselves (posters, nav stickers, case studies), never for site chrome.
 
-### 3.2 Rules
+### 3.3 Rules
 
-- Paper and ink are neutral. No tinted backgrounds.
-- Colour comes in solid blocks: thick frames around media (12–16 px), full-bleed sections, stickers, buttons. No gradients in UI chrome (the 3D scenes may use lighting gradients).
-- At most one accent beside violet in any one viewport section.
-- Text contrast: body text is always `ink` on paper or `night-ink` on night. Violet is used for text only at headline sizes (≥ 32 px) on paper; on night, use `lavender` for coloured text.
-- Text on accent fills uses that accent's darkest partner: violet → white, lime → `#2B3600`, sunflower → `#4A3A00`, tomato → white at ≥ 18 px only.
+- Use semantic tokens (`bg-bg`, `text-fg`, `bg-surface`, `text-accent-text`…) and `day:` / `night:` variants; never hard-code the palette in components.
+- Colour comes in solid blocks: stickers, buttons, posters, full-bleed bands. Gradients only for soft glows and fades.
+- One or two accents beside violet per viewport section.
+- Violet text only at headline sizes on paper; lavender for coloured text at night.
 
-### 3.3 Shifts
+### 3.4 Night
 
-| | Day | Night |
-|---|---|---|
-| Background | paper | night |
-| Headline colour | ink (serif line ink) | night-ink (serif line lavender) |
-| Mood | Bright, product, outcomes | Focused, technical, glowing accents |
-| Extra details | Stickers, coloured frames | Terminal snippets, commit messages, diagrams, lime prompt colour |
-| Peel flap | violet | lavender |
+Night must feel calm. The die-cut edge is a token (`--die`): white by day, soft translucent white at night (also applied to `border-white`). Bright tiles become dark tinted tiles with coloured names; covers that hide content use opaque `color-mix` tints (never translucent over text); the DiaLabs band turns deep violet; the contact block a dark surface; posters are toned down slightly. Heading word stickers stay bright as accents. Ink buttons invert to light.
 
 ## 4. Typography
 
-All free (Google Fonts), self-hosted through `next/font`.
+All free, self-hosted through `next/font`.
 
 | Role | Font | Settings |
 |---|---|---|
-| Display sans | **Mona Sans** | width 75, weight 820, tracking -0.035em, line-height 0.86, uppercase |
-| Display serif | **Instrument Serif** | regular (italic for emphasis), tracking -0.02em, line-height 0.9, uppercase in headlines |
+| Display sans | **Mona Sans** | weight 600, width 82, tracking -0.04em, sentence case (hero, section titles, word stickers, transition counter) |
+| Serif | **Instrument Serif** | italic for kickers, "Hi, I'm Itesh.", "Going to …", the wordmark |
 | Body / UI | **Mona Sans** | width 100, weight 400 / 500 / 600 |
-| Code / terminal | **JetBrains Mono** | 400 / 500 |
-| Handwriting | **Caveat** | 600, only for the home page's "peel here" hint; not preloaded |
+| Code | **JetBrains Mono** | latest push, terminal |
+| Handwriting | **Caveat** | only for notes like "peel here" and "pick a page" |
 
-### Scale (fluid, clamp-based)
-
-| Token | Size | Use |
-|---|---|---|
-| `display` | fitted to width, max ≈ 18 vw | Page headlines |
-| `h1` | clamp(40px, 6vw, 88px) | Section headlines (same sans + serif pairing) |
-| `h2` | clamp(28px, 3.6vw, 48px) | Sub-sections |
-| `kicker` | clamp(18px, 1.8vw, 24px) | Serif line above headlines ("By day: what he builds") |
-| `body-l` | 20px / 1.5 | Intros |
-| `body` | 17px / 1.6 | Default copy |
-| `small` | 14px / 1.5 | Meta, captions |
-| `micro` | 12px / 1.4 | Tags (sentence case, never below 12px) |
-
-Rules: headlines are uppercase; everything else is sentence case. Body line length is 55–75 characters. Never use more than one serif line per headline.
+Sizes: hero statement clamp(38px, 5vw, 76px); section titles clamp(32px, 4.4vw, 64px)-ish; kicker clamp(18px, 1.8vw, 24px); body 16–19px; meta 13–15px; never below 12px. Keep page text light: short lines, few words, no descriptions where a name and a cursor hint will do.
 
 ## 5. Layout
 
-- 12-column grid, max width 1440 px, side gutters clamp(16px, 4vw, 48px), column gap 24 px.
-- Spacing scale (px): 4, 8, 12, 16, 24, 32, 48, 64, 96, 128, 192.
-- Radii: 6 px (controls), 16 px (cards, panels), 999 px (pills). Media frames are square-cornered with thick colour borders.
-- Sections alternate paper and full-bleed colour or night blocks to create rhythm.
-- Mobile first: one column under 768 px. Headlines still fit the width. Interactions become tap-first (§12).
+- Max width 1440 px, side gutters `px-gutter` (clamp(16px, 4vw, 48px)).
+- Generous vertical rhythm: sections clamp(64px, 10vw, 140px) top and bottom; less on phones.
+- Radii: 12 px (word stickers), 16–20 px (tiles, posters, panels), pills for buttons and bars.
+- Faded mats (`.faded-mat`): a grid that fades out at the edges, used behind the hero, footer and /arcee; reuse it for page intros.
+- Fixed chrome: wordmark top-left, status pill top-centre, sound toggle and peel corner top-right, navigator bottom-centre. Leave ~90 px clear at the bottom of pages for the navigator.
 
 ## 6. Motion
 
-Libraries: GSAP (ScrollTrigger, SplitText, DrawSVG, CustomEase, Inertia), Lenis smooth scroll.
+Lenis smooth scroll (lazy-loaded); MotionLayer handles the rest without GSAP on first load.
 
 | Pattern | Spec |
 |---|---|
-| Text reveal | Lines are masked, rising from `yPercent: 120` → 0, `expo.out`, 1.0 s, stagger 0.08 s |
-| Headline typing | §2.3 |
-| Scroll reveal (blocks) | y 40 → 0, opacity 0 → 1, `power3.out`, 0.8 s, starting at 85% of the viewport |
-| Hover underline | A hand-drawn scribble draws under links (0 → 100%, 0.55 s, `expo.out`), with a different scribble each time; our own set of 6 scribbles. *As built:* SVG paths wiped in left to right by a `clip-path: inset()` transition (no DrawSVG; a `pathLength` dash trick leaked a stub in Chrome with non-scaling strokes), violet by day, lavender by night, lime on violet. Used on footer links, the contact CTA and channels, and "Try it live" |
-| Sticker flick | Stickers respond to cursor velocity with inertia: they spin and drift, then settle. *As built:* a hand-rolled damped spring (no Inertia plugin); the spin is the cross product of where the cursor hit and how fast it was moving, capped at ±22°. Fine pointers only |
-| Media frames | Slight rotation (-4° to 6°), parallax ±40 px on scroll |
-| Featured stack | Star project cards stacked in 3D; scrolling drops the top card away to reveal the next |
-| Nav bar open | Panel rises 12 px + fades in, 220 ms, `power3.out`; options stagger 30 ms |
-| Page transition | §2.2 |
-| Easings | `expo.out` (reveals), `power3.out` (UI), `power2.inOut` (peels), custom `slap` = cubic-bezier(.2,.9,.3,1.2) |
+| Reveals | `[data-animate]`: rise from a slight blur, staggered by `--d`; word stickers slap in (`slap-in`) |
+| Text reveal | `RevealText`: words light up with scroll |
+| Parallax | `[data-parallax]` (+ `data-parallax-fade`), only after scroll starts |
+| Peel curl on scroll | `[data-curl]` sets `--curl` |
+| Buttons | `.btn` sticker buttons (ink, paper, lime, violet), magnetic towards the cursor; hover lifts, press slaps down |
+| Sticker flick | Word stickers respond to cursor velocity with a damped spring (±22° max), fine pointers only |
+| Scribble underline | Hand-drawn scribbles wipe in under text links (`Scribble`) |
+| Custom cursor | Replaces the system cursor on fine pointers: a violet sticker arrow with labels from `[data-cursor]` ("View", "Live", "Code", page hints) |
+| Grow-in bands | `GrowIn`: a band grows from inset sticker to full width |
+| Pinned sideways track | `PinnedTrack` for galleries on desktop |
+| Easings | `--ease-expo-out` (reveals, UI), `--ease-slap` = cubic-bezier(.2,.9,.3,1.2), `power2.inOut` (peels) |
 
-Reduced motion (`prefers-reduced-motion: reduce`): no smooth scroll, no parallax, no typing (completions shown instantly), peels and slaps become crossfades, 3D is replaced by still renders.
+Reduced motion: no smooth scroll, parallax, curl or flicks; reveals show at once; peels and slaps become crossfades; animated artwork shows a still frame.
 
-## 7. 3D
+## 7. Project artwork
 
-- **Art direction:** soft, toy-like "clay" objects with subtle rim light. Violet key light by day, lavender and lime accents by night. No photoreal.
-- **Objects:**
-  - Arcee: woven amber rings around a geodesic wireframe orb (its own identity, only on its pages)
-  - PatentIQ: a rubber stamp that stamps "VERIFIED"
-  - DiaChat: a squishy speech bubble with a wobbly jelly body
-  - Archive: die-cut stickers as flat 3D cards that bend slightly when grabbed
-- Objects react to the cursor (look-at, squish, wobble) and scroll. On a case study, the object flies from its card to the hero during the transition.
-- *As built (2026-11-13):* cards and the stage's 2D layer show each project's real artwork instead of placeholder drawings. Arcee: the particle-ring animation from the Arcee app (`wave-active-dark.webp`, animated WebP, with a still frame for reduced motion). PatentIQ: its document-and-brain mark (from the PatentIQ repo) as a CSS mask, with a lime scan passing over the strokes, the circuit nodes lighting in turn and the glow pulse from its own loader. DiaChat: its preloader on a loop (bubble draws, heart draws and fills, beats, fades), white with a soft shadow on sunflower. All CSS; no JavaScript. The case-study stage shows the same artwork; the 3D objects and three.js were removed (2026-11-13).
-- Built with three.js through React Three Fiber; see spec §7 for performance rules.
+No 3D (three.js was removed). Each star project shows its real artwork, all CSS: Arcee the particle-ring animation from the Arcee app (animated WebP, still frame for reduced motion); PatentIQ its document-and-brain mark with a lime scan and circuit nodes lighting in turn; DiaChat its preloader on a loop (bubble, heart, beat). Case-study stages use the same artwork.
 
 ## 8. Stickers, icons, photo
 
-- **Stickers:** die-cut style: a 5–6 px white border around the artwork, slight rotation, very soft shadow. Used for decoration, archive projects, achievements (LeetCode 320+, certificates) and Arcee's chat replies.
-- **Cat stickers:** WhatsApp-style cats chosen by mood (happy, smug, thinking, shocked, sleepy, love, nope). Placeholders until Itesh supplies the set; each sticker maps to a mood tag.
-- **Custom icons:** our own set on a 24 px grid, 2 px rounded strokes with an optional violet fill accent, slightly playful (a little wobble on corners). First set: arrow, arrow-up-right, close, menu, search, sun-peel (theme), sound-on, sound-off, mail, linkedin, github, x, resume, external, play, pause, terminal, chat, sticker, star, cat.
-- **Photo of Itesh** (supplied later): cut out as a die-cut sticker, duotone in violet + ink with a fine halftone, placed tilted like a polaroid.
-- **Logo:** postponed. Placeholder: "itesh" set in Instrument Serif italic.
+- **Die-cut stickers:** white (`--die`) border, flat colour, soft shadow, optional slight tilt when an accent. Word stickers: `Sticker size="word"`; chips: `Sticker`.
+- **Wordless shapes** (`ui/Shape`): burst, blob, squiggle, arch, sparkle, zigzag, capsule. For loaders and transitions only; don't scatter them as decoration on content.
+- **Cat stickers** in Arcee's replies, chosen by mood.
+- **Icons:** our own 24 px set, 2 px rounded strokes.
+- **Photo of Itesh** (later): a die-cut sticker, placed like a polaroid.
+- **Logo:** postponed; "itesh" in Instrument Serif italic meanwhile.
 
 ## 9. Sound
 
-- Subtle and short (under 400 ms), mixed quietly (peak around -18 dBFS).
-- Set: `peel` (paper rip, rising band-pass), `slap` (soft low thump), `nav-open` / `nav-close` (soft pop), `tick` (typing), `sticker` (tiny squeak on flick; *as built:* a short paper flutter, only on a real knock, at most once per 260 ms), `terminal-key`, `success` (message sent).
-- A mute toggle sits in the top bar; the setting is remembered. Nothing plays before the first interaction.
+Short (under 400 ms), quiet: `peel`, `slap`, `open` / `close`, `select`, sticker flutter, terminal keys, success. Mute toggle in the top bar, remembered. Nothing plays before the first interaction.
 
-## 10. Components
+## 10. Voice and tone
 
-| Component | Notes |
-|---|---|
-| Top bar | Logo placeholder (left), sound toggle, peel corner (right). Very minimal; real navigation lives in the nav bar |
-| "Show me ___" nav bar | Bottom-centre violet pill, white text. The prompt appears once (pill and input label), never repeated on each option. Opens upward into a panel (paper-2 / night-2) with input + completion list; star items carry a violet "star" tag. Unmatched input shows an Arcee row |
-| Peel corner | 34 px curl at rest, grows on hover |
-| Headline | Fitted sans line + typing serif line + optional kicker |
-| Button | Pill with a label and a square arrow cap in an accent colour; the scribble underline for text links |
-| Media frame | Thick accent border, tilt, parallax |
-| Project sticker card | Die-cut card: title, one-line day blurb, tags, flick-able |
-| Arcee panel | Chat panel that grows from the nav bar; Arcee's messages are on the left with a cat sticker slot, visitor messages on the right; inline action chips ("Open Arcee case study", "Leave a message") |
-| Terminal | Full-width overlay in night colours, JetBrains Mono, lime prompt `itesh@shift:~$` |
-| Footer | Big contact CTA, channels, "currently building" live line, © and a hint ("psst, try ~") |
+Funny with attitude, confident without bragging, short sentences, English only. Arcee talks about Itesh in the third person. Less text is better: a name and a hint beat a paragraph.
 
-## 11. Voice and tone
-
-Funny with attitude, confident without bragging, short sentences, English only. Third person when Arcee talks about Itesh.
-
-| Context | Day (what) | Night (how) |
-|---|---|---|
-| Home (cycling) | Agents / that act · Products / people pay for · Models, / fine-tuned · A lab / called DiaLabs | Logs, / read twice · Evals / for everything · Bugs, / fixed at 3am · Docs / that exist |
-| Arcee case | "An agent / for your desktop" | "Plans, guards, / then acts" |
-| PatentIQ | "Patents, / screened by AI" | "Citations first, / then Gemini" |
-| DiaChat | "A companion / in your browser" | "Gemma 3, live / on WebGPU" |
-| Work | "Real products, / real users" | "Payments, logistics, / retries" |
-| DiaLabs | "DiaLabs, / co-founded" | "Open models, / open data" |
-| About | "The human / behind it" | "Evals, edge cases, / failure modes" |
-| Contact | "Say / hello" | "Leave Arcee / a message" |
-| Nav ("Show me ___") | the desktop agent · the patent screener · the AI companion · real products · the lab · the human · how to say hi | how the agent thinks · the citation pipeline · the WebGPU bits · the payment flows · the open models · the edge cases · the inbox |
-
-Microcopy examples:
+Microcopy:
 - 404: "The model hallucinated this page."
 - Tab title away: "come back (╥﹏╥)"
-- 3am: "why are you awake? same."
-- Arcee refusing off-topic: "I only gossip about Itesh. Ask me what he's built."
+- Arcee off-topic: "I only gossip about Itesh. Ask me what he's built."
 - Terminal `rm -rf /`: "nice try. permission denied, forever."
 
-## 12. Responsive and mobile
+## 11. Responsive and mobile
 
-- Full personality on phones; the 3D is lighter (pre-rendered or simplified objects, no post-processing).
-- The nav bar sits at the bottom in the thumb zone; its panel becomes a bottom sheet.
-- Peel: tap the corner to flip; dragging still works. The corner hit area is at least 44 × 44 px.
-- Hover-only effects (scribble, image trail, sticker flick) are replaced with tap or scroll versions or skipped.
+- Full personality on phones. Pinned/sideways sections become snap carousels or stacks; hover effects become tap versions or are skipped; the custom cursor is off.
+- The navigator stays bottom-centre in the thumb zone.
+- Peel corner hit area at least 44 × 44 px.
 - Test widths: 360, 390, 768, 1024, 1440, 1920.
 
-## 13. Accessibility in design
+## 12. Accessibility in design
 
-- Visible focus ring: 2 px violet + 2 px offset on paper, lavender on night.
-- Every creative control has a labelled button equivalent: the peel corner is a button "Switch to night shift"; the nav bar is a combobox.
-- Typing headlines expose the full text to assistive technology immediately (`aria-label`), and the animation is decorative.
-- Never rely on colour alone; star projects also carry a "star" label.
+- Visible focus ring: 2 px violet + 2 px offset (lavender at night).
+- Every creative control has a labelled equivalent: the peel corner is a button; the navigator is a combobox with a listbox of options.
+- Decorative motion and shapes are `aria-hidden`; never rely on colour alone.
+- Respect `prefers-reduced-motion` everywhere.
+
+## 13. Pages still to redesign in this language
+
+Work, the three case studies, About, DiaLabs, Contact (and 404). For each: a hero on a faded mat with a `SectionTitle`-style heading (one word sticker), content as straight die-cut tiles/posters, peel-to-reveal for technical detail, real artwork and links, no leftover day/night copy, and the shared motion patterns above.
