@@ -17,7 +17,6 @@ const SHAPES: { name: ShapeName; size: string }[] = [
   { name: "squiggle", size: "w-[clamp(60px,7vw,112px)]" },
   { name: "arch", size: "w-[clamp(46px,5.4vw,84px)]" },
   { name: "sparkle", size: "w-[clamp(40px,4.6vw,72px)]" },
-  { name: "flower", size: "w-[clamp(48px,5.6vw,88px)]" },
   { name: "zigzag", size: "w-[clamp(56px,6.6vw,104px)]" },
   { name: "capsule", size: "w-[clamp(48px,5.8vw,92px)]" },
 ];
@@ -27,7 +26,7 @@ const SHAPES: { name: ShapeName; size: string }[] = [
  * for every shape before first paint, as CSS variables on <html> so React's
  * markup stays untouched.
  */
-const PLACE_SHAPES = `(function(){try{var s=document.documentElement.style,p=[];for(var i=0;i<${8};i++){var x,y,t=0;do{x=3+Math.random()*88;y=7+Math.random()*80;t++}while(t<60&&((x>20&&x<74&&y>22&&y<72)||p.some(function(q){return Math.abs(q[0]-x)<13&&Math.abs(q[1]-y)<15})));p.push([x,y]);s.setProperty('--is'+i+'x',x.toFixed(1)+'%');s.setProperty('--is'+i+'y',y.toFixed(1)+'%');s.setProperty('--is'+i+'d',(150+Math.random()*1100|0)+'ms');s.setProperty('--is'+i+'r',(Math.random()*40-20|0)+'deg')}}catch(e){}})();`;
+const PLACE_SHAPES = `(function(){try{var s=document.documentElement.style,p=[];for(var i=0;i<${7};i++){var x,y,t=0;do{x=3+Math.random()*88;y=7+Math.random()*80;t++}while(t<60&&((x>20&&x<74&&y>22&&y<72)||p.some(function(q){return Math.abs(q[0]-x)<13&&Math.abs(q[1]-y)<15})));p.push([x,y]);s.setProperty('--is'+i+'x',x.toFixed(1)+'%');s.setProperty('--is'+i+'y',y.toFixed(1)+'%');s.setProperty('--is'+i+'d',(150+Math.random()*1100|0)+'ms');s.setProperty('--is'+i+'r',(Math.random()*40-20|0)+'deg')}}catch(e){}})();`;
 
 /** Where the shapes sit if the script doesn't run: around the edges. */
 const FALLBACK = [
@@ -38,7 +37,6 @@ const FALLBACK = [
   [30, 10],
   [64, 86],
   [6, 46],
-  [90, 50],
 ];
 
 function Rotator({ words }: { words: string[] }) {

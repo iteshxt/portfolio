@@ -43,8 +43,8 @@ export function NavBar() {
   const go = useTransitionGo();
 
   const [query, setQuery] = useState("");
-  // Two layouts to compare: the hand of cards, or a full-screen sheet (remembered).
-  const [layout, setLayout] = useState<"cards" | "sheet">("cards");
+  // Two layouts under evaluation: the full-screen sheet (in use) and the hand of cards (dormant).
+  const [layout, setLayout] = useState<"cards" | "sheet">("sheet");
   function switchLayout(next: "cards" | "sheet") {
     setLayout(next);
     try {
@@ -64,10 +64,8 @@ export function NavBar() {
   const activeIndex = items.length ? Math.min(active, items.length - 1) : -1;
 
   const openNav = useCallback(() => {
-    // The saved layout choice is read on open (no effect needed, no hydration mismatch).
-    try {
-      setLayout(localStorage.getItem("nav-layout") === "sheet" ? "sheet" : "cards");
-    } catch {}
+    // Trying the full-screen sheet for now; the hand-of-cards layout stays in the code until a verdict.
+    setLayout("sheet");
     play("open");
     useUI.getState().closeArcee();
     preloadArcee();
@@ -239,7 +237,6 @@ export function NavBar() {
               <div className="flex items-center justify-between gap-4">
                 <p className="font-serif text-[clamp(22px,2.2vw,30px)] italic">Where to?</p>
                 <div className="flex items-center gap-4">
-                  {toggle}
                   <button type="button" onClick={() => closeNav(true)} className="btn btn-paper" aria-label="Close navigation">
                     Close
                   </button>

@@ -278,8 +278,10 @@ export function TransitionProvider({
     };
     routeRaf.current = requestAnimationFrame(tick);
     ui.querySelectorAll<HTMLElement>("[data-route-shape]").forEach((el, i) => {
-      el.style.left = `${8 + Math.random() * 80}%`;
-      el.style.top = `${10 + Math.random() * 42}%`;
+      // Around the edges, clear of the centred counter.
+      const side = Math.random() < 0.5;
+      el.style.left = `${side ? 6 + Math.random() * 22 : 72 + Math.random() * 22}%`;
+      el.style.top = `${12 + Math.random() * 74}%`;
       el.animate(
         [
           { opacity: 0, transform: `translate(-50%, -50%) scale(1.8) rotate(${Math.random() * 40 - 20}deg)` },
@@ -461,23 +463,20 @@ export function TransitionProvider({
         <div ref={sheetRef} className="absolute inset-0 flex items-center justify-center bg-violet will-change-transform">
           {/* Route UI (not during the intro): where you're going, a counter, a bar and a few stickers. */}
           <div ref={routeUiRef} className="route-ui px-gutter absolute inset-0 text-white">
-            {(["burst", "flower", "zigzag"] as const).map((name) => (
+            {(["burst", "sparkle", "zigzag"] as const).map((name) => (
               <Shape key={name} name={name} data-route-shape="" className="absolute w-[clamp(52px,6vw,92px)] opacity-0" />
             ))}
-            <div className="absolute inset-x-[clamp(16px,4vw,48px)] bottom-[clamp(28px,4vw,48px)] flex items-end justify-between gap-6">
-              <div className="route-label min-w-0">
-                <p className="font-mono text-[12px] tracking-wide uppercase opacity-75">Going to</p>
-                <span
-                  ref={labelRef}
-                  className="mt-2 block truncate text-[clamp(52px,9vw,150px)] leading-[0.9] font-semibold tracking-[-0.05em] [font-variation-settings:'wdth'_78]"
-                />
-              </div>
-              <span className="display-sans flex shrink-0 items-start text-[clamp(56px,10vw,170px)] leading-none tabular-nums">
+            {/* Like the loader: the counter in the middle, where you're going in small type above it. */}
+            <div className="route-center absolute inset-0 flex flex-col items-center justify-center gap-4 text-center">
+              <p className="route-label font-serif text-[clamp(20px,2.2vw,30px)] leading-[1.1] italic opacity-90">
+                Going to <span ref={labelRef} />
+              </p>
+              <span className="display-sans flex items-start text-[clamp(96px,22vw,300px)] leading-none tabular-nums">
                 <span ref={routeCounterRef}>000</span>
                 <span className="display-serif mt-[0.08em] text-[0.32em] text-lavender">%</span>
               </span>
             </div>
-            <span className="absolute inset-x-[clamp(16px,4vw,48px)] bottom-4 block h-[3px] overflow-hidden rounded-full bg-white/20">
+            <span className="absolute inset-x-[clamp(16px,4vw,48px)] bottom-[max(20px,env(safe-area-inset-bottom))] block h-[3px] overflow-hidden rounded-full bg-white/20">
               <span ref={routeBarRef} className="block h-full origin-left rounded-full bg-lime" style={{ transform: "scaleX(0)" }} />
             </span>
           </div>

@@ -32,17 +32,9 @@ const ART = {
   ),
 };
 
-/** Extra loader shapes: a sparkle, a flower, a zigzag and a capsule. */
+/** Extra loader shapes: a sparkle, a zigzag and a capsule. */
 const MORE = {
   sparkle: <path d="M50 6C54 34 66 46 94 50 66 54 54 66 50 94 46 66 34 54 6 50 34 46 46 34 50 6Z" fill="var(--paper)" {...DIE_CUT} />,
-  flower: (
-    <>
-      {[0, 72, 144, 216, 288].map((a) => (
-        <ellipse key={a} cx="50" cy="28" rx="16" ry="22" fill="var(--tomato)" {...DIE_CUT} transform={`rotate(${a} 50 50)`} />
-      ))}
-      <circle cx="50" cy="50" r="13" fill="var(--sunflower)" />
-    </>
-  ),
   zigzag: (
     <>
       <path d="M8 62 26 38 44 62 62 38 80 62 94 44" fill="none" stroke="#fff" strokeWidth="26" strokeLinecap="round" strokeLinejoin="round" />

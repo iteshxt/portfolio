@@ -97,7 +97,7 @@
 [data-slap-root]:not([data-route]) .route-ui {
   display: none;
 }
-[data-slap-root][data-fly="true"] .route-label {
+[data-slap-root][data-fly="true"] .route-center {
   visibility: hidden;
 }
 /* Intro screen on the sticker: only during the intro. */
@@ -758,20 +758,24 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   /* The curled corner is cut away from the sheet. */
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%);
 }
-/* A light paper grain over the sheet. */
+/* Paper grain over the sheet: fine fibres plus a coarser mottle, so it reads as paper. */
 .hero-sheet::after {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  background-size: 240px 240px;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.27  0 0 0 0 0.24  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.02' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
+  background-size:
+    260px 260px,
+    600px 600px;
   mix-blend-mode: multiply;
-  opacity: 0.32;
+  opacity: 0.55;
 }
 [data-shift="night"] .hero-sheet::after {
-  mix-blend-mode: soft-light;
-  opacity: 0.5;
+  mix-blend-mode: screen;
+  opacity: 0.16;
 }
 .hero-mat {
   background-image:
