@@ -75,7 +75,18 @@ The home page stays one of a kind: its lifted sheet, scroll peel, reactive headl
 - **Hero:** on a faded mat. Left: serif "Work", then "*22* things, built and *shipped*." where the number is a lime word sticker that counts up from 00 (`CountUp`), a one-line lead, and "Open the case files" (ink) / "Browse the shelf" (paper), which glide down. Right: a torn till receipt, tilted a touch, the **shipping manifest**: every project as a numbered line (name, star for case studies, kind · year), "TOTAL SHIPPED", a barcode and "thanks for scrolling". It prints in from the top, then rolls upwards like a till roll (paused on hover; scrollable for reduced motion). Star lines open their case study; the rest glide to their tile on the shelf, which flashes a violet ring.
 - **Case files:** "Three with the *full story*." Each star project is a folder: a tab in its app's colours ("CASE 01") on a white die-cut body, artwork on one side in brand colours and the what, an "Under the hood" note (shown openly here), the stack and "Open the case file" on the other. Sides alternate; the tab and body lift on hover. The artwork still flies into the case study.
 - **The shelf:** "The rest, *all shipped*." Plain paper tiles, each tagged with a sticker for its kind (AI lavender, Web lime, Mobile sunflower, Tools tomato), year, one line, stack chips and Live / GitHub links; kind chips filter.
-- **Contact block** to close.
+- **Ending:** no contact block (that belongs to the home page). Below a dashed tear line, "That's the lot" → "Curious about *one*?" with "Ask Arcee about it" (lime) and "The person behind them" (paper, to About).
+
+### 2.11 Case studies (2026-11-14): the case file, opened
+
+The folder from the work page, open, in the project's own colours (each page wears its brand; site chrome stays the same).
+- **The opened file:** a "CASE 01 / 03" tab on a big brand-coloured sheet that unfolds from the top on arrival; "All work" back link. Left: year, the name huge, the plain summary, and an index card clipped on at a slight angle (role, when, links) with the status stamped on in red like a rubber stamp (it thumps in). Right: the project's artwork (the stage the work-page artwork flies into).
+- **Evidence:** the four stats as die-cut paper tiles that slap in.
+- **What it does:** "In plain *words*." with the intro pinned on the left while the numbered points scroll on the right.
+- **How it works:** "Under the *hood*." then the technical summary revealing word by word, then the pipeline: numbered dots in the brand colour joined by a line that fills as you scroll (scroll-driven; vertical on phones).
+- **Decisions that mattered:** notes taped into the file (sunflower, lavender, lime, paper), slightly askew, with a strip of tape each; tinted at night.
+- **Exhibit A:** PatentIQ's rubric as bars that fill in; Arcee's gated phases as rows with stamps (gate passed, in progress, next).
+- **Next file:** the next project's tab and sheet in its colours, "Open it →"; its artwork flies into the next page. No contact block.
 
 ## 3. Colour
 
@@ -197,4 +208,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10). Still to do: the three case studies, About, DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
+Done: Work (§2.10), case studies (§2.11). Still to do: About, DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.

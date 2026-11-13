@@ -37,7 +37,7 @@ test("the nav bar finishes the sentence and navigates", async ({ page }) => {
   await input.press("Enter");
   await page.waitForURL("**/work/patentiq");
   await settled(page);
-  await expect(page.locator("main h1:visible").first()).toContainText(/patents/i);
+  await expect(page.locator("main h1:visible").first()).toContainText(/patentiq/i);
 });
 
 test("a star poster's artwork flies into the case-study stage", async ({ page }) => {

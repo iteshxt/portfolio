@@ -1024,6 +1024,203 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* Case files (docs/design.md §2.11): the opened folder in the project's colours. */
+.case-tab {
+  translate: 0 4px;
+}
+.case-sheet {
+  box-shadow: 0 34px 70px -36px rgb(0 0 0 / 0.5);
+  animation: case-open 0.9s var(--ease-expo-out) 0.25s backwards;
+}
+@keyframes case-open {
+  from {
+    clip-path: inset(0 0 100% 0 round 28px);
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 28px);
+  }
+}
+.case-card {
+  rotate: -1.2deg;
+  box-shadow: 0 18px 30px -18px rgb(0 0 0 / 0.5);
+}
+/* A rubber stamp: ink-coloured outline, slightly askew and faded at the edges. */
+.case-status-stamp {
+  color: var(--tomato);
+  border-color: currentColor;
+  background: var(--surface);
+  rotate: -2.5deg;
+  animation: stamp-in 0.45s var(--ease-slap) 1.1s backwards;
+}
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+    scale: 1.8;
+    rotate: 14deg;
+  }
+}
+.case-stamp {
+  rotate: -3deg;
+}
+.case-stamp-done {
+  color: #3d7a00;
+  border-color: currentColor;
+}
+[data-shift="night"] .case-stamp-done {
+  color: var(--lime);
+}
+.case-stamp-doing {
+  color: #a26b00;
+  border-color: currentColor;
+}
+[data-shift="night"] .case-stamp-doing {
+  color: var(--sunflower);
+}
+.case-stamp-next {
+  color: var(--fg-muted);
+  border-color: currentColor;
+  border-style: dashed;
+}
+/* The pipeline line fills with scroll where scroll-driven animations exist; otherwise it's simply full. */
+.case-pipe-line {
+  position: absolute;
+  left: 21px;
+  top: 22px;
+  bottom: 22px;
+  width: 3px;
+  border-radius: 3px;
+  transform-origin: top;
+}
+.case-pipe::before {
+  content: "";
+  position: absolute;
+  left: 21px;
+  top: 22px;
+  bottom: 22px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--line);
+}
+@media (min-width: 768px) {
+  .case-pipe {
+    grid-template-columns: repeat(var(--steps), minmax(0, 1fr));
+  }
+  .case-pipe-line,
+  .case-pipe::before {
+    left: 22px;
+    right: 22px;
+    top: 20px;
+    bottom: auto;
+    width: auto;
+    height: 3px;
+    transform-origin: left;
+  }
+}
+@supports (animation-timeline: view()) {
+  .case-pipe-line {
+    animation: pipe-fill linear both;
+    animation-timeline: view();
+    animation-range: entry 30% cover 60%;
+  }
+  @keyframes pipe-fill {
+    from {
+      scale: 1 0;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+  @media (min-width: 768px) {
+    @keyframes pipe-fill {
+      from {
+        scale: 0 1;
+      }
+      to {
+        scale: 1 1;
+      }
+    }
+  }
+}
+/* Notes taped into the file. */
+.case-note {
+  rotate: var(--tilt);
+  box-shadow: 0 16px 24px -18px rgb(0 0 0 / 0.45);
+}
+.case-note::before {
+  content: "";
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  width: 84px;
+  height: 22px;
+  translate: -50% 0;
+  rotate: -3deg;
+  background: rgb(255 255 255 / 0.55);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+  backdrop-filter: blur(1px);
+}
+.case-note-sunflower {
+  background: var(--sunflower);
+  color: #4a3a00;
+}
+.case-note-lavender {
+  background: var(--lavender);
+  color: var(--violet-ink);
+}
+.case-note-lime {
+  background: var(--lime);
+  color: #2b3600;
+}
+.case-note-paper {
+  background: var(--surface);
+  color: var(--fg);
+}
+[data-shift="night"] .case-note-sunflower {
+  background: color-mix(in srgb, var(--sunflower) 16%, var(--surface));
+  color: var(--sunflower);
+}
+[data-shift="night"] .case-note-lavender {
+  background: color-mix(in srgb, var(--lavender) 14%, var(--surface));
+  color: var(--lavender);
+}
+[data-shift="night"] .case-note-lime {
+  background: color-mix(in srgb, var(--lime) 12%, var(--surface));
+  color: var(--lime);
+}
+[data-shift="night"] .case-note::before {
+  background: rgb(255 255 255 / 0.18);
+}
+/* Rubric bars fill when their row comes into view. */
+.case-bar-fill {
+  width: calc(var(--w) * 100%);
+  transform-origin: left;
+  scale: 0 1;
+  transition: scale 1s var(--ease-expo-out) calc(var(--d, 0ms) + 150ms);
+}
+.case-bar[data-in] .case-bar-fill {
+  scale: 1 1;
+}
+/* The next file's tab lifts when you point at it. */
+.case-next-body {
+  transition: translate 0.45s var(--ease-expo-out);
+}
+.case-next:hover .case-next-body {
+  translate: 0 -6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-sheet,
+  .case-status-stamp {
+    animation: none;
+  }
+  .case-pipe-line {
+    animation: none !important;
+  }
+  .case-bar-fill {
+    transition: none;
+    scale: 1 1;
+  }
+}
+
 /* The page blurs softly behind the open navigator (no halo shape). */
 .nav-scrim {
   background: color-mix(in srgb, var(--bg) 42%, transparent);

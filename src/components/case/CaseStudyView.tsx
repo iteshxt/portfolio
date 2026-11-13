@@ -1,211 +1,274 @@
+import type { CSSProperties } from "react";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
-import { Reveal } from "@/components/motion/Reveal";
+import { StarVisual } from "@/components/home/StarVisual";
 import { RevealText } from "@/components/motion/RevealText";
+import { Scribble } from "@/components/motion/Scribble";
 import { TransitionLink } from "@/components/transition/TransitionLink";
-import { SectionHeading } from "@/components/type/SectionHeading";
-import { ShiftHeadline } from "@/components/type/ShiftHeadline";
+import { SectionTitle } from "@/components/type/SectionTitle";
+import { Sticker } from "@/components/ui/Sticker";
 import type { CaseStudy } from "@/content/case-studies";
-import { PAGES } from "@/content/pages";
 import type { Project } from "@/content/projects";
+import { STAR_PROJECTS } from "@/content/projects";
 import { brandOf } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 import { StarStage } from "./StarStage";
 
+const NOTE_TONES = ["case-note-sunflower", "case-note-lavender", "case-note-lime", "case-note-paper"];
+const STATE = {
+  done: { label: "Gate passed", cls: "case-stamp-done" },
+  doing: { label: "In progress", cls: "case-stamp-doing" },
+  next: { label: "Next", cls: "case-stamp-next" },
+} as const;
+
 /**
- * Star project case study (docs/prd.md §7.2). Both stories are always on the
- * page; the current shift's story comes first (day: what, night: how).
+ * A star project's case study, as the case file opened (docs/design.md §2.11):
+ * the folder from the work page, open on the desk, in the project's own colours.
+ * An index card with a status stamp, the evidence, what it does, how it works
+ * (a pipeline that draws itself as you scroll), notes taped in for the decisions,
+ * the project's extra exhibit, and the next file's tab to finish.
  */
 export function CaseStudyView({ study, project, next }: { study: CaseStudy; project: Project; next: Project }) {
   const brand = brandOf(project);
+  const nextBrand = brandOf(next);
+  const links = [
+    project.links.live && { label: "Live", href: project.links.live },
+    project.links.repo && { label: "GitHub", href: project.links.repo },
+    ...(project.links.extra ?? []),
+  ].filter(Boolean) as { label: string; href: string }[];
 
   return (
     <main className="flex-1">
-      {/* Hero */}
-      <section className="px-gutter flex flex-col items-center gap-10 pt-28 pb-16 text-center">
-        <ShiftHeadline copy={PAGES[study.slug]} />
-        <div className={cn("relative w-full max-w-[1200px] border-[clamp(8px,1.1vw,16px)]", brand.frame, brand.fill)}>
-          <StarStage slug={study.slug} className="h-[clamp(320px,58vh,620px)]" />
+      {/* The opened file */}
+      <section data-section={study.name} className="px-gutter pt-24 pb-[clamp(48px,7vw,96px)] md:pt-28">
+        <div className="mx-auto max-w-[1320px]">
+          <div className="flex items-end justify-between gap-4">
+            <p
+              className={cn(
+                "case-tab rounded-t-[14px] border-[4px] border-b-0 border-[var(--die)] px-4 pt-2 pb-3 font-mono text-[13px] tracking-wider uppercase",
+                brand.fill,
+                brand.onFill,
+              )}
+            >
+              Case {String(project.order).padStart(2, "0")} / {String(STAR_PROJECTS.length).padStart(2, "0")}
+            </p>
+            <TransitionLink href="/work" transitionLabel="Work" className="mb-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-fg-muted hover:text-fg">
+              <ArrowRight className="rotate-180" /> <Scribble>All work</Scribble>
+            </TransitionLink>
+          </div>
+          <div className={cn("case-sheet relative grid overflow-hidden rounded-[28px] rounded-tl-none border-[5px] border-[var(--die)] lg:grid-cols-[1fr_1.05fr]", brand.fill, brand.onFill)}>
+            <div className="relative z-10 flex flex-col gap-6 p-[clamp(22px,3.4vw,56px)] lg:justify-between">
+              <div>
+                <p className="font-mono text-[13px] tracking-wide uppercase opacity-80">
+                  {project.year} · the case file
+                </p>
+                <h1 className="mt-3 text-[clamp(56px,9vw,148px)] leading-[0.88] font-semibold tracking-[-0.055em] [font-variation-settings:'wdth'_76]">
+                  {study.name}
+                </h1>
+                <p className="mt-5 max-w-[34ch] text-[clamp(17px,1.5vw,22px)] leading-snug">{study.summary.day}</p>
+              </div>
+              {/* The index card clipped to the file, with its status stamped on. */}
+              <dl className="case-card relative grid max-w-[460px] gap-x-6 gap-y-3 rounded-[16px] bg-surface p-5 pt-[60px] text-fg sm:grid-cols-2">
+                <div>
+                  <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Role</dt>
+                  <dd className="mt-0.5 text-[15px] leading-snug">{study.role}</dd>
+                </div>
+                <div>
+                  <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">When</dt>
+                  <dd className="mt-0.5 text-[15px] leading-snug">{study.timeline}</dd>
+                </div>
+                <div className="sm:col-span-2">
+                  <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Links</dt>
+                  <dd className="mt-1 flex flex-wrap gap-x-5 gap-y-1 text-[15px] font-semibold">
+                    {links.map((l) => (
+                      <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1">
+                        <Scribble>{l.label}</Scribble> <ArrowUpRight className="text-[13px]" />
+                      </a>
+                    ))}
+                  </dd>
+                </div>
+                <p aria-label={`Status: ${study.status}`} className="case-status-stamp absolute top-3.5 right-4 left-5 w-fit max-w-[calc(100%-36px)] rounded-[6px] border-[3px] px-2.5 py-1 text-center font-mono text-[12px] leading-tight font-semibold tracking-wider uppercase">
+                  {study.status}
+                </p>
+              </dl>
+            </div>
+            <StarStage slug={study.slug} className="min-h-[300px] night:[filter:saturate(0.85)_brightness(0.88)] lg:min-h-[560px]" />
+          </div>
         </div>
       </section>
 
-      {/* Meta strip */}
-      <section className="px-gutter pb-[clamp(48px,7vw,96px)]">
-        <dl className="mx-auto grid max-w-[1200px] gap-6 border-y border-line py-6 sm:grid-cols-2 lg:grid-cols-4">
-          {(
-            [
-              ["Role", study.role],
-              ["When", study.timeline],
-              ["Status", study.status],
-            ] as const
-          ).map(([k, v]) => (
-            <div key={k}>
-              <dt className="text-[13px] text-fg-muted">{k}</dt>
-              <dd className="mt-1 text-[16px]">{v}</dd>
-            </div>
+      {/* The evidence */}
+      <section data-section="Evidence" className="px-gutter pb-[clamp(64px,9vw,128px)]">
+        <ul className="mx-auto grid max-w-[1320px] gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {study.stats.map((s, i) => (
+            <li
+              key={s.label}
+              data-animate="slap"
+              style={{ "--d": `${i * 90}ms` } as CSSProperties}
+              className="flex flex-col gap-2 rounded-[22px] border-[4px] border-[var(--die)] bg-surface p-6 shadow-[0_14px_30px_-20px_rgb(0_0_0/0.35)]"
+            >
+              <span className={cn("size-2.5 rounded-full", brand.dot)} />
+              <p className="text-[clamp(48px,5vw,76px)] leading-none font-semibold tracking-[-0.05em] [font-variation-settings:'wdth'_78]">{s.value}</p>
+              <p className="text-[15px] leading-snug text-fg-muted">{s.label}</p>
+            </li>
           ))}
-          <div>
-            <dt className="text-[13px] text-fg-muted">Links</dt>
-            <dd className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-[16px]">
-              {project.links.live && (
-                <a href={project.links.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-line underline-offset-4 hover:decoration-current">
-                  Live <ArrowUpRight className="text-[13px]" />
-                </a>
-              )}
-              {project.links.repo && (
-                <a href={project.links.repo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-line underline-offset-4 hover:decoration-current">
-                  Code <ArrowUpRight className="text-[13px]" />
-                </a>
-              )}
-              {project.links.extra?.map((l) => (
-                <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline decoration-line underline-offset-4 hover:decoration-current">
-                  {l.label} <ArrowUpRight className="text-[13px]" />
-                </a>
-              ))}
-            </dd>
-          </div>
-        </dl>
+        </ul>
       </section>
 
-      {/* Summary + stats */}
-      <section className="px-gutter pb-[clamp(64px,10vw,140px)]">
-        <div className="mx-auto max-w-[1200px]">
-          <RevealText className="max-w-[26ch] text-[clamp(28px,3.8vw,56px)] leading-[1.08] font-medium tracking-[-0.03em] [font-variation-settings:'wdth'_85]">
-            <span className="day-only">{study.summary.day}</span>
-            <span className="night-only">{study.summary.night}</span>
+      {/* What it does */}
+      <section data-section="What it does" className="px-gutter py-[clamp(48px,7vw,96px)]">
+        <div className="mx-auto grid max-w-[1320px] gap-[clamp(32px,5vw,80px)] lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <SectionTitle kicker="What it does">
+              In plain{" "}
+              <Sticker size="word" tone="lime" tilt={-2}>
+                words
+              </Sticker>
+              .
+            </SectionTitle>
+            <p className="mt-6 max-w-[40ch] text-[clamp(17px,1.4vw,20px)] leading-snug text-fg-muted">{study.day.intro}</p>
+          </div>
+          <ol className="border-b border-line">
+            {study.day.points.map((p, i) => (
+              <li key={p.title} data-animate="rise" style={{ "--d": `${i * 70}ms` } as CSSProperties} className="grid grid-cols-[3.5rem_1fr] gap-4 border-t border-line py-7">
+                <span className="font-mono text-[14px] text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3 className="text-[clamp(22px,2vw,30px)] leading-tight font-semibold tracking-[-0.03em] [font-variation-settings:'wdth'_85]">{p.title}</h3>
+                  <p className="mt-2 max-w-[52ch] leading-snug text-fg-muted">{p.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section data-section="How it works" className="px-gutter py-[clamp(56px,8vw,120px)]">
+        <div className="mx-auto max-w-[1320px]">
+          <SectionTitle kicker="How it works">
+            Under the{" "}
+            <Sticker size="word" tone="violet" tilt={2}>
+              hood
+            </Sticker>
+            .
+          </SectionTitle>
+          <RevealText className="mt-8 max-w-[30ch] text-[clamp(24px,2.9vw,42px)] leading-[1.18] font-medium tracking-[-0.03em] [font-variation-settings:'wdth'_85]">
+            {study.summary.night}
           </RevealText>
-          <ul className="mt-14 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {study.stats.map((s, i) => (
-              <Reveal as="li" key={s.label} delay={i * 80} className="border-t-2 border-fg pt-4">
-                <p className="display-sans text-[clamp(56px,6vw,96px)] normal-case">{s.value}</p>
-                <p className="mt-2 max-w-[22ch] text-fg-muted">{s.label}</p>
-              </Reveal>
+          <p className="mt-6 max-w-[56ch] text-fg-muted">{study.night.intro}</p>
+
+          {/* The pipeline: a line runs through the steps and fills as you scroll past. */}
+          <ol className="case-pipe relative mt-14 grid gap-8 md:gap-5" style={{ "--steps": study.night.pipeline.length } as CSSProperties}>
+            <span aria-hidden="true" className={cn("case-pipe-line", brand.dot)} />
+            {study.night.pipeline.map((s, i) => (
+              <li key={s.step} data-animate="rise" style={{ "--d": `${i * 90}ms` } as CSSProperties} className="relative grid grid-cols-[44px_1fr] gap-4 md:flex md:flex-col md:gap-4">
+                <span className={cn("relative z-10 flex size-11 items-center justify-center rounded-full border-[3px] border-[var(--die)] font-mono text-[13px] font-semibold", brand.dot, brand.onDot)}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="text-[clamp(24px,2.2vw,32px)] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_80]">{s.step}</h3>
+                  <p className="mt-2 text-[15px] leading-snug text-fg-muted">{s.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          {/* Decisions: notes taped into the file */}
+          <h3 className="mt-[clamp(64px,8vw,112px)] font-serif text-[clamp(26px,2.6vw,36px)] italic">Decisions that mattered</h3>
+          <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {study.night.decisions.map((d, i) => (
+              <li
+                key={d.title}
+                data-animate="slap"
+                style={{ "--d": `${i * 80}ms`, "--tilt": `${[-1.2, 0.9, -0.6, 1.1][i % 4]}deg` } as CSSProperties}
+                className={cn("case-note relative rounded-[6px] p-6 pt-8", NOTE_TONES[i % NOTE_TONES.length])}
+              >
+                <h4 className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{d.title}</h4>
+                <p className="mt-2 text-[15px] leading-snug opacity-80">{d.body}</p>
+              </li>
             ))}
           </ul>
         </div>
       </section>
 
-      {/* The two stories: current shift first */}
-      <div className="flex flex-col">
-        <section className="px-gutter order-1 pb-[clamp(64px,10vw,140px)] night:order-2">
-          <div className="mx-auto max-w-[1200px]">
-            <SectionHeading
-              className="mb-6"
-              kicker={{ day: "By day: what it does", night: "And by day: what it does" }}
-              day={{ sans: "What it", serif: "does" }}
-            />
-            <p className="mb-10 max-w-2xl text-[clamp(17px,1.5vw,21px)] text-fg-muted">{study.day.intro}</p>
-            <ul className="grid gap-5 md:grid-cols-2">
-              {study.day.points.map((p, i) => (
-                <Reveal as="li" key={p.title} delay={(i % 2) * 90} className="rounded-[26px] border border-line bg-surface p-6">
-                  <span className={cn("mb-4 block size-3 rounded-full", brand.dot)} />
-                  <h3 className="text-[clamp(20px,1.8vw,24px)] font-semibold tracking-tight">{p.title}</h3>
-                  <p className="mt-2 leading-snug text-fg-muted">{p.body}</p>
-                </Reveal>
+      {/* The exhibit: PatentIQ's rubric, Arcee's gated phases */}
+      {study.breakdown && (
+        <section data-section="The rubric" className="px-gutter py-[clamp(48px,7vw,96px)]">
+          <div className="mx-auto max-w-[1320px]">
+            <SectionTitle kicker="Exhibit A">
+              The{" "}
+              <Sticker size="word" tone="sunflower" tilt={-2}>
+                rubric
+              </Sticker>
+              .
+            </SectionTitle>
+            <p className="mt-4 text-fg-muted">{study.breakdown.caption}</p>
+            <ul className="mt-10 flex flex-col gap-3.5">
+              {study.breakdown.rows.map((r, i) => (
+                <li key={r.label} data-animate="row" style={{ "--d": `${i * 45}ms`, "--w": r.value / r.max } as CSSProperties} className="case-bar grid grid-cols-[minmax(0,15rem)_1fr_4.5rem] items-center gap-4">
+                  <span className="flex items-center gap-2 text-[15px]">
+                    {r.label}
+                    {r.note && <span className="rounded-full bg-lime px-2 py-0.5 text-[11px] font-semibold text-[#2B3600]">{r.note}</span>}
+                  </span>
+                  <span className="h-4 overflow-hidden rounded-full bg-line">
+                    <span className={cn("case-bar-fill block h-full rounded-full", brand.dot)} />
+                  </span>
+                  <span className="text-right font-mono text-[14px]">{r.value} pts</span>
+                </li>
               ))}
             </ul>
           </div>
         </section>
-
-        <section className="px-gutter order-2 pb-[clamp(64px,10vw,140px)] night:order-1">
-          <div className="mx-auto max-w-[1200px]">
-            <SectionHeading
-              className="mb-6"
-              kicker={{ day: "And by night: how it works", night: "By night: how it works" }}
-              day={{ sans: "How it", serif: "works" }}
-            />
-            <p className="mb-12 max-w-2xl text-[clamp(17px,1.5vw,21px)] text-fg-muted">{study.night.intro}</p>
-
-            <ol className="relative mb-16 flex flex-col gap-0 before:absolute before:top-3 before:bottom-3 before:left-[19px] before:w-px before:bg-line">
-              {study.night.pipeline.map((s, i) => (
-                <Reveal as="li" key={s.step} delay={i * 60} className="relative grid grid-cols-[40px_1fr] gap-5 py-4">
-                  <span className={cn("relative z-10 flex size-10 items-center justify-center rounded-full font-mono text-[13px]", brand.dot, brand.onDot)}>
-                    {String(i + 1).padStart(2, "0")}
+      )}
+      {study.progress && (
+        <section data-section="The gates" className="px-gutter py-[clamp(48px,7vw,96px)]">
+          <div className="mx-auto max-w-[1320px]">
+            <SectionTitle kicker="Exhibit A">
+              Built in gated{" "}
+              <Sticker size="word" tone="sunflower" tilt={-2}>
+                phases
+              </Sticker>
+              .
+            </SectionTitle>
+            <p className="mt-4 text-fg-muted">{study.progress.caption}</p>
+            <ol className="mt-10 border-b border-line">
+              {study.progress.rows.map((r, i) => (
+                <li key={r.label} data-animate="rise" style={{ "--d": `${i * 60}ms` } as CSSProperties} className="grid items-center gap-3 border-t border-line py-6 sm:grid-cols-[3rem_15rem_1fr_auto] sm:gap-6">
+                  <span className="font-mono text-[13px] text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="text-[19px] font-semibold tracking-[-0.02em]">{r.label}</span>
+                  <span className="text-fg-muted">{r.note}</span>
+                  <span className={cn("case-stamp w-fit rounded-[5px] border-[2.5px] px-2.5 py-0.5 font-mono text-[12px] font-semibold tracking-wider uppercase", STATE[r.state].cls)}>
+                    {STATE[r.state].label}
                   </span>
-                  <div className="pt-1.5">
-                    <h3 className="display-sans text-[clamp(28px,3vw,40px)]">{s.step}</h3>
-                    <p className="mt-1 max-w-2xl leading-snug text-fg-muted">{s.body}</p>
-                  </div>
-                </Reveal>
+                </li>
               ))}
             </ol>
-
-            <h3 className="mb-6 font-serif text-[clamp(26px,2.6vw,36px)] italic">Decisions that mattered</h3>
-            <ul className="grid gap-5 md:grid-cols-2">
-              {study.night.decisions.map((d, i) => (
-                <Reveal as="li" key={d.title} delay={(i % 2) * 90} className="rounded-[26px] bg-ink p-6 text-paper night:bg-surface night:text-fg">
-                  <h4 className="text-[clamp(19px,1.7vw,22px)] font-semibold tracking-tight">{d.title}</h4>
-                  <p className="mt-2 leading-snug opacity-75">{d.body}</p>
-                </Reveal>
-              ))}
-            </ul>
-          </div>
-        </section>
-      </div>
-
-      {/* Breakdown / progress */}
-      {(study.breakdown || study.progress) && (
-        <section className="px-gutter pb-[clamp(64px,10vw,140px)]">
-          <div className="mx-auto max-w-[1200px]">
-            {study.breakdown && (
-              <>
-                <SectionHeading className="mb-4" kicker={{ day: study.breakdown.caption }} day={{ sans: "The", serif: "rubric" }} />
-                <ul className="mt-10 flex flex-col gap-3">
-                  {study.breakdown.rows.map((r, i) => (
-                    <Reveal as="li" key={r.label} delay={i * 40} className="grid grid-cols-[minmax(0,14rem)_1fr_4rem] items-center gap-4">
-                      <span className="text-[15px]">
-                        {r.label}
-                        {r.note && <span className="ml-2 rounded-full bg-lime px-2 py-0.5 text-[11px] text-[#2B3600]">{r.note}</span>}
-                      </span>
-                      <span className="h-3 overflow-hidden rounded-full bg-line">
-                        <span className={cn("block h-full rounded-full", brand.dot)} style={{ width: `${(r.value / r.max) * 100}%` }} />
-                      </span>
-                      <span className="text-right font-mono text-[14px]">{r.value} pts</span>
-                    </Reveal>
-                  ))}
-                </ul>
-              </>
-            )}
-            {study.progress && (
-              <>
-                <SectionHeading className="mb-4" kicker={{ day: study.progress.caption }} day={{ sans: "Gated", serif: "phases" }} />
-                <ol className="mt-10 border-b border-line">
-                  {study.progress.rows.map((r, i) => (
-                    <Reveal as="li" key={r.label} delay={i * 50} className="grid gap-2 border-t border-line py-5 sm:grid-cols-[3rem_14rem_1fr_auto] sm:items-baseline sm:gap-6">
-                      <span className="font-mono text-[13px] text-fg-muted">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="text-[18px] font-medium">{r.label}</span>
-                      <span className="text-fg-muted">{r.note}</span>
-                      <span
-                        className={cn(
-                          "w-fit rounded-full px-3 py-0.5 text-[12px] font-medium",
-                          r.state === "done" && "bg-lime text-[#2B3600]",
-                          r.state === "doing" && "bg-sunflower text-[#4A3A00]",
-                          r.state === "next" && "border border-line text-fg-muted",
-                        )}
-                      >
-                        {r.state === "done" ? "Gate passed" : r.state === "doing" ? "In progress" : "Next"}
-                      </span>
-                    </Reveal>
-                  ))}
-                </ol>
-              </>
-            )}
           </div>
         </section>
       )}
 
-      {/* Next project */}
-      <section className="px-gutter pb-[clamp(72px,10vw,140px)]">
-        <TransitionLink
-          href={`/work/${next.slug}`}
-          transitionLabel={next.name}
-          className="group mx-auto flex max-w-[1200px] items-end justify-between gap-6 border-t-2 border-fg pt-6"
-        >
-          <span>
-            <span className="block font-serif text-[clamp(18px,1.6vw,22px)] text-fg-muted">Next star project</span>
-            <span className="display-sans block text-[clamp(56px,10vw,160px)] transition-colors group-hover:text-accent-text">{next.name}</span>
-          </span>
-          <ArrowRight className="mb-[2vw] shrink-0 text-[clamp(36px,5vw,72px)] transition-transform duration-500 ease-[var(--ease-expo-out)] group-hover:translate-x-2" />
-        </TransitionLink>
+      {/* The next file's tab */}
+      <section className="px-gutter pt-[clamp(32px,5vw,64px)] pb-[clamp(96px,10vw,150px)]">
+        <div className="mx-auto max-w-[1320px]">
+          <TransitionLink href={`/work/${next.slug}`} transitionLabel={next.name} data-fly-card="" className="case-next group block">
+            <span className={cn("inline-block rounded-t-[14px] border-[4px] border-b-0 border-[var(--die)] px-4 pt-2 pb-3 font-mono text-[13px] tracking-wider uppercase", nextBrand.fill, nextBrand.onFill)}>
+              Next file
+            </span>
+            <span className={cn("case-next-body relative -mt-[2px] flex items-center justify-between gap-6 overflow-hidden rounded-[24px] rounded-tl-none border-[5px] border-[var(--die)] p-[clamp(20px,3vw,40px)]", nextBrand.fill, nextBrand.onFill)}>
+              <span>
+                <span className="block font-mono text-[13px] tracking-wide uppercase opacity-80">
+                  Case {String(next.order).padStart(2, "0")}
+                </span>
+                <span className="mt-2 block text-[clamp(52px,9vw,140px)] leading-[0.88] font-semibold tracking-[-0.055em] [font-variation-settings:'wdth'_76]">{next.name}</span>
+                <span className="mt-3 inline-flex items-center gap-2 text-[16px] font-semibold">
+                  Open it <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1.5" />
+                </span>
+              </span>
+              <span data-fly-source={next.slug} className="case-next-art relative hidden h-[clamp(140px,16vw,220px)] w-[clamp(180px,24vw,340px)] shrink-0 items-center justify-center sm:flex">
+                <StarVisual slug={next.slug} />
+              </span>
+            </span>
+          </TransitionLink>
+        </div>
       </section>
     </main>
   );
