@@ -20,7 +20,7 @@ const SIZES = {
   /** A label chip. */
   chip: "gap-2 rounded-full border-[3px] px-4 py-1.5 text-[15px] font-medium",
   /** A word inside running text, sized from the surrounding font. */
-  word: "rounded-[0.28em] border-[0.07em] px-[0.26em] pb-[0.04em] leading-[1.05]",
+  word: "sticker-word rounded-[0.28em] border-[0.07em] px-[0.26em] pb-[0.04em] leading-[1.05]",
 } as const;
 
 export function Sticker({

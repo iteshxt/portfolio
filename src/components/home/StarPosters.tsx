@@ -64,7 +64,7 @@ export function StarPosters({ projects, header }: { projects: Project[]; header:
                 </div>
               </div>
             </div>
-            <div data-fly-source={p.slug} className={cn("poster-art relative flex min-h-72 items-center justify-center", brand.fill)}>
+            <div data-fly-source={p.slug} data-cursor="View" className={cn("poster-art relative flex min-h-72 items-center justify-center", brand.fill)}>
               <StarVisual slug={p.slug} />
             </div>
           </article>

@@ -5,6 +5,7 @@ import { SectionTitle } from "@/components/type/SectionTitle";
 import { PeelReveal } from "@/components/ui/PeelReveal";
 import { Sticker } from "@/components/ui/Sticker";
 import { RELEASES } from "@/content/dialabs";
+import type { CSSProperties } from "react";
 
 const COVERS = [
   "bg-patentiq text-patentiq-ink",
@@ -44,7 +45,7 @@ export function DiaLabsTeaser() {
           </div>
           <ul className="grid gap-x-5 gap-y-6 sm:grid-cols-2">
             {RELEASES.map((r, i) => (
-              <li key={r.name} style={{ rotate: `${TILTS[i % TILTS.length]}deg` }}>
+              <li key={r.name} data-animate="slap" style={{ rotate: `${TILTS[i % TILTS.length]}deg`, "--d": `${i * 70}ms` } as CSSProperties}>
                 <PeelReveal label={r.name} eyebrow={r.kind} cover={COVERS[i % COVERS.length]} className="h-full [&>div:first-child]:min-h-[128px] [&>div:first-child]:border-white/30">
                   <p className="text-[15px] leading-snug">{r.day}</p>
                   <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px] font-semibold">

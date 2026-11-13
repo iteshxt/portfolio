@@ -1,5 +1,5 @@
 import { cacheLife } from "next/cache";
-import { Suspense } from "react";
+import { Suspense, type CSSProperties } from "react";
 import { ArrowUpRight } from "@/components/icons";
 import { Sticker, type StickerTone } from "@/components/ui/Sticker";
 import { SITE } from "@/content/site";
@@ -31,7 +31,7 @@ export async function Footer() {
     <footer className="cutting-mat px-gutter mt-auto border-t border-line pt-[clamp(56px,8vw,100px)] pb-32">
       <div className="mx-auto grid max-w-[1440px] items-start gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
         <div className="flex flex-col items-start gap-5">
-          <p className="wordmark-sticker inline-block rounded-[28px] border-[6px] border-white bg-violet px-8 pt-3 pb-5 font-serif text-[clamp(64px,8vw,120px)] leading-none text-white italic">
+          <p data-animate="slap" className="wordmark-sticker inline-block rounded-[28px] border-[6px] border-white bg-violet px-8 pt-3 pb-5 font-serif text-[clamp(64px,8vw,120px)] leading-none text-white italic">
             itesh
           </p>
           <p className="max-w-xs text-fg-muted">{SITE.role}.</p>
@@ -39,8 +39,8 @@ export async function Footer() {
 
         <nav aria-label="Elsewhere">
           <ul className="flex flex-wrap gap-3">
-            {LINKS.map((link) => (
-              <li key={link.label}>
+            {LINKS.map((link, i) => (
+              <li key={link.label} data-animate="slap" style={{ "--d": `${120 + i * 80}ms` } as CSSProperties}>
                 <a
                   href={link.href}
                   target={link.href.startsWith("http") ? "_blank" : undefined}

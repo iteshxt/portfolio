@@ -36,6 +36,7 @@ export function PeelReveal({
         aria-controls={id}
         tabIndex={open ? -1 : 0}
         onClick={() => setOpen(true)}
+        data-cursor="Peel"
         className={cn("peel-cover absolute inset-0 flex flex-col justify-between rounded-2xl border-4 border-white p-5 text-left", cover, open && "is-peeled")}
       >
         <span className="font-mono text-[12px] tracking-wide uppercase opacity-80">{eyebrow}</span>

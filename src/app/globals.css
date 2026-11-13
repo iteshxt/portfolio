@@ -577,6 +577,98 @@ html {
   }
 }
 
+/* Motion layer (components/motion/MotionLayer): reveal on scroll, staggered by --d. */
+[data-js] [data-animate]:not([data-in]) {
+  opacity: 0;
+}
+[data-animate="rise"][data-in] {
+  animation: rise-in 0.9s var(--ease-expo-out) var(--d, 0ms) backwards;
+}
+[data-animate="row"][data-in] {
+  animation: rise-in 0.7s var(--ease-expo-out) var(--d, 0ms) backwards;
+}
+[data-animate="slap"][data-in] {
+  animation: slap-in 0.6s var(--ease-slap) var(--d, 0ms) backwards;
+}
+/* Word stickers in a heading slap on just after the heading rises. */
+[data-animate="rise"][data-in] .sticker-word {
+  animation: slap-in 0.6s var(--ease-slap) calc(var(--d, 0ms) + 380ms) backwards;
+}
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    translate: 0 36px;
+    filter: blur(6px);
+  }
+}
+@keyframes slap-in {
+  from {
+    opacity: 0;
+    scale: 1.7;
+  }
+  60% {
+    opacity: 1;
+    scale: 0.94;
+  }
+}
+
+/* Sticker cursor: a small violet dot that grows on interactive things and labels [data-cursor]. */
+.sticker-cursor {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.sticker-cursor[data-on] {
+  opacity: 1;
+}
+.sticker-cursor-dot {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  translate: -50% -50%;
+  border: 2px solid #fff;
+  border-radius: 9999px;
+  background: var(--violet);
+  box-shadow: 0 4px 10px -4px rgb(0 0 0 / 0.5);
+  transition:
+    width 0.35s var(--ease-slap),
+    height 0.35s var(--ease-slap),
+    border-radius 0.35s var(--ease-slap),
+    background-color 0.2s ease;
+}
+.sticker-cursor[data-mode="hover"] .sticker-cursor-dot {
+  width: 40px;
+  height: 40px;
+  background: rgb(122 44 255 / 0.18);
+}
+.sticker-cursor[data-mode="label"] .sticker-cursor-dot {
+  width: 72px;
+  height: 72px;
+  rotate: -8deg;
+  border-width: 3px;
+  background: var(--lime);
+}
+.sticker-cursor-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2b3600;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.sticker-cursor[data-mode="label"] .sticker-cursor-label {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-js] [data-animate]:not([data-in]) {
+    opacity: 1;
+  }
+  [data-animate][data-in],
+  [data-animate="rise"][data-in] .sticker-word {
+    animation: none;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);

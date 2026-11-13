@@ -26,6 +26,7 @@ export default function Home() {
       <section data-section="Hello" className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
         <PeelHint />
 
+        <div data-parallax="0.28" data-parallax-fade="" className="flex flex-col items-center">
         <p className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">Hi, I&rsquo;m Itesh.</p>
         {/* One readable statement instead of a giant cycling headline; the key words are flickable stickers. */}
         {/* Letters swell towards the cursor; each sticker is kept with its punctuation. */}
@@ -63,6 +64,7 @@ export default function Home() {
               Ask Arcee
             </OpenArceeButton>
           </div>
+        </div>
         </div>
 
         <p className="absolute bottom-28 left-1/2 flex -translate-x-1/2 items-center gap-2 font-serif text-[18px] text-fg-muted md:bottom-10 md:left-[clamp(16px,4vw,48px)] md:translate-x-0">

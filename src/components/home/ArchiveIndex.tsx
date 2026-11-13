@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight } from "@/components/icons";
 import { CATEGORY_LABELS, type Project, type ProjectCategory } from "@/content/projects";
 import { cn } from "@/lib/cn";
@@ -96,13 +96,14 @@ export function ArchiveIndex({ projects }: { projects: Project[] }) {
         {visible.map((p, i) => {
           const href = p.links.live ?? p.links.repo;
           return (
-            <li key={p.slug} className="border-t border-line">
+            <li key={p.slug} data-animate="row" style={{ "--d": `${Math.min(i, 8) * 45}ms` } as CSSProperties} className="border-t border-line">
               <a
                 href={href}
                 target="_blank"
                 rel="noreferrer"
                 onPointerEnter={() => setHover(i)}
                 onFocus={() => setHover(i)}
+                data-cursor="Open"
                 className="index-row group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-5 md:grid-cols-[3.5rem_1fr_12rem_6rem]"
               >
                 <span className="font-mono text-[13px] text-fg-muted">{String(i + 1).padStart(2, "0")}</span>

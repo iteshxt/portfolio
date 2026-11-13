@@ -10,6 +10,7 @@ import { PrintResume } from "@/components/print/PrintResume";
 import { Footer } from "@/components/shell/Footer";
 import { NavBar } from "@/components/shell/NavBar";
 import { PeelCorner } from "@/components/shell/PeelCorner";
+import { MotionLayer } from "@/components/motion/MotionLayer";
 import { ScrollStatus } from "@/components/shell/ScrollStatus";
 import { TopBar } from "@/components/shell/TopBar";
 import { IntroScreen } from "@/components/transition/IntroScreen";
@@ -113,6 +114,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <SmoothScroll />
           <TopBar />
           <ScrollStatus />
+          <MotionLayer />
           {children}
           <Footer />
           <NavBar />
