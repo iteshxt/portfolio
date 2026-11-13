@@ -1081,6 +1081,60 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     26px 26px,
     26px 26px;
 }
+/* The notebook as an open book: graph-paper pages, a spine shadow, leaves turning in 3D. */
+.book-page {
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 26px 26px;
+  border: 5px solid var(--die);
+  box-shadow: 0 30px 60px -40px rgb(0 0 0 / 0.5);
+  overflow: hidden;
+}
+.book-left {
+  border-radius: 24px 6px 6px 24px;
+  border-right-width: 0;
+}
+.book-right {
+  border-radius: 6px 24px 24px 6px;
+  border-left-width: 0;
+  /* The red margin line, near the spine. */
+  background-image:
+    linear-gradient(90deg, transparent 26px, rgb(255 75 43 / 0.45) 26px, rgb(255 75 43 / 0.45) 28px, transparent 28px),
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    26px 26px,
+    26px 26px;
+}
+.book-leaf {
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.book-face {
+  backface-visibility: hidden;
+}
+/* Only the pages under the leaves cast the book's shadow; stacked leaves would darken it. */
+.book-leaf .book-page {
+  box-shadow: none;
+}
+.book-back {
+  transform: rotateY(180deg);
+}
+/* A soft shade sweeps across a page while it turns. */
+.book-leaf[data-turning] .book-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgb(0 0 0 / 0.12), transparent 60%);
+}
+.book-spine {
+  background: linear-gradient(90deg, transparent, rgb(0 0 0 / 0.14) 45%, rgb(0 0 0 / 0.2) 50%, rgb(0 0 0 / 0.14) 55%, transparent);
+}
 .notebook-stamp {
   color: #3d7a00;
   border-color: currentColor;

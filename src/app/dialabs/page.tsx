@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { LabBot } from "@/components/dialabs/LabBot";
+import { FlipNotebook } from "@/components/dialabs/FlipNotebook";
 import { LabNotebook } from "@/components/dialabs/LabNotebook";
 import { ArrowDown, ArrowUpRight, Spark } from "@/components/icons";
 import { SectionTitle } from "@/components/type/SectionTitle";
@@ -75,16 +76,21 @@ export default function DiaLabsPage() {
       </section>
 
       {/* The notebook */}
-      <section id="notebook" data-section="The notebook" className="px-gutter scroll-mt-10 py-[clamp(48px,7vw,104px)]">
+      <section id="notebook" data-section="The notebook" className="px-gutter scroll-mt-10 py-[clamp(48px,7vw,104px)] md:pt-0">
         <div className="mx-auto max-w-[1240px]">
-          <SectionTitle kicker="The notebook" className="mb-[clamp(32px,5vw,60px)]">
-            Every release was a{" "}
-            <Sticker size="word" tone="sunflower" tilt={2}>
-              question
-            </Sticker>
-            .
-          </SectionTitle>
-          <LabNotebook releases={RELEASES} />
+          <FlipNotebook
+            releases={RELEASES}
+            fallback={<LabNotebook releases={RELEASES} />}
+            title={
+              <SectionTitle kicker="The notebook">
+                Every release was a{" "}
+                <Sticker size="word" tone="sunflower" tilt={2}>
+                  question
+                </Sticker>
+                .
+              </SectionTitle>
+            }
+          />
           <div className="mt-[clamp(28px,4vw,48px)] flex flex-col gap-3 md:flex-row md:items-center md:gap-6">
             <p className="font-serif text-[clamp(18px,1.6vw,22px)] text-fg-muted italic">Also from the lab, by the rest of the team:</p>
             <ul className="flex flex-wrap gap-2">

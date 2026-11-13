@@ -4,7 +4,7 @@ import { Scribble } from "@/components/motion/Scribble";
 import type { Release } from "@/content/dialabs";
 import { cn } from "@/lib/cn";
 
-const KIND_TONE: Record<Release["kind"], string> = {
+export const KIND_TONE: Record<Release["kind"], string> = {
   App: "bg-violet text-white",
   Model: "bg-lime text-[#2B3600]",
   Tool: "bg-lavender text-violet-ink",
