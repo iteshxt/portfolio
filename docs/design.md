@@ -32,7 +32,7 @@ Reference studied: extrafazant.nl. We learned from its discipline (a few signatu
 
 From a star card (home stack or work grid), the card's drawing lifts off its card with a white die-cut edge and a shadow, settles in the centre over the slapping sticker (in place of the destination's name), then flies into the case-study stage as the sticker peels, and fades into the real one.
 
-The same sequence runs as the site intro on first load, starting from a sticker already in place. While it covers the page, the intro sticker shows a loader: the wordmark, a 000→100 counter with a lime progress bar, a rotating "Warming up agents / models / …" line (night: logs / evals / …), and three stickers slapping on. It runs at least 1.1 s on a first visit (0.35 s on repeat visits in the same tab), finishes once fonts are ready (capped at 1.2 s), fades its content out, then peels. Reduced motion: a 200 ms crossfade, with no slap or peel.
+The same sequence runs as the site intro on first load, starting from a sticker already in place. While it covers the page, the intro sticker shows a loader: the wordmark, a 000→100 counter with a lime progress bar, a rotating "Warming up agents / models / …" line (night: logs / evals / …), and four wordless die-cut shapes (a sunflower burst, a lime blob, a tomato squiggle, a lavender arch) slapping on like a sticker sheet. No words on them: the loader isn't a CV. It runs at least 1.1 s on a first visit (0.35 s on repeat visits in the same tab), finishes once fonts are ready (capped at 1.2 s), fades its content out, then peels. Reduced motion: a 200 ms crossfade, with no slap or peel.
 
 ### 2.3 Two-line headlines
 
@@ -41,6 +41,10 @@ The same sequence runs as the site intro on first load, starting from a sticker 
 - The serif line types itself in (80 ms per character) and, on the home page, deletes and retypes through the completions (35 ms per character when deleting, 1.7 s pause).
 - Each line is fitted to the container width (see spec §5.3), so headlines always span the page.
 - Day completions say *what*; night completions say *how* (the table in §11).
+
+### 2.4 "Peel here" hint
+
+On the home hero, a handwritten "peel here" (Caveat) with a squiggly arrow points at the corner. It writes itself in once the intro has peeled (2.2 s), then the arrow nudges towards the corner every few seconds. It's hidden for good once the visitor has peeled (the saved shift sets `data-peeled` on `<html>`). Reduced motion: shown still.
 
 ## 3. Colour
 
@@ -92,6 +96,7 @@ All free (Google Fonts), self-hosted through `next/font`.
 | Display serif | **Instrument Serif** | regular (italic for emphasis), tracking -0.02em, line-height 0.9, uppercase in headlines |
 | Body / UI | **Mona Sans** | width 100, weight 400 / 500 / 600 |
 | Code / terminal | **JetBrains Mono** | 400 / 500 |
+| Handwriting | **Caveat** | 600, only for the home page's "peel here" hint; not preloaded |
 
 ### Scale (fluid, clamp-based)
 
@@ -144,6 +149,7 @@ Reduced motion (`prefers-reduced-motion: reduce`): no smooth scroll, no parallax
   - DiaChat: a squishy speech bubble with a wobbly jelly body
   - Archive: die-cut stickers as flat 3D cards that bend slightly when grabbed
 - Objects react to the cursor (look-at, squish, wobble) and scroll. On a case study, the object flies from its card to the hero during the transition.
+- *As built (2026-11-13):* cards and the stage's 2D layer show each project's real artwork instead of placeholder drawings. Arcee: the particle-ring animation from the Arcee app (`wave-active-dark.webp`, animated WebP, with a still frame for reduced motion). PatentIQ: its document-and-brain mark (from the PatentIQ repo) as a CSS mask, with a lime scan passing over the strokes, the circuit nodes lighting in turn and the glow pulse from its own loader. DiaChat: its preloader on a loop (bubble draws, heart draws and fills, beats, fades), white with a soft shadow on sunflower. All CSS; no JavaScript. The 3D objects still take over on case-study stages on capable devices.
 - Built with three.js through React Three Fiber; see spec §7 for performance rules.
 
 ## 8. Stickers, icons, photo

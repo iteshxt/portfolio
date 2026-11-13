@@ -120,7 +120,8 @@ Loaded with `next/font/google` (self-hosted, subset `latin`, `display: swap`) an
 |---|---|---|
 | `--font-sans` | Mona Sans | variable, `axes: ["wdth"]` so the display style can use width 75 |
 | `--font-serif` | Instrument Serif | weight 400, normal + italic |
-| `--font-mono` | JetBrains Mono | variable |
+| `--font-mono` | JetBrains Mono | variable, not preloaded |
+| `--font-hand` | Caveat | weight 600, not preloaded; only the home page's "peel here" hint (downloads when it shows) |
 
 ## 5. Signature moves: implementation
 
@@ -288,7 +289,7 @@ ArceePanel (useChat, AI SDK)
 | INP | < 200 ms |
 | Initial JS (gzipped, excluding lazy 3D) | < 200 KB total, of which our app code < 40 KB (React/Next runtime is ~160 KB) |
 | Lighthouse performance (mobile) | ≥ 90 |
-| Fonts | 3 families, subset latin, preload the display fonts only |
+| Fonts | 3 families, subset latin, preload the display fonts only (plus Caveat for one hint, never preloaded) |
 
 *Measured 2026-11-12, after the milestone 7 pass and the extras:* 199 KB gzipped on the home page (197 KB before the extras; the scribbles, flickable stickers and card flight add 2.3 KB), of which ~160 KB is the React/Next runtime and the rest our code. That leaves under 1 KB of headroom: anything new on the home page needs to load on demand or pay for itself. The chat (AI SDK + corpus), terminal and scuba cat load on first use; GSAP loads after first paint for the line reveals; three.js loads only on case studies. (Before the pass it was ~345 KB once Arcee landed.) *Re-measured 2026-11-13:* the intro loader and the fuller home hero bring it to 199.7 KB (+0.8 KB: the intro counter logic and the Delhi clock). The loader markup is a Server Component passed into `TransitionProvider` as `intro`, so it ships no JS. *After merging that into v7 (2026-11-13):* 200.2 KB, so Lenis now loads on demand right after hydration (the intro covers the screen meanwhile): home 194.9 KB, work 197.9 KB, about 195.5 KB, contact 195.7 KB. On Vercel, Web Analytics and Speed Insights add their small loaders on top.
 

@@ -189,7 +189,9 @@ The name only; it's a separate thing from the Arcee agent project.
 
 ### 7.1 Home
 
-Intro loader + peel → hero cycling through two-line statements ("AGENTS / that act"), with an availability line and Delhi clock, a one-line "right now" summary, fact stickers, "See the work" / "Ask Arcee" buttons and the latest GitHub push → short who-he-is with an at-a-glance grid (now, last role, shipped, building) → star projects (Arcee first) → archive teaser → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
+Intro loader + peel → hero cycling through two-line statements ("AGENTS / that act"), with a one-line "right now" summary, "See the work" / "Ask Arcee" buttons, the latest GitHub push and a handwritten "peel here" pointing at the corner → short who-he-is statement → star projects (Arcee first), each with its real artwork animated → archive teaser (every sticker links to the live project or its code) → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
+
+No CV material on the home page (decided 2026-11-13): no degree, scores, availability badge, location or local time anywhere on the site. Background lives on the about page and in the print resume.
 
 ### 7.2 Star case studies (`/work/arcee`, `/work/patentiq`, `/work/diachat`)
 
