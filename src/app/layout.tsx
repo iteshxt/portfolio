@@ -10,6 +10,7 @@ import { PrintResume } from "@/components/print/PrintResume";
 import { Footer } from "@/components/shell/Footer";
 import { NavBar } from "@/components/shell/NavBar";
 import { PeelCorner } from "@/components/shell/PeelCorner";
+import { ScrollStatus } from "@/components/shell/ScrollStatus";
 import { TopBar } from "@/components/shell/TopBar";
 import { IntroScreen } from "@/components/transition/IntroScreen";
 import { TransitionProvider } from "@/components/transition/TransitionProvider";
@@ -111,6 +112,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <TransitionProvider intro={<IntroScreen />}>
           <SmoothScroll />
           <TopBar />
+          <ScrollStatus />
           {children}
           <Footer />
           <NavBar />

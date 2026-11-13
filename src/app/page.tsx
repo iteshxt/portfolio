@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <main className="flex-1">
       {/* Hero */}
-      <section className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
+      <section data-section="Hello" className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
         <PeelHint />
 
         <p className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">Hi, I&rsquo;m Itesh.</p>
@@ -77,7 +77,7 @@ export default function Home() {
       </section>
 
       {/* Intro */}
-      <section className="px-gutter py-[clamp(64px,10vw,140px)]">
+      <section data-section="In short" className="px-gutter py-[clamp(64px,10vw,140px)]">
         <div className="mx-auto flex max-w-[1440px] flex-col gap-4">
           <p className="font-serif text-[clamp(18px,1.7vw,24px)] text-fg-muted italic">In short</p>
           <RevealText className="max-w-[30ch] text-[clamp(26px,3.4vw,50px)] leading-[1.2] font-medium tracking-[-0.03em] [font-variation-settings:'wdth'_85]">
@@ -88,7 +88,7 @@ export default function Home() {
       </section>
 
       {/* Star projects */}
-      <section className="px-gutter pt-[clamp(32px,6vw,80px)] pb-[clamp(48px,8vw,120px)]">
+      <section data-section="Selected work" className="px-gutter pt-[clamp(32px,6vw,80px)] pb-[clamp(48px,8vw,120px)]">
         <div className="mx-auto max-w-[1440px]">
           <SectionTitle kicker="Selected work">
             Three I&rsquo;m most{" "}
@@ -103,7 +103,7 @@ export default function Home() {
 
       {/* Archive */}
       {ARCHIVE_PROJECTS.length > 0 && (
-        <section className="px-gutter py-[clamp(48px,8vw,120px)]">
+        <section data-section="More projects" className="px-gutter py-[clamp(48px,8vw,120px)]">
           <div className="mx-auto max-w-[1440px]">
             <div className="flex flex-wrap items-end justify-between gap-6">
               <SectionTitle kicker="Everything else">
@@ -133,7 +133,7 @@ export default function Home() {
       <DiaLabsTeaser />
 
       {/* Experience */}
-      <section className="px-gutter py-[clamp(64px,10vw,140px)]">
+      <section data-section="Experience" className="px-gutter py-[clamp(64px,10vw,140px)]">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
             <SectionTitle kicker="Experience">

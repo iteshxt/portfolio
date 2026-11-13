@@ -15,7 +15,7 @@ const RELEASES: { name: string; tone: StickerTone }[] = [
 /** DiaLabs as one chapter (not the headline): a full-bleed violet block. */
 export function DiaLabsTeaser() {
   return (
-    <section className="px-gutter bg-violet py-[clamp(72px,11vw,150px)] text-white">
+    <section data-section="DiaLabs" className="px-gutter bg-violet py-[clamp(72px,11vw,150px)] text-white">
       <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1.2fr_1fr] lg:items-end">
         <SectionTitle kicker="Co-founded" inverse>
           DiaLabs, an{" "}

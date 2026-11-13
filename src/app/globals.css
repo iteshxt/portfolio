@@ -409,6 +409,23 @@ html {
   }
 }
 
+/* Section name in the top-centre status pill slides in when it changes. */
+.status-label {
+  display: inline-block;
+  animation: status-in 0.45s var(--ease-expo-out);
+}
+@keyframes status-in {
+  from {
+    opacity: 0;
+    transform: translateY(70%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .status-label {
+    animation: none;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);
