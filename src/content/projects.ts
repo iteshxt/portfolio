@@ -47,8 +47,8 @@ export const STAR_PROJECTS: Project[] = [
     category: "ai",
     year: "2026",
     day: "Scores student patent drafts on an 11-part, 100-point rubric before anyone files them.",
-    night: "Patent citations are validated with SerpAPI before Gemini grades; OCR for PDFs; Cloudflare Workers.",
-    stack: ["Next.js", "Cloudflare Workers", "Express", "Gemini", "SerpAPI"],
+    night: "Cited patents are checked against live patent search (Serper) before the model grades the draft; a Cloudflare Worker in front, an Express service behind.",
+    stack: ["Next.js", "Cloudflare Workers", "Express", "Gemma", "Serper"],
     links: {
       live: "https://patentiq.dialabs.tech",
       repo: "https://github.com/DiaLabs/PatentIQ",
