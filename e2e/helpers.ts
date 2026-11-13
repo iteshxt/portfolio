@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 
-export const ROUTES = ["/", "/work", "/work/arcee", "/work/patentiq", "/work/diachat", "/dialabs", "/about", "/contact"];
+export const ROUTES = ["/", "/work", "/work/arcee", "/work/patentiq", "/work/diachat", "/dialabs", "/about", "/contact", "/arcee"];
 
 /** Waits until the intro/transition sticker has peeled away. */
 export async function settled(page: Page) {

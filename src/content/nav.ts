@@ -19,6 +19,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/work", label: "Work", kind: "page", day: "real products", night: "the payment flows" },
   { href: "/dialabs", label: "DiaLabs", kind: "page", day: "the lab", night: "the open models" },
   { href: "/about", label: "About", kind: "page", day: "the human", night: "the edge cases" },
+  { href: "/arcee", label: "Chat", kind: "page", day: "ask Arcee anything", night: "the chatbot" },
   { href: "/contact", label: "Contact", kind: "page", day: "how to say hi", night: "the inbox" },
   { href: "/", label: "Home", kind: "page", day: "the start", night: "the start" },
 ];

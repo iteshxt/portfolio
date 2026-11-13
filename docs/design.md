@@ -66,6 +66,10 @@ The day/night content split is being retired page by page: light and dark become
 - **Buttons:** `.btn` sticker buttons (ink, paper, lime, violet), magnetic towards the cursor. Scrollbar: rounded violet strip.
 - **Motion:** headings rise from a blur and their word stickers slap on; rows and sticker groups stagger; hero parallax; a sticker cursor with labels. All rest for reduced motion.
 
+### 2.13 Arcee, full page (2026-11-13)
+
+`/arcee` holds the same conversation as the floating panel (one shared chat instance), big, beside postcards: what Arcee knows, questions to try, and how leaving a message works. The panel's header has an "open full page" button; "Chat" is in the navigator. Arcee's greeting is a postcard with a stamp (its animated ring). Tilts are now reserved for accents: heading word stickers, the footer wordmark, the peel hint, the stamp, the loader.
+
 ## 3. Colour
 
 ### 3.1 Palette

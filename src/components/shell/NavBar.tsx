@@ -17,6 +17,7 @@ const DOT: Record<string, string> = {
   Work: "bg-lime",
   DiaLabs: "bg-violet",
   About: "bg-lavender",
+  Chat: "bg-arcee",
   Contact: "bg-tomato",
   Home: "bg-fg-muted",
 };
