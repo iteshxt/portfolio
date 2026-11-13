@@ -41,10 +41,10 @@ export function DiaLabsTeaser() {
           <TransitionLink
             href="/dialabs"
             transitionLabel="DiaLabs"
-            className="group inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-[15px] font-medium text-violet-ink"
+            className="btn btn-paper"
           >
             Inside the lab
-            <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+            <ArrowRight />
           </TransitionLink>
         </Reveal>
       </div>

@@ -18,10 +18,10 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
       </h1>
       <p className="max-w-md text-fg-muted">The night shift has been notified (it&apos;s just Itesh). Try again, or head home.</p>
       <div className="flex flex-wrap justify-center gap-3">
-        <button type="button" onClick={reset} className="min-h-11 rounded-full bg-violet px-5 font-medium text-white">
+        <button type="button" onClick={reset} className="btn btn-violet">
           Try again
         </button>
-        <Link href="/" className="flex min-h-11 items-center rounded-full border border-fg px-5 font-medium">
+        <Link href="/" className="btn btn-paper">
           Go home
         </Link>
       </div>

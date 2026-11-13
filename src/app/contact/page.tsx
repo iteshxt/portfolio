@@ -53,7 +53,7 @@ export default function ContactPage() {
             <p className="max-w-md text-fg-muted">Rather not open your mail app? Leave a message with Arcee, the site&apos;s chatbot.</p>
             <OpenArceeButton
               seed="I want to leave a message for Itesh"
-              className="rounded-full bg-violet px-5 py-3 text-[15px] font-medium text-white transition-transform hover:-translate-y-0.5"
+              className="btn btn-violet"
             >
               Leave Arcee a message
             </OpenArceeButton>

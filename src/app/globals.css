@@ -312,64 +312,100 @@
   }
 }
 
-/* The loader's shapes, stuck around the home hero after the intro (components/home/HeroShapes). */
-.hero-shape {
-  animation:
-    intro-slap 0.5s var(--ease-slap) both,
-    hero-float 6s ease-in-out infinite;
-}
-@keyframes hero-float {
-  0%,
-  100% {
-    translate: 0 0;
+/* Buttons as die-cut stickers (docs/design.md §10): white edge and a drop shadow;
+   hover lifts and tilts them, pressing slaps them down. In a layer so utilities can override. */
+@layer components {
+  .btn {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.5rem;
+    border: 3px solid #fff;
+    border-radius: 9999px;
+    padding: 0.7rem 1.35rem;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    box-shadow: 0 8px 18px -10px rgb(0 0 0 / 0.45);
+    transition:
+      transform 0.35s var(--ease-expo-out),
+      box-shadow 0.35s var(--ease-expo-out),
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
-  50% {
-    translate: 0 -8px;
+  .btn:hover {
+    transform: translateY(-3px) rotate(-1.5deg);
+    box-shadow: 0 16px 28px -14px rgb(0 0 0 / 0.5);
   }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-shape {
-    animation: none;
+  .btn:active {
+    transform: translateY(0) scale(0.96);
+    box-shadow: 0 3px 8px -5px rgb(0 0 0 / 0.45);
+    transition-duration: 0.08s;
+  }
+  .btn svg {
+    transition: transform 0.3s var(--ease-expo-out);
+  }
+  .btn:hover svg:last-child {
+    transform: translateX(3px);
+  }
+  .btn-ink {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .btn-paper {
+    background: var(--surface);
+    color: var(--fg);
+    box-shadow:
+      inset 0 0 0 1.5px var(--line),
+      0 8px 18px -10px rgb(0 0 0 / 0.35);
+  }
+  .btn-lime {
+    background: var(--lime);
+    color: #2b3600;
+  }
+  .btn-violet {
+    background: var(--violet);
+    color: #fff;
+  }
+  [data-shift="night"] .btn {
+    border-color: rgb(255 255 255 / 0.9);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn:hover,
+    .btn:active {
+      transform: none;
+    }
   }
 }
 
-/* Peel-to-reveal sticker over hidden details (components/ui/PeelReveal). */
-.peel-cover {
-  box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.5);
-  transform-origin: 0 0;
-  transition:
-    transform 0.65s var(--ease-expo-out),
-    opacity 0.4s ease 0.15s;
-  cursor: pointer;
+/* Scrollbar: a violet sticker strip on the page colour (lavender at night). */
+html {
+  scrollbar-gutter: stable;
 }
-/* The lifted corner that says "peel me". */
-.peel-cover::after {
-  content: "";
-  position: absolute;
-  right: -4px;
-  bottom: -4px;
-  width: 34px;
-  height: 34px;
-  border-bottom-right-radius: 14px;
-  background: linear-gradient(135deg, transparent 49%, rgb(0 0 0 / 0.22) 50%, #fff 58%, #e9e7ee 100%);
-  transition:
-    width 0.3s var(--ease-expo-out),
-    height 0.3s var(--ease-expo-out);
+::-webkit-scrollbar {
+  width: 14px;
 }
-.peel-cover:hover::after,
-.peel-cover:focus-visible::after {
-  width: 52px;
-  height: 52px;
+::-webkit-scrollbar-track {
+  background: var(--bg);
 }
-.peel-cover.is-peeled {
-  transform: translate(6%, -26%) rotate(-14deg) scale(0.92);
-  opacity: 0;
-  pointer-events: none;
+::-webkit-scrollbar-thumb {
+  border: 4px solid var(--bg);
+  border-radius: 9999px;
+  background: var(--violet);
 }
-@media (prefers-reduced-motion: reduce) {
-  .peel-cover,
-  .peel-cover::after {
-    transition: none;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--violet-ink);
+}
+[data-shift="night"] ::-webkit-scrollbar-thumb {
+  background: var(--lavender);
+}
+@supports (-moz-appearance: none) {
+  html {
+    scrollbar-color: var(--violet) var(--bg);
+  }
+  [data-shift="night"] {
+    scrollbar-color: var(--lavender) var(--bg);
   }
 }
 

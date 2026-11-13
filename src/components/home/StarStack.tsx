@@ -55,10 +55,10 @@ export function StarStack({ projects }: { projects: Project[] }) {
                     <TransitionLink
                       href={`/work/${p.slug}`}
                       transitionLabel={p.name}
-                      className="group inline-flex items-center gap-2 rounded-full bg-fg px-5 py-3 text-[15px] font-medium text-bg"
+                      className="btn btn-ink"
                     >
                       Read the case study
-                      <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                      <ArrowRight />
                     </TransitionLink>
                     {p.links.live && (
                       <a href={p.links.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[15px]">

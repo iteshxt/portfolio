@@ -47,7 +47,7 @@ export default function DiaLabsPage() {
               href={DIALABS_URL}
               target="_blank"
               rel="noreferrer"
-              className="group inline-flex items-center gap-2 rounded-full border border-fg px-5 py-3 text-[15px] font-medium"
+              className="btn btn-paper"
             >
               DiaLabs on GitHub
               <ArrowUpRight className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

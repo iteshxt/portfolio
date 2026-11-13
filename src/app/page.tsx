@@ -10,7 +10,6 @@ import { ArrowDown, ArrowRight, Spark } from "@/components/icons";
 import { RevealText } from "@/components/motion/RevealText";
 import { NowBuilding } from "@/components/shell/NowBuilding";
 import { PeelHint } from "@/components/shell/PeelHint";
-import { HeroShapes } from "@/components/home/HeroShapes";
 import { Sticker } from "@/components/ui/Sticker";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionTitle } from "@/components/type/SectionTitle";
@@ -25,7 +24,6 @@ export default function Home() {
       {/* Hero */}
       <section className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
         <PeelHint />
-        <HeroShapes />
 
         <p className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">Hi, I&rsquo;m Itesh.</p>
         {/* One readable statement instead of a giant cycling headline; the key words are flickable stickers. */}
@@ -60,16 +58,16 @@ export default function Home() {
             <TransitionLink
               href="/work"
               transitionLabel="Work"
-              className="group inline-flex items-center gap-2 rounded-full bg-fg px-6 py-3 text-[15px] font-medium text-bg transition-colors hover:bg-violet hover:text-white"
+              className="btn btn-ink"
             >
               See the work
-              <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowRight />
             </TransitionLink>
             <OpenArceeButton
               seed="What are you building right now?"
-              className="group inline-flex items-center gap-2 rounded-full border border-fg px-6 py-3 text-[15px] font-medium transition-colors hover:bg-fg hover:text-bg"
+              className="btn btn-lime"
             >
-              <Spark className="transition-transform duration-500 group-hover:rotate-90" />
+              <Spark />
               Ask Arcee
             </OpenArceeButton>
           </div>
@@ -129,10 +127,10 @@ export default function Home() {
               <TransitionLink
                 href="/work"
                 transitionLabel="Work"
-                className="group inline-flex items-center gap-2 rounded-full border border-fg px-5 py-3 text-[15px] font-medium"
+                className="btn btn-paper"
               >
                 See all work
-                <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight />
               </TransitionLink>
             </div>
             <ArchiveMarquee projects={ARCHIVE_PROJECTS} />
@@ -158,10 +156,10 @@ export default function Home() {
             <TransitionLink
               href="/about"
               transitionLabel="About"
-              className="group inline-flex items-center gap-2 rounded-full border border-fg px-5 py-3 text-[15px] font-medium"
+              className="btn btn-paper"
             >
               The full story
-              <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
+              <ArrowRight />
             </TransitionLink>
           </div>
           <ExperienceList items={EXPERIENCE} />
