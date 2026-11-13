@@ -54,6 +54,18 @@ No giant cycling headline and no day/night copy. A small serif "Hi, I'm Itesh." 
 
 The day/night content split is being retired page by page: light and dark become a plain theme switched by the peel corner, with the same text in both. "How it works" now hides under small stickers instead: on each home star card, a sticker in the project's colours ("Peel for how it works") peels off on click or tap to show the how (approach summary and stack), with "Stick it back" to cover it again (`components/ui/PeelReveal`). Home sections use `SectionTitle`: a serif italic kicker over one sentence-case line with one word sticker. Hero stickers are field-themed (terminal, braces, neural net, chip, git branch, sparkle); the loader keeps its abstract shapes. The "peel here" hint always shows.
 
+### 2.7–2.12 Home page, round of 2026-11-13
+
+- **2.7 Status pill:** a fixed top-centre sticker pill with the current section ("03 · Selected work / 07", from `[data-section]`, picked by scroll position) and a violet line filling with page scroll.
+- **2.8 "Where to?" navigator:** the pill carries a tiny sticker stack and "Where to?" (no underscore). Opening fans out die-cut page stickers from the pill, each in its page's colour (stars in their brand colours), tilted, over a sticker search field; typing filters, Enter goes, anything else asks Arcee.
+- **2.9 Star posters:** each star project is a big die-cut poster in its app's colours (artwork large, name huge, peel sticker for how it works). "Selected work" pins while scroll slides the posters sideways (`PinnedTrack`); phones and reduced motion stack them.
+- **2.10 More projects:** a filterable index (category chips, one link row per project); on desktop a tilted preview sticker trails the cursor.
+- **2.11 DiaLabs:** the violet band grows from an inset rounded sticker to full width on scroll (`GrowIn`); releases are peelable stickers (name and kind; what it is and links underneath).
+- **2.12 Footer:** a sticker sheet on a cutting mat: wordmark sticker, link stickers, the latest push as a torn receipt, a peel tab back to the top.
+- **Hero type:** letters in the headline swell (weight up, width down) towards the cursor.
+- **Buttons:** `.btn` sticker buttons (ink, paper, lime, violet), magnetic towards the cursor. Scrollbar: rounded violet strip.
+- **Motion:** headings rise from a blur and their word stickers slap on; rows and sticker groups stagger; hero parallax; a sticker cursor with labels. All rest for reduced motion.
+
 ## 3. Colour
 
 ### 3.1 Palette
