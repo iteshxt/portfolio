@@ -771,11 +771,11 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     260px 260px,
     600px 600px;
   mix-blend-mode: multiply;
-  opacity: 0.55;
+  opacity: 0.4;
 }
 [data-shift="night"] .hero-sheet::after {
   mix-blend-mode: screen;
-  opacity: 0.16;
+  opacity: 0.12;
 }
 .hero-mat {
   background-image:
@@ -930,47 +930,75 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 .nav-sticker[aria-selected="true"] {
   translate: 0 -4px;
   box-shadow:
-    0 0 0 2px var(--violet),
+    0 0 0 2px var(--fg),
     0 16px 26px -14px rgb(0 0 0 / 0.5);
 }
-.nav-search {
-  transition-delay: 0s;
+/* A soft frosted backdrop keeps the stickers off the page underneath. */
+.nav-hand {
+  position: relative;
 }
-/* From tablet width up the page cards fan like a hand of playing cards above the pill: even steps
-   that overlap a little, a shallow arc and a small tilt each (--o = offset from the middle). */
+.nav-hand::before {
+  content: "";
+  position: absolute;
+  inset: -14px -10px;
+  z-index: -1;
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: opacity 0.3s ease;
+}
+.nav-panel[data-open="false"] .nav-hand::before {
+  opacity: 0;
+}
+/* From tablet width up the pages fan out of the pill on two semicircles (--a = angle, --R = radius):
+   star projects close in, the other pages further out. Each sticker sits at the pill's centre and is
+   pushed out along its angle, tilted a little with it so it stays readable; the chosen one slides
+   further out at the same angle. */
 @media (min-width: 640px) {
   .nav-hand {
-    position: relative;
     display: block;
-    height: 290px;
+    height: 230px;
   }
-  .nav-hand > li {
-    --gap: min(100px, calc((100vw - 200px) / 9));
-    position: absolute;
-    bottom: 40px;
+  .nav-hand::before {
+    inset: auto;
     left: 50%;
-    width: 132px;
-    margin-left: -66px;
-    translate: calc(var(--o) * var(--gap)) calc(var(--o) * var(--o) * 6px);
-    rotate: calc(var(--o) * 6deg);
+    bottom: -36px;
+    width: 680px;
+    height: 680px;
+    translate: -50% 50%;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--bg) 90%, transparent);
+    -webkit-mask: radial-gradient(closest-side, #000 82%, transparent);
+    mask: radial-gradient(closest-side, #000 82%, transparent);
+  }
+  .nav-hand > li,
+  .nav-hand > li[aria-selected="true"] {
+    --lift: 0px;
+    position: absolute;
+    left: 50%;
+    bottom: -36px;
+    translate: calc(-50% + sin(var(--a)) * (var(--R) + var(--lift))) calc(50% - cos(var(--a)) * (var(--R) + var(--lift)));
+    rotate: calc(var(--a) * 0.22);
   }
   .nav-hand > li[aria-selected="true"] {
+    --lift: 14px;
     z-index: 5;
-    /* `transform` runs after the card's own rotate, so it lifts along the card's tilt. */
-    translate: calc(var(--o) * var(--gap)) calc(var(--o) * var(--o) * 6px);
-    transform: translateY(-34px) scale(1.06);
   }
   .nav-panel[data-open="false"] .nav-hand > li {
-    translate: 0 40px;
+    translate: -50% 50%;
     rotate: 0deg;
-    transform: scale(0.5);
+    transform: scale(0.3);
   }
 }
-.nav-card .nav-card-face {
-  transition: scale 0.35s var(--ease-slap);
+/* The search field opens out of the pill. */
+.nav-field:not([hidden]) {
+  animation: nav-field-in 0.4s var(--ease-slap);
 }
-.nav-card[aria-selected="true"] .nav-card-face {
-  scale: 1.04;
+@keyframes nav-field-in {
+  from {
+    width: 190px;
+  }
 }
 /* The pill's mini stack fans when hovered or open. */
 .nav-pill {
@@ -999,6 +1027,9 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   .nav-mini,
   .nav-pill {
     transition: none;
+  }
+  .nav-field:not([hidden]) {
+    animation: none;
   }
 }
 

@@ -8,40 +8,41 @@ import { isTypingTarget } from "@/lib/motion";
 import { play } from "@/lib/sound";
 import { preloadArcee } from "./LazyOverlays";
 import { useUI } from "@/store/ui";
-import { StarVisual } from "@/components/home/StarVisual";
-import { Shape, type ShapeName } from "@/components/ui/Shape";
 
-/** The picture in the middle of each page card: real artwork for the stars, a die-cut shape for the rest. */
-const FACE: Record<string, { bg: string; star?: string; shape?: ShapeName }> = {
-  Arcee: { bg: "bg-arcee-deep", star: "arcee" },
-  PatentIQ: { bg: "bg-patentiq", star: "patentiq" },
-  DiaChat: { bg: "bg-diachat", star: "diachat" },
-  Work: { bg: "bg-violet/12", shape: "burst" },
-  DiaLabs: { bg: "bg-violet/12", shape: "capsule" },
-  About: { bg: "bg-violet/12", shape: "arch" },
-  Chat: { bg: "bg-violet/12", shape: "zigzag" },
-  Contact: { bg: "bg-violet/12", shape: "squiggle" },
-  Home: { bg: "bg-violet/12", shape: "blob" },
+/** Each page as a word sticker in the hero's colours; the star projects wear their own app's colours. */
+const TONE: Record<string, string> = {
+  Arcee: "bg-arcee-deep text-arcee",
+  PatentIQ: "bg-patentiq text-patentiq-ink",
+  DiaChat: "bg-diachat text-diachat-ink",
+  Work: "bg-lime text-[#2B3600]",
+  DiaLabs: "bg-violet text-white",
+  About: "bg-lavender text-violet-ink",
+  Chat: "bg-sunflower text-[#4A3A00]",
+  Contact: "bg-tomato text-[#2A0700]",
+  Home: "bg-paper text-ink",
 };
 
-/** A small dot of each page's colour; the stickers themselves stay plain and straight. */
-const DOT: Record<string, string> = {
-  Arcee: "bg-arcee",
-  PatentIQ: "bg-patentiq",
-  DiaChat: "bg-diachat",
-  Work: "bg-lime",
-  DiaLabs: "bg-violet",
-  About: "bg-lavender",
-  Chat: "bg-arcee",
-  Contact: "bg-tomato",
-  Home: "bg-fg-muted",
-};
+/** The two rings around the pill: star projects close in, the other pages further out. */
+const RINGS = { star: { radius: 118, step: 55, span: 110 }, page: { radius: 215, step: 30, span: 150 } };
+
+function placeOnRings(items: NavItem[]) {
+  const counts = { star: 0, page: 0 };
+  for (const item of items) counts[item.kind]++;
+  const seen = { star: 0, page: 0 };
+  return items.map((item) => {
+    const ring = RINGS[item.kind];
+    const n = counts[item.kind];
+    const k = seen[item.kind]++;
+    const span = Math.min(ring.span, ring.step * (n - 1));
+    return { angle: n < 2 ? 0 : -span / 2 + (span * k) / (n - 1), radius: ring.radius, order: k + (item.kind === "page" ? 1 : 0) };
+  });
+}
 
 /**
  * The "Where to?" navigator (docs/design.md §2.8, docs/spec.md §5.5): a pill with
- * a tiny sticker stack that fans out a hand of page cards (name in the corners,
- * a picture in the middle) over a search field. Typing filters; anything that isn't a
- * page goes to Arcee ("terminal" opens the hidden terminal).
+ * a tiny sticker stack. Opening it fans the pages out as word stickers on two
+ * semicircles around it, and the pill itself becomes the search field. Typing
+ * filters; anything that isn't a page goes to Arcee ("terminal" opens the hidden terminal).
  */
 export function NavBar() {
   const open = useUI((s) => s.navOpen);
@@ -58,6 +59,7 @@ export function NavBar() {
   const panelId = useId();
 
   const items = useMemo(() => filterNav(NAV_ITEMS, query), [query]);
+  const spots = useMemo(() => placeOnRings(items), [items]);
   const activeIndex = items.length ? Math.min(active, items.length - 1) : -1;
 
   const openNav = useCallback(() => {
@@ -73,7 +75,8 @@ export function NavBar() {
       setOpen(false);
       setQuery("");
       setActive(0);
-      if (focusPill) pillRef.current?.focus();
+      // The pill is shown again on the next render.
+      if (focusPill) requestAnimationFrame(() => pillRef.current?.focus());
     },
     [setOpen],
   );
@@ -140,88 +143,52 @@ export function NavBar() {
     }
   }
 
+  const miniStack = (
+    <span aria-hidden="true" className="relative h-6 w-8 shrink-0">
+      <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-sunflower" style={{ "--m": "-14deg", "--mx": "-5px" } as CSSProperties} />
+      <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-lime" style={{ "--m": "12deg", "--mx": "5px" } as CSSProperties} />
+      <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-lavender" style={{ "--m": "0deg", "--mx": "0px" } as CSSProperties} />
+    </span>
+  );
+  const askArcee = query.trim() !== "" && !items.length;
+
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
       {/* Clicks pass through the column; only the open panel and the pill take them. */}
       <div ref={shellRef} className="flex w-full max-w-[560px] flex-col items-center gap-3">
-        <div id={panelId} data-open={open} inert={!open} className="nav-panel pointer-events-auto flex w-full flex-col gap-3">
-          <ul id={listId} role="listbox" aria-label="Pages" className="nav-hand grid grid-cols-3 gap-2.5 px-1">
-            {items.map((item, i) => {
-              const art = FACE[item.label];
-              return (
-                <li
-                  key={item.href}
-                  id={`${listId}-${i}`}
-                  role="option"
-                  aria-selected={i === activeIndex}
-                  aria-label={`${item.label}: ${item.day}`}
-                  onPointerEnter={() => setActive(i)}
-                  onClick={() => choose(item)}
-                  style={
-                    {
-                      "--r": "0deg",
-                      // Fanned like a hand of cards from tablet width up (globals.css .nav-hand).
-                      "--o": i - (items.length - 1) / 2,
-                      "--from-x": `${(i % 2 ? -1 : 1) * 40}%`,
-                      transitionDelay: open ? `${Math.abs(i - (items.length - 1) / 2) * 40}ms` : "0ms",
-                    } as CSSProperties
-                  }
-                  className="nav-sticker nav-card relative flex aspect-[3/4] cursor-pointer flex-col rounded-[16px] border-[3px] border-white bg-surface p-2 text-fg"
-                >
-                  {/* Like a playing card: the name in two corners, a picture in the middle. */}
-                  <span aria-hidden="true" className="flex items-center gap-1.5 text-[13px] leading-none font-semibold tracking-[-0.01em]">
-                    <span className={cn("size-2 shrink-0 rounded-full", DOT[item.label] ?? "bg-violet")} />
-                    {item.label}
-                  </span>
-                  <span aria-hidden="true" className={cn("nav-card-face my-1.5 flex flex-1 items-center justify-center overflow-hidden rounded-[10px]", art?.bg ?? "bg-bg")}>
-                    {art?.star ? <StarVisual slug={art.star} /> : art?.shape ? <Shape name={art.shape} className="w-[46%]" /> : null}
-                  </span>
-                  <span aria-hidden="true" className="flex rotate-180 items-center gap-1.5 text-[13px] leading-none font-semibold tracking-[-0.01em]">
-                    <span className={cn("size-2 shrink-0 rounded-full", DOT[item.label] ?? "bg-violet")} />
-                    {item.label}
-                  </span>
-                </li>
-              );
-            })}
+        <div id={panelId} data-open={open} inert={!open} className="nav-panel pointer-events-auto w-full">
+          <ul id={listId} role="listbox" aria-label="Pages" className="nav-hand flex flex-wrap justify-center gap-2.5">
+            {items.map((item, i) => (
+              <li
+                key={item.href}
+                id={`${listId}-${i}`}
+                role="option"
+                aria-selected={i === activeIndex}
+                aria-label={`${item.label}: ${item.day}`}
+                onPointerEnter={() => setActive(i)}
+                onClick={() => choose(item)}
+                style={
+                  {
+                    "--r": "0deg",
+                    // Their place on the rings from tablet width up (globals.css .nav-hand).
+                    "--a": `${spots[i].angle}deg`,
+                    "--R": `${spots[i].radius}px`,
+                    "--from-x": `${(i % 2 ? -1 : 1) * 40}%`,
+                    transitionDelay: open ? `${spots[i].order * 35}ms` : "0ms",
+                  } as CSSProperties
+                }
+                className={cn(
+                  "nav-sticker nav-word cursor-pointer rounded-[12px] border-[3px] border-white px-3.5 pt-1 pb-1.5 text-[20px] leading-tight font-semibold tracking-[-0.03em] whitespace-nowrap [font-variation-settings:'wdth'_82]",
+                  TONE[item.label] ?? "bg-paper text-ink",
+                )}
+              >
+                <span aria-hidden="true">{item.label}</span>
+              </li>
+            ))}
           </ul>
-
-          <label className="nav-sticker nav-search flex items-center gap-3 rounded-full border-[3px] border-white bg-surface px-4 py-2.5 text-fg" style={{ "--r": "0deg" } as CSSProperties}>
-            <span aria-hidden="true" className="font-serif text-[20px] whitespace-nowrap italic leading-none text-fg-muted">
-              Go to
-            </span>
-            <input
-              ref={inputRef}
-              role="combobox"
-              aria-expanded={open}
-              aria-controls={listId}
-              aria-autocomplete="list"
-              aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined}
-              aria-label="Type a page to go to, or ask Arcee"
-              placeholder="a page, or ask Arcee anything"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                setActive(0);
-              }}
-              onKeyDown={onInputKeyDown}
-              autoComplete="off"
-              spellCheck={false}
-              className="w-full min-w-0 bg-transparent text-[16px] outline-none placeholder:text-fg-muted"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                const q = query.trim();
-                closeNav();
-                useUI.getState().openArcee(q || undefined);
-              }}
-              className="shrink-0 rounded-full bg-violet px-3 py-1 text-[12px] font-semibold text-white"
-            >
-              {query.trim() && !items.length ? "Ask Arcee ↵" : "Arcee"}
-            </button>
-          </label>
         </div>
 
+        {/* Closed: the "Where to?" pill. Open: the same pill as the search field. */}
         <button
           ref={pillRef}
           type="button"
@@ -229,18 +196,65 @@ export function NavBar() {
           aria-expanded={open}
           aria-controls={panelId}
           data-open={open}
-          onClick={() => (open ? closeNav() : openNav())}
+          hidden={open}
+          onClick={openNav}
           className="nav-pill group pointer-events-auto flex min-h-12 items-center gap-3 rounded-full border-[3px] border-white bg-violet py-2.5 pr-5 pl-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)]"
         >
-          {/* A tiny stack of stickers that fans out on hover and when open. */}
-          <span aria-hidden="true" className="relative h-6 w-8">
-            <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-sunflower" style={{ "--m": "-14deg", "--mx": "-5px" } as CSSProperties} />
-            <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-lime" style={{ "--m": "12deg", "--mx": "5px" } as CSSProperties} />
-            <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-lavender" style={{ "--m": "0deg", "--mx": "0px" } as CSSProperties} />
-          </span>
+          {miniStack}
           <span className="font-serif text-[22px] italic leading-none">Where to?</span>
-          <span className="sr-only">{open ? "Close navigation" : "Open navigation"}</span>
+          <span className="sr-only">Open navigation</span>
         </button>
+        <div
+          hidden={!open}
+          data-open={open}
+          className="nav-pill nav-field pointer-events-auto flex min-h-12 w-[min(380px,100%)] items-center gap-2.5 rounded-full border-[3px] border-white bg-violet py-1 pr-1 pl-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)]"
+        >
+          <button type="button" onClick={() => closeNav(true)} aria-label="Close navigation" className="flex items-center">
+            {miniStack}
+          </button>
+          <input
+            ref={inputRef}
+            role="combobox"
+            aria-expanded={open}
+            aria-controls={listId}
+            aria-autocomplete="list"
+            aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined}
+            aria-label="Type a page to go to, or ask Arcee"
+            placeholder="Where to?"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setActive(0);
+            }}
+            onKeyDown={onInputKeyDown}
+            autoComplete="off"
+            spellCheck={false}
+            className={cn(
+              "w-full min-w-0 bg-transparent leading-none outline-none placeholder:text-white/80",
+              query ? "text-[17px]" : "font-serif text-[22px] italic",
+            )}
+          />
+          {/* Arcee answers anything that isn't a page. */}
+          <button
+            type="button"
+            onClick={() => {
+              const q = query.trim();
+              closeNav();
+              useUI.getState().openArcee(q || undefined);
+            }}
+            aria-label="Ask Arcee"
+            className={cn(
+              "flex shrink-0 items-center gap-2 rounded-full border-2 border-white bg-ink text-[13px] font-semibold text-white transition-[padding] duration-300",
+              askArcee ? "py-0.5 pr-3 pl-0.5" : "p-0",
+            )}
+          >
+            <picture className="block size-8 overflow-hidden rounded-full">
+              <source srcSet="/projects/arcee-wave-still.webp" media="(prefers-reduced-motion: reduce)" />
+              <img src="/projects/arcee-wave.webp" alt="" width={32} height={32} className="size-full scale-[1.35] object-cover" />
+            </picture>
+            {askArcee && <span aria-hidden="true">Ask ↵</span>}
+          </button>
+        </div>
       </div>
     </div>
   );
