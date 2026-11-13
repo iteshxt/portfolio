@@ -50,6 +50,10 @@ On the home hero, a handwritten "peel here" (Caveat) with a squiggly arrow point
 
 No giant cycling headline and no day/night copy. A small serif "Hi, I'm Itesh." then one medium statement, "I build agents, train models and ship products.", where the three nouns are tilted, flickable word stickers (violet, lime, sunflower). Below: the "right now" line, "See the work" / "Ask Arcee", the latest push and the scroll hint. The loader's four die-cut shapes stay stuck around the edges once it peels (slap in, then drift; hidden on phones). The "peel here" hint rests after a peel for the rest of the visit and returns on the next one.
 
+### 2.6 Peel to reveal (replaces day/night content, 2026-11-13)
+
+The day/night content split is being retired page by page: light and dark become a plain theme switched by the peel corner, with the same text in both. "How it works" now hides under small stickers instead: on each home star card, a sticker in the project's colours ("Peel for how it works") peels off on click or tap to show the how (approach summary and stack), with "Stick it back" to cover it again (`components/ui/PeelReveal`). Home sections use `SectionTitle`: a serif italic kicker over one sentence-case line with one word sticker. Hero stickers are field-themed (terminal, braces, neural net, chip, git branch, sparkle); the loader keeps its abstract shapes. The "peel here" hint always shows.
+
 ## 3. Colour
 
 ### 3.1 Palette
