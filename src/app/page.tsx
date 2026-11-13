@@ -13,7 +13,7 @@ import { PeelHint } from "@/components/shell/PeelHint";
 import { HeroShapes } from "@/components/home/HeroShapes";
 import { Sticker } from "@/components/ui/Sticker";
 import { TransitionLink } from "@/components/transition/TransitionLink";
-import { SectionHeading } from "@/components/type/SectionHeading";
+import { SectionTitle } from "@/components/type/SectionTitle";
 import { EXPERIENCE } from "@/content/profile";
 import { ARCHIVE_PROJECTS, STAR_PROJECTS } from "@/content/projects";
 
@@ -88,14 +88,11 @@ export default function Home() {
 
       {/* Intro */}
       <section className="px-gutter py-[clamp(64px,10vw,140px)]">
-        <div className="mx-auto max-w-[1440px]">
-          <RevealText className="max-w-[22ch] text-[clamp(30px,4.6vw,72px)] leading-[1.05] font-medium tracking-[-0.03em] [font-variation-settings:'wdth'_85]">
-            <span className="day-only">
-              ML engineer and full-stack developer. Fine-tunes models, builds agents, ships products people actually pay for.
-            </span>
-            <span className="night-only">
-              Evals before vibes. Logs before guesses. Decision records for the big calls, tests for the small ones.
-            </span>
+        <div className="mx-auto flex max-w-[1440px] flex-col gap-4">
+          <p className="font-serif text-[clamp(18px,1.7vw,24px)] text-fg-muted italic">In short</p>
+          <RevealText className="max-w-[30ch] text-[clamp(26px,3.4vw,50px)] leading-[1.2] font-medium tracking-[-0.03em] [font-variation-settings:'wdth'_85]">
+            I&rsquo;m an ML engineer and full-stack developer. I fine-tune models, build agents, and ship the product around them, the kind
+            people actually pay for.
           </RevealText>
         </div>
       </section>
@@ -103,11 +100,13 @@ export default function Home() {
       {/* Star projects */}
       <section className="px-gutter pt-[clamp(32px,6vw,80px)] pb-[clamp(48px,8vw,120px)]">
         <div className="mx-auto max-w-[1440px]">
-          <SectionHeading
-            kicker={{ day: "Star projects", night: "Star projects, under the hood" }}
-            day={{ sans: "The good", serif: "stuff" }}
-            night={{ sans: "The hard", serif: "parts" }}
-          />
+          <SectionTitle kicker="Selected work">
+            Three I&rsquo;m most{" "}
+            <Sticker size="word" tone="tomato" tilt={-2.5}>
+              proud
+            </Sticker>{" "}
+            of.
+          </SectionTitle>
           <StarStack projects={STAR_PROJECTS} />
         </div>
       </section>
@@ -117,11 +116,16 @@ export default function Home() {
         <section className="px-gutter py-[clamp(48px,8vw,120px)]">
           <div className="mx-auto max-w-[1440px]">
             <div className="flex flex-wrap items-end justify-between gap-6">
-              <SectionHeading
-                kicker={{ day: "Everything else", night: "Everything else, shipped" }}
-                day={{ sans: "More", serif: "projects" }}
-                night={{ sans: "Side quests,", serif: "main effort" }}
-              />
+              <SectionTitle kicker="Everything else">
+                More{" "}
+                <span className="whitespace-nowrap">
+                  <Sticker size="word" tone="lime" tilt={2}>
+                    projects
+                  </Sticker>
+                  ,
+                </span>{" "}
+                all shipped.
+              </SectionTitle>
               <TransitionLink
                 href="/work"
                 transitionLabel="Work"
@@ -142,11 +146,15 @@ export default function Home() {
       <section className="px-gutter py-[clamp(64px,10vw,140px)]">
         <div className="mx-auto max-w-[1440px]">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading
-              kicker={{ day: "Experience", night: "Experience, the how" }}
-              day={{ sans: "Shipped", serif: "for others" }}
-              night={{ sans: "Tested,", serif: "then shipped" }}
-            />
+            <SectionTitle kicker="Experience">
+              Shipped for{" "}
+              <span className="whitespace-nowrap">
+                <Sticker size="word" tone="sunflower" tilt={-2}>
+                  others
+                </Sticker>
+                .
+              </span>
+            </SectionTitle>
             <TransitionLink
               href="/about"
               transitionLabel="About"

@@ -1,7 +1,7 @@
 import { ArrowRight } from "@/components/icons";
 import { Reveal } from "@/components/motion/Reveal";
 import { TransitionLink } from "@/components/transition/TransitionLink";
-import { SectionHeading } from "@/components/type/SectionHeading";
+import { SectionTitle } from "@/components/type/SectionTitle";
 import { Sticker, type StickerTone } from "@/components/ui/Sticker";
 
 const RELEASES: { name: string; tone: StickerTone }[] = [
@@ -17,20 +17,17 @@ export function DiaLabsTeaser() {
   return (
     <section className="px-gutter bg-violet py-[clamp(72px,11vw,150px)] text-white">
       <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[1.2fr_1fr] lg:items-end">
-        <SectionHeading
-          tone="inverse"
-          kicker={{ day: "Co-founded", night: "Co-founded, and still tinkering" }}
-          day={{ sans: "DiaLabs,", serif: "an open lab" }}
-          night={{ sans: "Open models,", serif: "open data" }}
-        />
+        <SectionTitle kicker="Co-founded" inverse>
+          DiaLabs, an{" "}
+          <Sticker size="word" tone="lime" tilt={-3}>
+            open
+          </Sticker>{" "}
+          lab.
+        </SectionTitle>
         <Reveal className="flex flex-col gap-7">
           <p className="max-w-lg text-[clamp(17px,1.5vw,21px)] leading-snug">
-            <span className="day-only">
-              An open-source AI/ML organisation that releases free AI products and developer tools.
-            </span>
-            <span className="night-only">
-              Fine-tuned Gemma and Qwen models, a conversation dataset, a patent evaluator, and the apps that run them.
-            </span>
+            An open-source AI/ML organisation that releases free AI products and developer tools: fine-tuned Gemma and Qwen models, a
+            conversation dataset, a patent evaluator, and the apps that run them.
           </p>
           <ul className="flex flex-wrap gap-2.5">
             {RELEASES.map((r, i) => (

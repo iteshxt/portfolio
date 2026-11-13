@@ -40,10 +40,9 @@ export function ArchiveMarquee({ projects }: { projects: Project[] }) {
                 <span className="text-[12px] font-semibold tracking-wide uppercase">
                   {CATEGORY_LABELS[p.category]} · {p.year}
                 </span>
-                <span className="display-sans text-[38px]">{p.name}</span>
+                <span className="text-[34px] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_82]">{p.name}</span>
                 <span className="text-[14px] leading-snug">
-                  <span className="day-only">{p.day}</span>
-                  <span className="night-only">{p.night}</span>
+                  {p.day}
                 </span>
                 <span className="mt-auto inline-flex items-center gap-1 pt-1 text-[13px] font-semibold">
                   {p.links.live ? "Live" : "Code"}
