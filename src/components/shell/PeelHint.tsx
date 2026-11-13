@@ -12,7 +12,7 @@ export function PeelHint() {
       <span className="mt-[30px] -rotate-[8deg] font-hand text-[24px] leading-none whitespace-nowrap sm:mt-[38px] sm:text-[30px]">
         peel here
       </span>
-      <svg viewBox="0 0 80 64" className="peel-hint-arrow -ml-0.5 w-[56px] overflow-visible sm:w-[72px]">
+      <svg viewBox="0 0 80 64" className="peel-hint-arrow ml-2 w-[56px] overflow-visible sm:ml-3 sm:w-[72px]">
         <path
           className="peel-hint-stroke"
           pathLength={1}
