@@ -312,7 +312,7 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 - **Unit (Vitest):** peel geometry, fit, shift selection (clock / storage / query / 3am), terminal commands, nav filtering, retrieval, guard rules, GitHub event parsing.
 - **E2E (Playwright):** nav bar keyboard flow, page transition reaches the right route, peel toggles the shift and persists it, print emulation shows the resume, 404, and Arcee with a mocked API (navigate + message confirm).
 - **Accessibility:** axe checks in Playwright on every page, in both shifts.
-- **CI (GitHub Actions):** lint, typecheck, unit, e2e, build, all on every PR.
+- **CI (GitHub Actions):** lint, typecheck (`next typegen` first, so route types like `PageProps` exist on a fresh checkout), unit, e2e, build, on every PR and every push to `main` or a `v*` branch.
 - **Git:** `main` is always deployable; feature branches `feat/<area>-<thing>`; Conventional Commits.
 
 ## 15. Build order
