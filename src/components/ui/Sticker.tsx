@@ -16,14 +16,23 @@ const TONES = {
 
 export type StickerTone = keyof typeof TONES;
 
+const SIZES = {
+  /** A label chip. */
+  chip: "gap-2 rounded-full border-[3px] px-4 py-1.5 text-[15px] font-medium",
+  /** A word inside running text, sized from the surrounding font. */
+  word: "rounded-[0.28em] border-[0.07em] px-[0.26em] pb-[0.04em] leading-[1.05]",
+} as const;
+
 export function Sticker({
   tone = "lime",
   tilt = 0,
+  size = "chip",
   className,
   children,
 }: {
   tone?: StickerTone;
   tilt?: number;
+  size?: keyof typeof SIZES;
   className?: string;
   children: ReactNode;
 }) {
@@ -32,7 +41,8 @@ export function Sticker({
     <span
       ref={ref}
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border-[3px] border-white px-4 py-1.5 text-[15px] font-medium shadow-[0_6px_18px_-8px_rgb(0_0_0/0.35)] transition-[scale] duration-300 ease-[var(--ease-expo-out)] will-change-transform hover:scale-105",
+        "inline-flex items-center border-white shadow-[0_6px_18px_-8px_rgb(0_0_0/0.35)] transition-[scale] duration-300 ease-[var(--ease-expo-out)] will-change-transform hover:scale-105",
+        SIZES[size],
         TONES[tone],
         className,
       )}

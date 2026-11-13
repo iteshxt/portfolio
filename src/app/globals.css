@@ -312,6 +312,27 @@
   }
 }
 
+/* The loader's shapes, stuck around the home hero after the intro (components/home/HeroShapes). */
+.hero-shape {
+  animation:
+    intro-slap 0.5s var(--ease-slap) both,
+    hero-float 6s ease-in-out infinite;
+}
+@keyframes hero-float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-shape {
+    animation: none;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);

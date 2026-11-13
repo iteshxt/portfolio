@@ -10,10 +10,10 @@ import { ArrowDown, ArrowRight, Spark } from "@/components/icons";
 import { RevealText } from "@/components/motion/RevealText";
 import { NowBuilding } from "@/components/shell/NowBuilding";
 import { PeelHint } from "@/components/shell/PeelHint";
+import { HeroShapes } from "@/components/home/HeroShapes";
+import { Sticker } from "@/components/ui/Sticker";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionHeading } from "@/components/type/SectionHeading";
-import { ShiftHeadline } from "@/components/type/ShiftHeadline";
-import { HOME } from "@/content/pages";
 import { EXPERIENCE } from "@/content/profile";
 import { ARCHIVE_PROJECTS, STAR_PROJECTS } from "@/content/projects";
 
@@ -25,18 +25,36 @@ export default function Home() {
       {/* Hero */}
       <section className="px-gutter relative flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
         <PeelHint />
-        <ShiftHeadline copy={HOME} cycle heightScale={0.85} />
+        <HeroShapes />
 
-        <div className="mt-[clamp(20px,3.2vh,40px)] flex flex-col items-center gap-6">
-          <p className="max-w-[60ch] text-[clamp(16px,1.35vw,20px)] text-balance leading-[1.5] text-fg-muted">
-            <span className="day-only">
-              Right now: a desktop agent that plans and uses your apps, an AI screener for patent drafts, and a fine-tuned
-              Gemma&nbsp;3 that runs in the browser.
-            </span>
-            <span className="night-only">
-              Planner/executor loops, citation checks before the LLM, Gemma on WebGPU. Every call logged, every model
-              evaluated.
-            </span>
+        <p className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">Hi, I&rsquo;m Itesh.</p>
+        {/* One readable statement instead of a giant cycling headline; the key words are flickable stickers. */}
+        {/* Each sticker is kept with its punctuation so a comma never starts a line. */}
+        <h1 className="mt-4 max-w-[21ch] text-[clamp(38px,5vw,76px)] leading-[1.16] font-semibold tracking-[-0.04em] text-balance [font-variation-settings:'wdth'_82]">
+          I build{" "}
+          <span className="whitespace-nowrap">
+            <Sticker size="word" tone="violet" tilt={-3}>
+              agents
+            </Sticker>
+            ,
+          </span>{" "}
+          train{" "}
+          <Sticker size="word" tone="lime" tilt={2.5}>
+            models
+          </Sticker>{" "}
+          and ship{" "}
+          <span className="whitespace-nowrap">
+            <Sticker size="word" tone="sunflower" tilt={-2}>
+              products
+            </Sticker>
+            .
+          </span>
+        </h1>
+
+        <div className="mt-[clamp(24px,3.6vh,44px)] flex flex-col items-center gap-7">
+          <p className="max-w-[56ch] text-[clamp(16px,1.3vw,19px)] text-balance leading-[1.55] text-fg-muted">
+            Right now: a desktop agent that plans and uses your apps, an AI screener for patent drafts, and a fine-tuned
+            Gemma&nbsp;3 that runs in the browser.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <TransitionLink
@@ -59,8 +77,7 @@ export default function Home() {
 
         <p className="absolute bottom-28 left-1/2 flex -translate-x-1/2 items-center gap-2 font-serif text-[18px] text-fg-muted md:bottom-10 md:left-[clamp(16px,4vw,48px)] md:translate-x-0">
           <ArrowDown className="animate-bounce motion-reduce:animate-none" />
-          <span className="day-only">Scroll for the good stuff</span>
-          <span className="night-only">Scroll for the details</span>
+          Scroll for the good stuff
         </p>
         <div className="absolute right-[clamp(16px,4vw,48px)] bottom-9 hidden max-w-[min(340px,calc(50vw-260px))] lg:block">
           <Suspense fallback={null}>

@@ -1,3 +1,5 @@
+import { Shape, type ShapeName } from "@/components/ui/Shape";
+
 /**
  * What the intro sticker shows while the first page loads (docs/design.md §2.2):
  * the wordmark, a 000→100 counter, a rotating line of what's being "warmed up"
@@ -9,51 +11,12 @@
 const DAY_WORDS = ["agents", "models", "products", "a lab"];
 const NIGHT_WORDS = ["logs", "evals", "edge cases", "docs"];
 
-const DIE_CUT = { stroke: "#fff", strokeWidth: 7, strokeLinejoin: "round" as const, paintOrder: "stroke" as const };
-
-/** A 12-point burst, as polygon points in a 100×100 box. */
-const BURST = Array.from({ length: 24 }, (_, i) => {
-  const a = (i * Math.PI) / 12;
-  const r = i % 2 ? 33 : 47;
-  return `${(50 + r * Math.sin(a)).toFixed(1)},${(50 - r * Math.cos(a)).toFixed(1)}`;
-}).join(" ");
-
 /** Shapes only, no words: the loader shouldn't read like a CV. */
-const SHAPES = [
-  {
-    where: "top-[12%] left-[6%] w-[clamp(64px,7vw,104px)]",
-    tilt: -10,
-    delay: 220,
-    art: <polygon points={BURST} fill="var(--sunflower)" {...DIE_CUT} />,
-  },
-  {
-    where: "top-[24%] right-[6%] w-[clamp(60px,6.4vw,96px)]",
-    tilt: 8,
-    delay: 460,
-    art: <path d="M52 9C75 7 93 25 91 49 89 74 70 92 46 91 22 89 7 71 9 47 11 25 30 11 52 9Z" fill="var(--lime)" {...DIE_CUT} />,
-  },
-  {
-    where: "bottom-[6%] left-[15%] w-[clamp(72px,8vw,120px)]",
-    tilt: -6,
-    delay: 700,
-    art: (
-      <>
-        <path d="M10 58C22 28 34 28 40 50S58 72 64 50 82 28 90 44" fill="none" stroke="#fff" strokeWidth="26" strokeLinecap="round" />
-        <path d="M10 58C22 28 34 28 40 50S58 72 64 50 82 28 90 44" fill="none" stroke="var(--tomato)" strokeWidth="14" strokeLinecap="round" />
-      </>
-    ),
-  },
-  {
-    where: "bottom-[16%] right-[13%] w-[clamp(58px,6vw,92px)]",
-    tilt: 12,
-    delay: 900,
-    art: (
-      <>
-        <path d="M16 74A34 34 0 0 1 84 74" fill="none" stroke="#fff" strokeWidth="30" strokeLinecap="round" />
-        <path d="M16 74A34 34 0 0 1 84 74" fill="none" stroke="var(--lavender)" strokeWidth="18" strokeLinecap="round" />
-      </>
-    ),
-  },
+const SHAPES: { name: ShapeName; where: string; tilt: number; delay: number }[] = [
+  { name: "burst", where: "top-[12%] left-[6%] w-[clamp(64px,7vw,104px)]", tilt: -10, delay: 220 },
+  { name: "blob", where: "top-[24%] right-[6%] w-[clamp(60px,6.4vw,96px)]", tilt: 8, delay: 460 },
+  { name: "squiggle", where: "bottom-[6%] left-[15%] w-[clamp(72px,8vw,120px)]", tilt: -6, delay: 700 },
+  { name: "arch", where: "bottom-[16%] right-[13%] w-[clamp(58px,6vw,92px)]", tilt: 12, delay: 900 },
 ];
 
 function Rotator({ words }: { words: string[] }) {
@@ -96,15 +59,13 @@ export function IntroScreen() {
           <span className="display-serif mt-[0.08em] text-[0.32em] text-lavender">%</span>
         </span>
         <div className="pointer-events-none absolute inset-0 hidden sm:block" aria-hidden="true">
-          {SHAPES.map((shape, i) => (
-            <svg
-              key={i}
-              viewBox="0 0 100 100"
-              className={`intro-sticker absolute overflow-visible drop-shadow-[0_10px_14px_rgb(0_0_0/0.28)] ${shape.where}`}
+          {SHAPES.map((shape) => (
+            <Shape
+              key={shape.name}
+              name={shape.name}
+              className={`intro-sticker absolute ${shape.where}`}
               style={{ rotate: `${shape.tilt}deg`, animationDelay: `${shape.delay}ms` }}
-            >
-              {shape.art}
-            </svg>
+            />
           ))}
         </div>
       </div>
