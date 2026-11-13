@@ -1,8 +1,9 @@
 /**
  * Handwritten "peel here" with a squiggly arrow pointing at the peel corner
  * (home only). Pure CSS: it writes itself in after the intro peels, then nudges
- * towards the corner now and then. Hidden for visitors who have peeled before
- * ([data-peeled] on <html>, set by the shift bootstrap and the store).
+ * towards the corner now and then. Rests once the visitor has peeled during this
+ * visit ([data-peeled] on <html>, from a session flag the store sets and the
+ * shift bootstrap reads), and comes back on the next visit.
  */
 export function PeelHint() {
   return (

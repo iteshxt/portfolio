@@ -6,6 +6,8 @@
 export type Shift = "day" | "night";
 
 export const SHIFT_STORAGE_KEY = "shift";
+/** Session flag: the visitor peeled during this visit, so the "peel here" hint can rest. */
+export const PEELED_SESSION_KEY = "peeled";
 export const SHIFT_QUERY_PARAM = "shift";
 
 /**
@@ -31,11 +33,11 @@ export function resolveShift(
  * Inline script for <head>: sets data-shift (and data-owl) on <html> before
  * first paint so there's no flash of the wrong shift. It also sets data-js,
  * which scroll reveals use to hide content only when JavaScript is running, and
- * data-peeled once the visitor has peeled before (hides the "peel here" hint). The server can't know
+ * data-peeled once the visitor has peeled during this visit (hides the "peel here" hint). The server can't know
  * the visitor's clock, so this has to run in the browser.
  */
 export const shiftBootstrapScript = `(function(){document.documentElement.dataset.js="";try{var resolveShift=${resolveShift.toString()};var r=resolveShift(new URLSearchParams(location.search).get(${JSON.stringify(
   SHIFT_QUERY_PARAM,
 )}),localStorage.getItem(${JSON.stringify(
   SHIFT_STORAGE_KEY,
-)}),new Date().getHours());var d=document.documentElement;d.dataset.shift=r.shift;if(r.owl)d.dataset.owl="true";if(localStorage.getItem(${JSON.stringify(SHIFT_STORAGE_KEY)}))d.dataset.peeled="";}catch(e){document.documentElement.dataset.shift="day";}})();`;
+)}),new Date().getHours());var d=document.documentElement;d.dataset.shift=r.shift;if(r.owl)d.dataset.owl="true";if(sessionStorage.getItem(${JSON.stringify(PEELED_SESSION_KEY)}))d.dataset.peeled="";}catch(e){document.documentElement.dataset.shift="day";}})();`;
