@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import { Scribble } from "@/components/motion/Scribble";
 import { TransitionLink } from "@/components/transition/TransitionLink";
+import { PeelReveal } from "@/components/ui/PeelReveal";
 import type { Project } from "@/content/projects";
 import { brandOf } from "@/lib/brand";
 import { cn } from "@/lib/cn";
@@ -32,20 +33,24 @@ export function StarStack({ projects }: { projects: Project[] }) {
                   <p className="font-mono text-[13px] text-fg-muted">
                     0{p.order} · {p.year}
                   </p>
-                  <h3 className="display-sans mt-4 text-[clamp(56px,9vw,150px)]">{p.name}</h3>
-                  <p className="mt-5 max-w-md text-[clamp(17px,1.5vw,21px)] leading-snug">
-                    <span className="day-only">{p.day}</span>
-                    <span className="night-only">{p.night}</span>
-                  </p>
+                  <h3 className="mt-3 text-[clamp(44px,5.4vw,84px)] leading-none font-semibold tracking-[-0.045em] [font-variation-settings:'wdth'_82]">
+                    {p.name}
+                  </h3>
+                  <p className="mt-4 max-w-md text-[clamp(17px,1.5vw,21px)] leading-snug">{p.day}</p>
                 </div>
-                <div className="flex flex-col gap-5">
-                  <ul className="flex flex-wrap gap-2" aria-label="Stack">
-                    {p.stack.map((s) => (
-                      <li key={s} className="rounded-full border border-line px-3 py-1 text-[13px] text-fg-muted">
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
+                <div className="flex flex-col gap-6">
+                  {/* What it does is on show; how it works hides under a sticker. */}
+                  <PeelReveal label="Peel for how it works" cover={cn(brand.fill, brand.onFill)} className="max-w-lg">
+                    <p className="font-mono text-[12px] tracking-wide text-fg-muted uppercase">How it works</p>
+                    <p className="mt-2 text-[16px] leading-snug">{p.night}</p>
+                    <ul className="mt-4 flex flex-wrap gap-2" aria-label="Stack">
+                      {p.stack.map((s) => (
+                        <li key={s} className="rounded-full border border-line px-3 py-1 text-[13px] text-fg-muted">
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </PeelReveal>
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
                     <TransitionLink
                       href={`/work/${p.slug}`}
