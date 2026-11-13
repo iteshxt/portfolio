@@ -66,6 +66,17 @@ Detail that used to live in the night shift hides under small stickers now: e.g.
 
 `/arcee` is the conversation itself (shared chat instance with the floating panel): a slim intro with Arcee's animated ring, messages on a faded mat, a sticky composer above the navigator. Arcee's opening postcard holds what it knows, questions to try and a P.S. about leaving a message. Arcee uses the site's colours (violet, paper, ink), not the Arcee project's amber. The Arcee stamp (animated ring on ink) is its avatar everywhere.
 
+### 2.9 Inner pages: the shared intro
+
+Every inner page opens with `PageIntro`: the home hero's lifted sheet (mat grid, soft glow, folded corner that curls away with scroll) holding a serif kicker, one statement with word stickers (letters swell towards the cursor), a one-line lead and up to two `.btn` actions. Its `section` names the status pill. Pages end with the contact block.
+
+### 2.10 Work page (2026-11-14)
+
+- **Intro:** "Work" → "Things I've *built* and *shipped*." → "N projects: three with full case studies, the rest with live links and code." → "The case studies" (ink) and "Everything else" (paper), which glide down the page.
+- **Case studies:** "The three with the *full story*." The star posters (the same `StarPoster` as home) pile up as you scroll: each sticks near the top and the next slides over it, 18 px lower (`CaseStack`).
+- **Everything else:** "The rest, *all shipped*." The home project wall with its filter chips, twelve before "Show all".
+- **Contact block** to close.
+
 ## 3. Colour
 
 ### 3.1 Palette
@@ -186,4 +197,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Work, the three case studies, About, DiaLabs, Contact (and 404). For each: a hero on a faded mat with a `SectionTitle`-style heading (one word sticker), content as straight die-cut tiles/posters, peel-to-reveal for technical detail, real artwork and links, no leftover day/night copy, and the shared motion patterns above.
+Done: Work (§2.10). Still to do: the three case studies, About, DiaLabs, Contact (and 404). For each: a hero on a faded mat with a `SectionTitle`-style heading (one word sticker), content as straight die-cut tiles/posters, peel-to-reveal for technical detail, real artwork and links, no leftover day/night copy, and the shared motion patterns above.

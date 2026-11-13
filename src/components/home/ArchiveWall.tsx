@@ -20,9 +20,9 @@ const FIRST = 8;
 /**
  * Archive projects as a wall of die-cut stickers (docs/design.md §2.10): category
  * chips filter it; each sticker has its live and GitHub links, and straightens
- * and lifts on hover. First 8, then "Show all".
+ * and lifts on hover. The first few (`first`, 8 by default), then "Show all".
  */
-export function ArchiveWall({ projects }: { projects: Project[] }) {
+export function ArchiveWall({ projects, first = FIRST }: { projects: Project[]; first?: number }) {
   const [filter, setFilter] = useState<ProjectCategory | "all">("all");
   const [all, setAll] = useState(false);
 
@@ -32,7 +32,7 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
     return [...counts.entries()];
   }, [projects]);
   const shown = projects.filter((p) => filter === "all" || p.category === filter);
-  const visible = all ? shown : shown.slice(0, FIRST);
+  const visible = all ? shown : shown.slice(0, first);
   const PHONE = 4; // phones show fewer before "Show all"
 
   return (
@@ -89,7 +89,7 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
       </ul>
 
       {shown.length > PHONE && (
-        <button type="button" onClick={() => setAll((v) => !v)} className={cn("btn btn-paper mt-10", shown.length <= FIRST && !all && "sm:hidden")}>
+        <button type="button" onClick={() => setAll((v) => !v)} className={cn("btn btn-paper mt-10", shown.length <= first && !all && "sm:hidden")}>
           {all ? "Show fewer" : `Show all ${shown.length}`}
         </button>
       )}

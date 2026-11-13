@@ -40,11 +40,11 @@ test("the nav bar finishes the sentence and navigates", async ({ page }) => {
   await expect(page.locator("main h1:visible").first()).toContainText(/patents/i);
 });
 
-test("a star card's visual flies into the case-study stage", async ({ page }) => {
+test("a star poster's artwork flies into the case-study stage", async ({ page }) => {
   await page.clock.setFixedTime(new Date(2026, 10, 12, 12, 0));
   await open(page, "/work");
   // Clicking low on the card also guards against invisible overlays (the closed nav panel once caught these).
-  await page.locator("[data-fly-card]").nth(1).getByText("Case study").click();
+  await page.locator("[data-fly-card]").nth(1).getByRole("link", { name: /case study/i }).click();
   await expect(page.locator("[data-flyer]")).toBeVisible();
   await page.waitForURL("**/work/patentiq");
   await settled(page);
