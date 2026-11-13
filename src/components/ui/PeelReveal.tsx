@@ -10,11 +10,14 @@ import { cn } from "@/lib/cn";
  */
 export function PeelReveal({
   label,
+  eyebrow = "Hidden",
   cover,
   children,
   className,
 }: {
   label: string;
+  /** Small line above the label on the sticker. */
+  eyebrow?: string;
   /** Colour classes for the sticker (background + text). */
   cover: string;
   children: ReactNode;
@@ -35,7 +38,7 @@ export function PeelReveal({
         onClick={() => setOpen(true)}
         className={cn("peel-cover absolute inset-0 flex flex-col justify-between rounded-2xl border-4 border-white p-5 text-left", cover, open && "is-peeled")}
       >
-        <span className="font-mono text-[12px] tracking-wide uppercase opacity-80">Hidden</span>
+        <span className="font-mono text-[12px] tracking-wide uppercase opacity-80">{eyebrow}</span>
         <span className="text-[clamp(20px,1.8vw,26px)] leading-tight font-semibold tracking-[-0.02em]">{label}</span>
       </button>
       {open && (

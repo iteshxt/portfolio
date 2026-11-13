@@ -484,6 +484,46 @@ html {
   }
 }
 
+/* Peel-to-reveal sticker over hidden details (components/ui/PeelReveal). */
+.peel-cover {
+  box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.5);
+  transform-origin: 0 0;
+  transition:
+    transform 0.65s var(--ease-expo-out),
+    opacity 0.4s ease 0.15s;
+  cursor: pointer;
+}
+/* The lifted corner that says "peel me". */
+.peel-cover::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 34px;
+  height: 34px;
+  border-bottom-right-radius: 14px;
+  background: linear-gradient(135deg, transparent 49%, rgb(0 0 0 / 0.22) 50%, #fff 58%, #e9e7ee 100%);
+  transition:
+    width 0.3s var(--ease-expo-out),
+    height 0.3s var(--ease-expo-out);
+}
+.peel-cover:hover::after,
+.peel-cover:focus-visible::after {
+  width: 52px;
+  height: 52px;
+}
+.peel-cover.is-peeled {
+  transform: translate(6%, -26%) rotate(-14deg) scale(0.92);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .peel-cover,
+  .peel-cover::after {
+    transition: none;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);
