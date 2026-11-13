@@ -1051,6 +1051,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 [data-slap-root][data-theme="diachat"] .route-ui {
   color: var(--diachat-ink);
 }
+[data-slap-root][data-seamless] .route-ui,
 [data-slap-root][data-theme] [data-route-shape] {
   display: none;
 }

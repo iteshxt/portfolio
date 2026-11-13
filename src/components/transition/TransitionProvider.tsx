@@ -129,6 +129,9 @@ export function TransitionProvider({
   const gradRef = useRef<SVGLinearGradientElement>(null);
   const flyerRef = useRef<HTMLDivElement>(null);
   const flight = useRef<{ slug: string; box: Box } | null>(null);
+  // Into a case study from a card in the same colours: no slap, no peel, no frame. The coloured
+  // panel grows to fill the screen with the artwork floating on it, then fades into the page.
+  const seamless = useRef(false);
   const flightRaf = useRef(0);
 
   const phase = useRef<TransitionPhase>("covered");
@@ -178,17 +181,20 @@ export function TransitionProvider({
       if (!flyer) return;
       clearFlyer();
       const card = fly.source.closest("[data-fly-card]") ?? fly.source;
+      const plain = seamless.current;
       const tilt = Number.parseFloat(getComputedStyle(card).rotate) || 0;
       const from = boxOf(fly.source);
       const hold = holdBox();
+      const holdTilt = plain ? 0 : HOLD_TILT;
+      const lift = (k: number) => (plain ? "none" : liftShadow(k));
       flight.current = { slug: fly.slug, box: hold };
-      flyer.style.background = backgroundOf(fly.source);
+      flyer.style.background = plain ? "transparent" : backgroundOf(fly.source);
       flyer.replaceChildren(...Array.from(fly.source.children, (n) => n.cloneNode(true)));
-      Object.assign(flyer.style, px(hold), { rotate: `${HOLD_TILT}deg`, boxShadow: liftShadow(1), display: "flex" });
+      Object.assign(flyer.style, px(hold), { rotate: `${holdTilt}deg`, boxShadow: lift(1), display: "flex" });
       flyer.animate(
         [
-          { ...px(from), rotate: `${tilt}deg`, boxShadow: liftShadow(0) },
-          { ...px(hold), rotate: `${HOLD_TILT}deg`, boxShadow: liftShadow(1) },
+          { ...px(from), rotate: `${plain ? 0 : tilt}deg`, boxShadow: lift(0) },
+          { ...px(hold), rotate: `${holdTilt}deg`, boxShadow: lift(1) },
         ],
         { duration: SLAP_MS + 120, easing: "cubic-bezier(.16,1,.3,1)" },
       );
@@ -222,8 +228,8 @@ export function TransitionProvider({
       const t = Math.min(1, (now - foundAt) / PEEL_MS);
       const e = 1 - (1 - t) ** 4;
       Object.assign(flyer.style, px(lerpBox(f.box, boxOf(target), e)), {
-        rotate: `${HOLD_TILT * (1 - e)}deg`,
-        boxShadow: liftShadow(1 - e),
+        rotate: `${(seamless.current ? 0 : HOLD_TILT) * (1 - e)}deg`,
+        boxShadow: seamless.current ? "none" : liftShadow(1 - e),
       });
       if (t < 1) flightRaf.current = requestAnimationFrame(step);
       else fadeOut();
@@ -246,6 +252,8 @@ export function TransitionProvider({
     introDone.current = true;
 
     const done = () => {
+      // Drop finished animations (the seamless fade holds opacity 0 with fill: forwards).
+      sheet.getAnimations().forEach((a) => a.cancel());
       root.style.display = "none";
       sheet.style.clipPath = "";
       sheet.style.opacity = "";
@@ -254,11 +262,20 @@ export function TransitionProvider({
       if (labelRef.current) labelRef.current.textContent = "";
       delete root.dataset.route;
       delete root.dataset.theme;
+      delete root.dataset.seamless;
+      seamless.current = false;
       setPhase("idle");
     };
 
     if (prefersReducedMotion()) {
       sheet.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, easing: "ease-out" }).finished.then(done, done);
+      return;
+    }
+
+    if (seamless.current) {
+      // The artwork glides into the stage while the colour fades into the page's own sheet.
+      land();
+      sheet.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 460, delay: 120, easing: "ease-out", fill: "forwards" }).finished.then(done, done);
       return;
     }
 
@@ -317,6 +334,24 @@ export function TransitionProvider({
     root.dataset.fly = options.fly ? "true" : "false";
     startRouteUi();
 
+    if (seamless.current && options.fly) {
+      // The card's coloured panel opens out to fill the screen: one clip, no tilt, no overshoot.
+      const card = options.fly.source.closest("[data-fly-card]");
+      const panel = card?.querySelector<HTMLElement>("[data-fly-sheet]") ?? options.fly.source;
+      const r = panel.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const radius = Number.parseFloat(getComputedStyle(panel).borderTopRightRadius) || 24;
+      await sheet.animate(
+        [
+          { clipPath: `inset(${r.top}px ${vw - r.right}px ${vh - r.bottom}px ${r.left}px round ${radius}px)` },
+          { clipPath: "inset(0px 0px 0px 0px round 0px)" },
+        ],
+        { duration: 640, easing: "cubic-bezier(.7,0,.2,1)" },
+      ).finished;
+      return;
+    }
+
     const x = options.origin?.x ?? window.innerWidth / 2;
     const y = options.origin?.y ?? window.innerHeight - 40;
     sheet.style.transformOrigin = `${x}px ${y}px`;
@@ -344,9 +379,12 @@ export function TransitionProvider({
 
       router.prefetch(href);
       const theme = themeFor(target.pathname);
+      seamless.current = Boolean(theme && options.fly);
       if (rootRef.current) {
         if (theme) rootRef.current.dataset.theme = theme;
         else delete rootRef.current.dataset.theme;
+        if (seamless.current) rootRef.current.dataset.seamless = "";
+        else delete rootRef.current.dataset.seamless;
       }
       play("slap");
       setPhase("covering");
