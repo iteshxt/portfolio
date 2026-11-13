@@ -44,7 +44,7 @@ test("a star poster's artwork flies into the case-study stage", async ({ page })
   await page.clock.setFixedTime(new Date(2026, 10, 12, 12, 0));
   await open(page, "/work");
   // Clicking low on the card also guards against invisible overlays (the closed nav panel once caught these).
-  await page.locator("[data-fly-card]").nth(1).getByRole("link", { name: /case study/i }).click();
+  await page.locator("[data-fly-card]").nth(1).getByRole("link", { name: /open the case file/i }).click();
   await expect(page.locator("[data-flyer]")).toBeVisible();
   await page.waitForURL("**/work/patentiq");
   await settled(page);

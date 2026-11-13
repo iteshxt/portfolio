@@ -66,15 +66,15 @@ Detail that used to live in the night shift hides under small stickers now: e.g.
 
 `/arcee` is the conversation itself (shared chat instance with the floating panel): a slim intro with Arcee's animated ring, messages on a faded mat, a sticky composer above the navigator. Arcee's opening postcard holds what it knows, questions to try and a P.S. about leaving a message. Arcee uses the site's colours (violet, paper, ink), not the Arcee project's amber. The Arcee stamp (animated ring on ink) is its avatar everywhere.
 
-### 2.9 Inner pages: the shared intro
+### 2.9 Every page is its own piece
 
-Every inner page opens with `PageIntro`: the home hero's lifted sheet (mat grid, soft glow, folded corner that curls away with scroll) holding a serif kicker, one statement with word stickers (letters swell towards the cursor), a one-line lead and up to two `.btn` actions. Its `section` names the status pill. Pages end with the contact block.
+The home page stays one of a kind: its lifted sheet, scroll peel, reactive headline, pinned posters and hand-drawn hero bits are not reused elsewhere. Each inner page gets its own concept built from its content, and shares only the global language: colours and tokens, fonts, `.btn` buttons, die-cut stickers and word stickers, `SectionTitle`, filter chips, the cursor labels, the navigator and transitions, the faded mat and the contact block. (Tried and reverted 2026-11-14: giving /work the home hero's sheet and the home posters.)
 
-### 2.10 Work page (2026-11-14)
+### 2.10 Work page (2026-11-14): the shipping manifest
 
-- **Intro:** "Work" → "Things I've *built* and *shipped*." → "N projects: three with full case studies, the rest with live links and code." → "The case studies" (ink) and "Everything else" (paper), which glide down the page.
-- **Case studies:** "The three with the *full story*." The star posters (the same `StarPoster` as home) pile up as you scroll: each sticks near the top and the next slides over it, 18 px lower (`CaseStack`).
-- **Everything else:** "The rest, *all shipped*." The home project wall with its filter chips, twelve before "Show all".
+- **Hero:** on a faded mat. Left: serif "Work", then "*22* things, built and *shipped*." where the number is a lime word sticker that counts up from 00 (`CountUp`), a one-line lead, and "Open the case files" (ink) / "Browse the shelf" (paper), which glide down. Right: a torn till receipt, tilted a touch, the **shipping manifest**: every project as a numbered line (name, star for case studies, kind · year), "TOTAL SHIPPED", a barcode and "thanks for scrolling". It prints in from the top, then rolls upwards like a till roll (paused on hover; scrollable for reduced motion). Star lines open their case study; the rest glide to their tile on the shelf, which flashes a violet ring.
+- **Case files:** "Three with the *full story*." Each star project is a folder: a tab in its app's colours ("CASE 01") on a white die-cut body, artwork on one side in brand colours and the what, an "Under the hood" note (shown openly here), the stack and "Open the case file" on the other. Sides alternate; the tab and body lift on hover. The artwork still flies into the case study.
+- **The shelf:** "The rest, *all shipped*." Plain paper tiles, each tagged with a sticker for its kind (AI lavender, Web lime, Mobile sunflower, Tools tomato), year, one line, stack chips and Live / GitHub links; kind chips filter.
 - **Contact block** to close.
 
 ## 3. Colour
@@ -197,4 +197,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10). Still to do: the three case studies, About, DiaLabs, Contact (and 404). For each: a hero on a faded mat with a `SectionTitle`-style heading (one word sticker), content as straight die-cut tiles/posters, peel-to-reveal for technical detail, real artwork and links, no leftover day/night copy, and the shared motion patterns above.
+Done: Work (§2.10). Still to do: the three case studies, About, DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.

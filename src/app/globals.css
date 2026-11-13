@@ -914,6 +914,116 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     0 0 0 2px var(--fg),
     0 16px 26px -14px rgb(0 0 0 / 0.5);
 }
+/* Work page (docs/design.md §2.10). The manifest prints in from the top, tilted a touch,
+   then its rows roll upwards like a till roll; pointing at it pauses the roll. */
+.manifest {
+  rotate: 1.5deg;
+  animation: manifest-print 1.1s var(--ease-expo-out) 0.5s backwards;
+}
+@keyframes manifest-print {
+  from {
+    clip-path: inset(0 0 100% 0);
+    translate: 0 -24px;
+  }
+  to {
+    clip-path: inset(0 0 -40px 0);
+    translate: 0 0;
+  }
+}
+.manifest-window {
+  -webkit-mask: linear-gradient(transparent, #000 12%, #000 88%, transparent);
+  mask: linear-gradient(transparent, #000 12%, #000 88%, transparent);
+}
+.manifest-roll {
+  animation: manifest-roll calc(var(--rows) * 1.9s) linear 1.6s infinite;
+}
+.manifest:hover .manifest-roll,
+.manifest:focus-within .manifest-roll {
+  animation-play-state: paused;
+}
+@keyframes manifest-roll {
+  to {
+    translate: 0 -50%;
+  }
+}
+.manifest-row {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 4px;
+  border-radius: 6px;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+.manifest-row:hover,
+.manifest-row:focus-visible {
+  background: color-mix(in srgb, var(--violet) 12%, transparent);
+}
+.manifest-row:hover .manifest-name {
+  color: var(--accent-text);
+}
+.manifest-barcode {
+  background: repeating-linear-gradient(90deg, var(--fg) 0 2px, transparent 2px 4px, var(--fg) 4px 5px, transparent 5px 8px, var(--fg) 8px 11px, transparent 11px 13px);
+  opacity: 0.85;
+}
+/* Case files: the tab sits on the folder's top edge, left or right as the files alternate. */
+.case-file-tab {
+  left: clamp(18px, 3vw, 44px);
+  z-index: 1;
+  translate: 0 5px;
+  transition: translate 0.35s var(--ease-slap);
+}
+@media (min-width: 768px) {
+  .case-file-flip .case-file-tab {
+    left: auto;
+    right: clamp(18px, 3vw, 44px);
+  }
+}
+.case-file:hover .case-file-tab {
+  translate: 0 -3px;
+}
+.case-file-body {
+  transition: translate 0.45s var(--ease-expo-out);
+}
+.case-file:hover .case-file-body {
+  translate: 0 -4px;
+}
+/* Shelf tiles lift a little on hover; one the manifest jumped to flashes a violet ring. */
+.shelf-tile {
+  transition:
+    translate 0.4s var(--ease-expo-out),
+    box-shadow 0.4s var(--ease-expo-out);
+}
+.shelf-tile:hover {
+  translate: 0 -4px;
+}
+.shelf-item[data-flash] .shelf-tile {
+  animation: shelf-flash 2.4s ease-out;
+}
+@keyframes shelf-flash {
+  0%,
+  30% {
+    box-shadow:
+      0 0 0 4px var(--violet),
+      0 18px 36px -18px rgb(122 44 255 / 0.6);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .manifest {
+    animation: none;
+  }
+  .manifest-roll {
+    animation: none;
+  }
+  .manifest-window {
+    overflow-y: auto;
+  }
+  .manifest-roll > ol:last-child {
+    display: none;
+  }
+}
+
 /* The page blurs softly behind the open navigator (no halo shape). */
 .nav-scrim {
   background: color-mix(in srgb, var(--bg) 42%, transparent);
