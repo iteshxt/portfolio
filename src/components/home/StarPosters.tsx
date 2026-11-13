@@ -1,74 +1,29 @@
-import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import { PinnedTrack } from "@/components/motion/PinnedTrack";
-import { Scribble } from "@/components/motion/Scribble";
-import { TransitionLink } from "@/components/transition/TransitionLink";
-import { PeelReveal } from "@/components/ui/PeelReveal";
 import type { Project } from "@/content/projects";
-import { brandOf } from "@/lib/brand";
-import { cn } from "@/lib/cn";
-import { StarVisual } from "./StarVisual";
+import { StarPoster } from "./StarPoster";
 
 /**
  * Star projects as posters (docs/design.md §2.9): each one a big die-cut sticker
  * in its app's colours, artwork large, name huge, and "how it works" under a
  * peelable sticker. They slide sideways through a pinned section as you scroll.
  */
-export function StarPosters({ projects, header }: { projects: Project[]; header: React.ReactNode }) {
+export function StarPosters({
+  projects,
+  header,
+}: {
+  projects: Project[];
+  header: React.ReactNode;
+}) {
   return (
     <PinnedTrack header={header}>
-      {projects.map((p) => {
-        const brand = brandOf(p);
-        return (
-          <article
-            key={p.slug}
-            data-fly-card=""
-            className={cn(
-              "poster relative grid w-[84vw] shrink-0 snap-center overflow-hidden rounded-[24px] border-[5px] border-white shadow-[0_30px_70px_-30px_rgb(0_0_0/0.5)] night:[filter:saturate(0.85)_brightness(0.88)] md:h-[min(68vh,620px)] md:w-[min(82vw,1120px)] md:grid-cols-[1fr_1.1fr] md:rounded-[28px] md:border-[6px]",
-              brand.fill,
-              brand.onFill,
-            )}
-          >
-            <div className="relative z-10 flex flex-col justify-between gap-6 p-5 md:gap-8 md:p-[clamp(22px,3vw,44px)]">
-              <div>
-                <p className="font-mono text-[13px] tracking-wide uppercase opacity-80">
-                  {String(p.order).padStart(2, "0")} / {String(projects.length).padStart(2, "0")} · {p.year}
-                </p>
-                <h3 className="mt-3 text-[clamp(44px,7vw,124px)] leading-[0.9] font-semibold tracking-[-0.05em] [font-variation-settings:'wdth'_78] md:mt-4">
-                  {p.name}
-                </h3>
-                <p className="mt-3 max-w-sm text-[16px] leading-snug md:mt-5 md:text-[clamp(17px,1.4vw,21px)]">{p.day}</p>
-              </div>
-              <div className="flex flex-col gap-5">
-                <PeelReveal label="Peel for how it works" cover="bg-surface text-fg" className="max-w-md">
-                  <p className="font-mono text-[12px] tracking-wide uppercase opacity-80">How it works</p>
-                  <p className="mt-2 text-[15px] leading-snug">{p.night}</p>
-                  <ul className="mt-3 hidden flex-wrap gap-1.5 md:flex" aria-label="Stack">
-                    {p.stack.map((s) => (
-                      <li key={s} className="rounded-full border border-current/25 px-2.5 py-0.5 text-[12px]">
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </PeelReveal>
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                  <TransitionLink href={`/work/${p.slug}`} transitionLabel={p.name} className="btn btn-paper">
-                    Read the case study
-                    <ArrowRight />
-                  </TransitionLink>
-                  {p.links.live && (
-                    <a href={p.links.live} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[15px] font-medium">
-                      <Scribble inverse>Try it live</Scribble> <ArrowUpRight className="text-[14px]" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div data-fly-source={p.slug} data-cursor="View" className={cn("poster-art relative order-first flex h-44 items-center justify-center md:order-none md:h-auto md:min-h-72", brand.fill)}>
-              <StarVisual slug={p.slug} />
-            </div>
-          </article>
-        );
-      })}
+      {projects.map((p) => (
+        <StarPoster
+          key={p.slug}
+          p={p}
+          total={projects.length}
+          className="w-[84vw] shrink-0 snap-center md:w-[min(82vw,1120px)]"
+        />
+      ))}
     </PinnedTrack>
   );
 }
