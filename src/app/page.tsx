@@ -11,6 +11,7 @@ import { RevealText } from "@/components/motion/RevealText";
 import { NowBuilding } from "@/components/shell/NowBuilding";
 import { PeelHint } from "@/components/shell/PeelHint";
 import { Sticker } from "@/components/ui/Sticker";
+import { ReactiveHeadline } from "@/components/type/ReactiveHeadline";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionTitle } from "@/components/type/SectionTitle";
 import { EXPERIENCE } from "@/content/profile";
@@ -27,27 +28,18 @@ export default function Home() {
 
         <p className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">Hi, I&rsquo;m Itesh.</p>
         {/* One readable statement instead of a giant cycling headline; the key words are flickable stickers. */}
-        {/* Each sticker is kept with its punctuation so a comma never starts a line. */}
-        <h1 className="mt-4 max-w-[21ch] text-[clamp(38px,5vw,76px)] leading-[1.16] font-semibold tracking-[-0.04em] text-balance [font-variation-settings:'wdth'_82]">
-          I build{" "}
-          <span className="whitespace-nowrap">
-            <Sticker size="word" tone="violet" tilt={-3}>
-              agents
-            </Sticker>
-            ,
-          </span>{" "}
-          train{" "}
-          <Sticker size="word" tone="lime" tilt={2.5}>
-            models
-          </Sticker>{" "}
-          and ship{" "}
-          <span className="whitespace-nowrap">
-            <Sticker size="word" tone="sunflower" tilt={-2}>
-              products
-            </Sticker>
-            .
-          </span>
-        </h1>
+        {/* Letters swell towards the cursor; each sticker is kept with its punctuation. */}
+        <ReactiveHeadline
+          className="mt-4 max-w-[21ch] text-[clamp(38px,5vw,76px)] leading-[1.16] font-semibold tracking-[-0.04em] text-balance [font-variation-settings:'wdth'_82]"
+          parts={[
+            "I build ",
+            { word: "agents", tone: "violet", tilt: -3, after: "," },
+            " train ",
+            { word: "models", tone: "lime", tilt: 2.5 },
+            " and ship ",
+            { word: "products", tone: "sunflower", tilt: -2, after: "." },
+          ]}
+        />
 
         <div className="mt-[clamp(24px,3.6vh,44px)] flex flex-col items-center gap-7">
           <p className="max-w-[56ch] text-[clamp(16px,1.3vw,19px)] text-balance leading-[1.55] text-fg-muted">
