@@ -758,25 +758,6 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   /* The curled corner is cut away from the sheet. */
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%);
 }
-/* Paper grain over the sheet: fine fibres plus a coarser mottle, so it reads as paper. */
-.hero-sheet::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.27  0 0 0 0 0.24  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>"),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.012 0.02' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23m)'/></svg>");
-  background-size:
-    260px 260px,
-    600px 600px;
-  mix-blend-mode: multiply;
-  opacity: 0.4;
-}
-[data-shift="night"] .hero-sheet::after {
-  mix-blend-mode: screen;
-  opacity: 0.12;
-}
 .hero-mat {
   background-image:
     linear-gradient(var(--line) 1px, transparent 1px),
@@ -935,9 +916,8 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 /* The page blurs softly behind the open navigator (no halo shape). */
 .nav-scrim {
-  background: color-mix(in srgb, var(--bg) 58%, transparent);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: color-mix(in srgb, var(--bg) 42%, transparent);
+  backdrop-filter: blur(4px);
   transition:
     opacity 0.3s ease,
     visibility 0s linear 0s;

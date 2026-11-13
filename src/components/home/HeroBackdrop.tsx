@@ -1,6 +1,6 @@
 /**
  * The hero sits on a lifted sheet (docs/design.md §2.5): a rounded paper sheet
- * with a paper grain, a cutting-mat grid that fades towards its edges and a soft
+ * with a cutting-mat grid that fades towards its edges and a soft
  * violet glow. The hero section itself is clipped along the same fold
  * (.hero-peel), so its content peels away with the sheet, and the folded
  * corner (the flap) lies on top of that content. The curl grows as you scroll

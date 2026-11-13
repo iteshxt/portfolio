@@ -1,6 +1,6 @@
 /**
  * Pages for the "Where to?" navigator (docs/design.md §2.8): each shows as a
- * die-cut sticker with its name and a one-line description (`day`). `night`
+ * die-cut sticker with its name; the one-line description (`day`) is its cursor hint. `night`
  * is kept as an extra search term.
  */
 

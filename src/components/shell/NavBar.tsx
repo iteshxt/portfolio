@@ -176,6 +176,8 @@ export function NavBar() {
                 role="option"
                 aria-selected={i === activeIndex}
                 aria-label={`${item.label}: ${item.day}`}
+                // A one-line hint by the custom cursor.
+                data-cursor={item.day}
                 onPointerEnter={() => setActive(i)}
                 onClick={() => choose(item)}
                 style={
