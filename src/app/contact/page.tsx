@@ -1,13 +1,9 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
+import { Postcard } from "@/components/contact/Postcard";
+import { Stamps } from "@/components/contact/Stamps";
+import { Sticker } from "@/components/ui/Sticker";
 import { pageMetadata } from "@/lib/metadata";
-import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
-import { ArrowUpRight } from "@/components/icons";
-import { Reveal } from "@/components/motion/Reveal";
-import { Scribble } from "@/components/motion/Scribble";
-import { PageHero } from "@/components/shell/PageHero";
-import { EmailButton } from "@/components/ui/EmailButton";
-import { PAGES } from "@/content/pages";
-import { SITE } from "@/content/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
@@ -15,48 +11,41 @@ export const metadata: Metadata = pageMetadata({
   path: "/contact",
 });
 
-const CHANNELS = [
-  { label: "LinkedIn", href: SITE.socials.linkedin, day: "The formal version.", night: "Where the resume lives." },
-  { label: "GitHub", href: SITE.socials.github, day: "The receipts.", night: "Read the code, not the claims." },
-  { label: "X", href: SITE.socials.x, day: "Occasional thoughts.", night: "Late-night thoughts." },
-];
-
 export default function ContactPage() {
   return (
     <main className="flex-1">
-      <PageHero copy={PAGES.contact}>
-        <p>Roles, collaborations, or a project that needs both a model and a product around it.</p>
-      </PageHero>
+      <section data-section="Contact" className="px-gutter pt-28 pb-[clamp(96px,10vw,150px)] md:pt-36">
+        <div className="mx-auto max-w-[1240px]">
+          <div className="mb-[clamp(32px,5vw,60px)] flex flex-col gap-4 md:flex-row md:items-end md:justify-between md:gap-10">
+            <div>
+              <p data-animate="rise" className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">
+                Contact
+              </p>
+              <h1
+                data-animate="rise"
+                style={{ "--d": "80ms" } as CSSProperties}
+                className="mt-3 text-[clamp(44px,6.4vw,100px)] leading-[1.02] font-semibold tracking-[-0.045em] [font-variation-settings:'wdth'_80]"
+              >
+                Write me a{" "}
+                <Sticker size="word" tone="tomato" tilt={-3}>
+                  postcard
+                </Sticker>
+                .
+              </h1>
+            </div>
+            <p data-animate="rise" style={{ "--d": "160ms" } as CSSProperties} className="max-w-[34ch] text-[clamp(16px,1.3vw,19px)] leading-[1.5] text-fg-muted md:text-right">
+              Roles, collaborations, or a project that needs both a model and a product around it.
+            </p>
+          </div>
 
-      <section className="px-gutter pb-[clamp(64px,10vw,140px)]">
-        <div className="mx-auto flex max-w-[960px] flex-col items-center gap-14">
-          <Reveal>
-            <EmailButton email={SITE.email} />
-          </Reveal>
-
-          <ul className="w-full border-b border-line">
-            {CHANNELS.map((c, i) => (
-              <Reveal as="li" key={c.label} delay={i * 80} className="border-t border-line">
-                <a href={c.href} target="_blank" rel="noreferrer" className="group flex items-center justify-between gap-6 py-6">
-                  <Scribble className="display-sans text-[clamp(40px,6vw,84px)] transition-colors group-hover:text-accent-text">{c.label}</Scribble>
-                  <span className="flex items-center gap-3 text-right text-fg-muted">
-                    <span className="day-only hidden sm:inline">{c.day}</span>
-                    <span className="night-only hidden sm:inline">{c.night}</span>
-                    <ArrowUpRight className="text-[28px] text-fg transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-                  </span>
-                </a>
-              </Reveal>
-            ))}
-          </ul>
-
-          <div className="flex flex-col items-center gap-3 text-center">
-            <p className="max-w-md text-fg-muted">Rather not open your mail app? Leave a message with Arcee, the site&apos;s chatbot.</p>
-            <OpenArceeButton
-              seed="I want to leave a message for Itesh"
-              className="btn btn-violet"
-            >
-              Leave Arcee a message
-            </OpenArceeButton>
+          <div className="grid items-start gap-[clamp(32px,4vw,56px)] lg:grid-cols-[1.45fr_0.75fr]">
+            <div data-animate="rise" style={{ "--d": "200ms" } as CSSProperties}>
+              <Postcard />
+            </div>
+            <div className="flex flex-col gap-4">
+              <p className="font-serif text-[clamp(20px,1.8vw,24px)] text-fg-muted italic">Or pick a stamp</p>
+              <Stamps />
+            </div>
           </div>
         </div>
       </section>

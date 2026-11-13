@@ -4,7 +4,8 @@ import { limitMessage, visitorKey } from "@/lib/arcee/ratelimit";
 
 /**
  * Leave-a-message endpoint (docs/spec.md §8.5): only called when the visitor
- * presses Send on Arcee's draft. Emails Itesh via Resend.
+ * presses Send on Arcee's draft or posts the contact page's postcard. Emails
+ * Itesh via Resend.
  */
 
 const Body = z.object({
@@ -13,6 +14,8 @@ const Body = z.object({
   message: z.string().trim().min(1).max(1200),
   // Honeypot: real visitors never see or fill this field.
   website: z.string().max(200).optional(),
+  /** Where it was written: Arcee's draft card or the contact page's postcard. */
+  via: z.enum(["arcee", "postcard"]).optional(),
 });
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,7 +23,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(req: Request) {
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: "invalid" }, { status: 400 });
-  const { name, contact, message, website } = parsed.data;
+  const { name, contact, message, website, via = "arcee" } = parsed.data;
 
   // Bots that fill the honeypot get a polite "sure" and nothing happens.
   if (website) return Response.json({ ok: true });
@@ -37,8 +40,8 @@ export async function POST(req: Request) {
     from: process.env.CONTACT_FROM_EMAIL || "Arcee <onboarding@resend.dev>",
     to,
     replyTo: EMAIL.test(contact) ? contact : undefined,
-    subject: `New message via Arcee from ${name}`,
-    text: `${message}\n\n— ${name}\nContact: ${contact}\n\nSent from iteshxt.me via Arcee.`,
+    subject: via === "postcard" ? `A postcard from ${name}` : `New message via Arcee from ${name}`,
+    text: `${message}\n\n— ${name}\nContact: ${contact}\n\nSent from iteshxt.me ${via === "postcard" ? "on a postcard (contact page)" : "via Arcee"}.`,
   });
 
   if (error) return Response.json({ error: "send-failed" }, { status: 502 });

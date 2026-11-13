@@ -104,6 +104,13 @@ The folder from the work page, open, in the project's own colours (each page wea
 - **The notebook:** "Every release was a *question*." From tablet width up it is a real book: the section pins and the notebook lies open, one experiment per spread (number, kind, name and question on the left page; method, result, stamp and links on the right, with a red margin line by the spine). Scrolling turns the right-hand page over the spine in 3D to the next spread, tied to scroll (75vh per turn, eased, a shade sweeping across the turning page), with a "Page 02 / 06" counter. Phones get it as one long graph-paper sheet. Each release is a numbered experiment (EXP 01…): a kind sticker, the name, the question it set out to answer in serif italic ("Can a browser turn a football clip into match stats without uploading it?"), then Method, Result, a green rubber stamp (Live, Live · beta, On Hugging Face) and its links. Below: "Also from the lab, by the rest of the team" as chips (credited, not claimed).
 - **Ending:** "Next experiment": "Everything here is *open*." with "Visit the lab" (dialabs.tech), "Read the code" (GitHub) and "Ask Arcee about the lab". The home teaser links dialabs.tech too, and Arcee knows the address.
 
+### 2.14 Contact (2026-11-14): write me a postcard
+
+- **Hero:** serif "Contact", "Write me a *postcard*." and one line on what to write about.
+- **The postcard:** a real postcard, tilted a touch. Left half: "Your message" written on ruled lines in handwriting (Caveat). Right half: a faint ITESH AIRMAIL postmark with wavy lines, a perforated violet "itesh · first class" stamp, and the address lines in handwriting: "To Itesh", "From", "Reply to". "Send it" posts to the leave-a-message endpoint (`via: "postcard"`, subject "A postcard from …"; honeypot and rate limit as for Arcee). On success a red SENT · ITESHXT.ME postmark thumps onto the stamp, the card slides off into the post, and "Delivered. Got it. I'll write back to …" appears with "Write another" (a blank card). Errors say so plainly and offer the email address.
+- **Or pick a stamp:** the other ways in as perforated postage stamps (dotted mask edges, an inner frame), slightly askew, flicking when knocked: Airmail (the email address, tap to copy), LinkedIn, GitHub, X, and Express: Arcee (opens the chat to leave a message).
+- No ending block: the contact page is the end; the footer follows.
+
 ## 3. Colour
 
 ### 3.1 Palette
@@ -224,4 +231,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13). Still to do: Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
+Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13), Contact (§2.14). Still to do: the 404. For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.

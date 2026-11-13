@@ -1024,6 +1024,99 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* Contact (docs/design.md §2.14): a postcard and postage stamps. */
+.postcard {
+  rotate: -1deg;
+  box-shadow: 0 34px 60px -36px rgb(0 0 0 / 0.5);
+  transition:
+    translate 0.9s var(--ease-expo-out),
+    rotate 0.9s var(--ease-expo-out),
+    opacity 0.5s ease;
+}
+.postcard-lines {
+  background-image: repeating-linear-gradient(transparent 0 35px, var(--line) 35px 36px);
+  background-attachment: local;
+}
+.postcard-field {
+  border-bottom: 1.5px solid var(--line);
+  padding-bottom: 4px;
+}
+.postcard-stamp {
+  rotate: 4deg;
+}
+.postcard-sent {
+  opacity: 0;
+  rotate: -14deg;
+  scale: 1.8;
+  mix-blend-mode: multiply;
+}
+[data-shift="night"] .postcard-sent {
+  mix-blend-mode: normal;
+}
+/* Sent: the postmark thumps on, then the card slides off into the post. */
+.postcard[data-state="sent"] .postcard-sent {
+  animation: postmark 0.45s var(--ease-slap) forwards;
+}
+.postcard[data-state="sent"] {
+  animation: post-away 0.9s var(--ease-expo-in, cubic-bezier(0.7, 0, 0.84, 0)) 0.9s forwards;
+}
+@keyframes postmark {
+  to {
+    opacity: 0.85;
+    scale: 1;
+  }
+}
+@keyframes post-away {
+  to {
+    translate: 60% 30%;
+    rotate: 12deg;
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+.postcard-thanks {
+  animation: rise-in 0.7s var(--ease-expo-out) 1.6s backwards;
+}
+/* Postage stamps: perforated edges (a dotted mask on the padding, solid inside). */
+.stamp {
+  padding: 7px;
+  -webkit-mask:
+    radial-gradient(circle, transparent 3.2px, #000 3.8px) -5px -5px / 10px 10px round,
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask-composite: source-over;
+  mask:
+    radial-gradient(circle, transparent 3.2px, #000 3.8px) -5px -5px / 10px 10px round,
+    linear-gradient(#000 0 0) content-box;
+  mask-composite: add;
+}
+.stamp > span {
+  outline: 1.5px solid currentColor;
+  outline-offset: -1px;
+  border-radius: 2px;
+  opacity: 1;
+}
+.stamp-wrap {
+  filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.22));
+  transition: scale 0.3s var(--ease-expo-out);
+}
+.stamp-wrap:hover {
+  scale: 1.04;
+}
+@media (prefers-reduced-motion: reduce) {
+  .postcard[data-state="sent"],
+  .postcard[data-state="sent"] .postcard-sent,
+  .postcard-thanks {
+    animation: none;
+  }
+  .postcard[data-state="sent"] {
+    visibility: hidden;
+  }
+  .postcard[data-state="sent"] .postcard-sent {
+    opacity: 0.85;
+    scale: 1;
+  }
+}
+
 /* DiaLabs (docs/design.md §2.13): the lab's robot and its notebook. */
 .labbot-light {
   animation: labbot-light 2.4s ease-in-out infinite;
