@@ -19,8 +19,9 @@ export function EmailButton({ email, className }: { email: string; className?: s
   }
 
   return (
-    <div className={cn("inline-flex max-w-full items-stretch overflow-hidden rounded-full bg-lime text-[#2B3600]", className)}>
-      <a href={`mailto:${email}`} className="flex min-w-0 items-center gap-3 px-6 py-4 text-[clamp(17px,2vw,24px)] font-medium hover:bg-black/5">
+    // w-fit: inside a flex column it would otherwise stretch and push the copy button to the far edge.
+    <div className={cn("inline-flex w-fit max-w-full items-stretch overflow-hidden rounded-full bg-lime text-[#2B3600]", className)}>
+      <a href={`mailto:${email}`} className="flex min-w-0 items-center gap-3 py-4 pr-4 pl-6 text-[clamp(17px,2vw,24px)] font-medium hover:bg-black/5">
         <Mail className="shrink-0" />
         <span className="truncate">{email}</span>
       </a>
@@ -28,9 +29,10 @@ export function EmailButton({ email, className }: { email: string; className?: s
         type="button"
         onClick={copy}
         aria-label={copied ? "Email copied" : "Copy email address"}
-        className="flex items-center border-l-2 border-[#2B3600]/15 px-5 text-[20px] hover:bg-black/5"
+        className="flex items-center gap-2 border-l-2 border-[#2B3600]/15 pr-5 pl-4 text-[20px] hover:bg-black/5"
       >
         {copied ? <Check /> : <Copy />}
+        {copied && <span className="text-[14px] font-medium">Copied</span>}
       </button>
       <span className="sr-only" aria-live="polite">
         {copied ? "Copied to clipboard" : ""}
