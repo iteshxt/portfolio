@@ -33,8 +33,6 @@ export type CaseStudy = {
   /** Optional extra block: a scored breakdown (PatentIQ) or a progress list (Arcee). */
   breakdown?: { title: string; caption: string; rows: { label: string; value: number; max: number; note?: string }[] };
   progress?: { title: string; caption: string; rows: { label: string; state: "done" | "doing" | "next"; note: string }[] };
-  /** Small true stories from building it. */
-  log?: { title: string; body: string }[];
   next: StarSlug;
 };
 
@@ -107,12 +105,6 @@ export const CASE_STUDIES: Record<StarSlug, CaseStudy> = {
         { label: "Packaging and release", state: "next", note: "75% on the local evals (it's at 98%) and 20 outside testers for v1.0" },
       ],
     },
-    log: [
-      { title: "“Open Chrome” went somewhere made up", body: "It navigated to an invented chromium.org address. The fix: change which tools each request gets to see." },
-      { title: "The tests kept opening YouTube", body: "Unit tests drove his real Chrome until they were isolated from the live session." },
-      { title: "name.txt.txt", body: "Renaming through the Files app once doubled the extension: the kind of bug only a GUI path finds." },
-      { title: "149 MB to 66 MB", body: "The always-on voice listener was cut to well under half its memory." },
-    ],
     next: "patentiq",
   },
 
@@ -218,10 +210,6 @@ export const CASE_STUDIES: Record<StarSlug, CaseStudy> = {
         { title: "A bigger model for memory", body: "Summaries and chat titles come from a larger hosted model, the trade that keeps long chats coherent on a 1B." },
       ],
     },
-    log: [
-      { title: "The keyboard ate the chat", body: "On phones the virtual keyboard pushed the composer off screen, fixed with 100dvh and keyboard-aware layout." },
-      { title: "No model names on screen", body: "Loading messages are scrubbed so the companion feels like Dia, not a model card." },
-    ],
     next: "arcee",
   },
 };

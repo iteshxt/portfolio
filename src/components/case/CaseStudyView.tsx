@@ -26,7 +26,7 @@ const STATE = {
  * the folder from the work page, open on the desk, in the project's own colours.
  * An index card with a status stamp, what it does, how it works (a pipeline that
  * draws itself as you scroll, and what it's tested on), notes taped in for the
- * decisions, the rules, the exhibit, the work log, the next file's tab, and a
+ * decisions, the rules, the exhibit, the next file's tab, and a
  * nudge to ask Arcee about it.
  */
 export function CaseStudyView({ study, project, next }: { study: CaseStudy; project: Project; next: Project }) {
@@ -281,26 +281,6 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
                   <span className={cn("case-stamp w-fit rounded-[5px] border-[2.5px] px-2.5 py-0.5 font-mono text-[12px] font-semibold tracking-wider uppercase", STATE[r.state].cls)}>
                     {STATE[r.state].label}
                   </span>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-      )}
-
-      {/* From the work log */}
-      {study.log && (
-        <section data-section="Work log" className="px-gutter py-[clamp(48px,7vw,96px)]">
-          <div className="mx-auto max-w-[1320px]">
-            <h2 className="font-serif text-[clamp(26px,2.6vw,36px)] italic">From the work log</h2>
-            <ol className="mt-8 grid gap-x-10 md:grid-cols-2">
-              {study.log.map((l, i) => (
-                <li key={l.title} data-animate="rise" style={{ "--d": `${(i % 2) * 70}ms` } as CSSProperties} className="grid grid-cols-[4.5rem_1fr] gap-4 border-t border-dashed border-line py-6">
-                  <span className="font-mono text-[12px] tracking-wider text-fg-muted uppercase">Log {String(i + 1).padStart(2, "0")}</span>
-                  <div>
-                    <h3 className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{l.title}</h3>
-                    <p className="mt-1.5 text-[15px] leading-snug text-fg-muted">{l.body}</p>
-                  </div>
                 </li>
               ))}
             </ol>
