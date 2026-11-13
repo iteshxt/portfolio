@@ -1,11 +1,10 @@
-import type { Ref } from "react";
 import { Sticker } from "@/components/ui/Sticker";
 
 /**
  * What the intro sticker shows while the first page loads (docs/design.md §2.2):
  * the wordmark, a 000→100 counter, a rotating line of what's being "warmed up"
  * and a few stickers slapping on. Rendered on the server so it's there at first
- * paint; TransitionProvider drives the counter and bar, then fades it out
+ * paint; TransitionProvider drives the counter and bar (found by data attributes), then fades it out
  * before the peel. Hidden outside the intro (CSS: `.intro-ui`).
  */
 
@@ -28,13 +27,8 @@ function Rotator({ words }: { words: string[] }) {
   );
 }
 
-export function IntroScreen({
-  counterRef,
-  barRef,
-}: {
-  counterRef: Ref<HTMLSpanElement>;
-  barRef: Ref<HTMLSpanElement>;
-}) {
+/** Server component, passed into TransitionProvider as `intro` so it adds no client JS. */
+export function IntroScreen() {
   return (
     <div className="intro-ui px-gutter absolute inset-0 flex flex-col justify-between pt-5 pb-[max(20px,env(safe-area-inset-bottom))] text-white">
       <div className="flex items-start justify-between">
@@ -53,7 +47,7 @@ export function IntroScreen({
           </span>
         </span>
         <span className="display-sans flex items-start text-[clamp(96px,22vw,300px)] tabular-nums">
-          <span ref={counterRef}>000</span>
+          <span data-intro-counter="">000</span>
           <span className="display-serif mt-[0.08em] text-[0.32em] text-lavender">%</span>
         </span>
         <div className="pointer-events-none absolute inset-0 hidden sm:block" aria-hidden="true">
@@ -78,7 +72,7 @@ export function IntroScreen({
           <span>Delhi, IN</span>
         </div>
         <span className="block h-[3px] w-full overflow-hidden rounded-full bg-white/20">
-          <span ref={barRef} className="block h-full origin-left scale-x-0 rounded-full bg-lime" />
+          <span data-intro-bar="" className="block h-full origin-left scale-x-0 rounded-full bg-lime" />
         </span>
       </div>
     </div>

@@ -6,7 +6,6 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { animatePoint, peelEnd, peelShape, toClipPath, toSvgPoints, type Point } from "@/lib/peel";
 import { play } from "@/lib/sound";
 import { useUI, type TransitionPhase } from "@/store/ui";
-import { IntroScreen } from "./IntroScreen";
 
 /**
  * The slap + peel page transition (docs/design.md §2.2, docs/spec.md §5.3):
@@ -100,7 +99,14 @@ const INTRO_MIN_MS = 1100;
 const INTRO_REPEAT_MS = 350;
 const INTRO_SEEN_KEY = "intro-seen";
 
-export function TransitionProvider({ children }: { children: ReactNode }) {
+export function TransitionProvider({
+  children,
+  intro,
+}: {
+  children: ReactNode;
+  /** Server-rendered loader shown on the intro sticker (IntroScreen). */
+  intro?: ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const setPhaseInStore = useUI((s) => s.setTransitionPhase);
@@ -108,8 +114,6 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
-  const counterRef = useRef<HTMLSpanElement>(null);
-  const barRef = useRef<HTMLSpanElement>(null);
   const flapRef = useRef<SVGPolygonElement>(null);
   const shadeRef = useRef<SVGPolygonElement>(null);
   const gradRef = useRef<SVGLinearGradientElement>(null);
@@ -348,6 +352,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
     // The counter eases towards ~90% while things load, then runs to 100.
     const start = performance.now();
     let shown = 0;
+    const counter = rootRef.current?.querySelector<HTMLElement>("[data-intro-counter]");
+    const bar = rootRef.current?.querySelector<HTMLElement>("[data-intro-bar]");
     const finish = () => {
       const ui = rootRef.current?.querySelector<HTMLElement>(".intro-ui");
       if (!ui) return reveal();
@@ -368,8 +374,8 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       shown += (target - shown) * (done ? 0.28 : 0.16);
       if (done && shown > 99.4) shown = 100;
       const n = Math.floor(shown);
-      if (counterRef.current) counterRef.current.textContent = String(n).padStart(3, "0");
-      if (barRef.current) barRef.current.style.transform = `scaleX(${shown / 100})`;
+      if (counter) counter.textContent = String(n).padStart(3, "0");
+      if (bar) bar.style.transform = `scaleX(${shown / 100})`;
       if (shown >= 100) fadeTimer = window.setTimeout(finish, 140);
       else raf = requestAnimationFrame(tick);
     };
@@ -412,7 +418,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       >
         <div ref={sheetRef} className="absolute inset-0 flex items-center justify-center bg-violet will-change-transform">
           <span ref={labelRef} className="display-serif px-6 text-center text-[clamp(40px,8vw,120px)] text-white" />
-          <IntroScreen counterRef={counterRef} barRef={barRef} />
+          {intro}
         </div>
         <svg className="absolute inset-0 h-full w-full overflow-visible">
           <defs>
