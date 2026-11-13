@@ -4,6 +4,8 @@
  * Facts come from the GitHub repos, the CV and iteshxt.me — no invented metrics.
  */
 
+export type StarBrand = "arcee" | "patentiq" | "diachat";
+
 export type ProjectCategory = "ai" | "web" | "mobile" | "tool";
 
 export type Project = {
@@ -17,7 +19,8 @@ export type Project = {
   stack: string[];
   links: { live?: string; repo?: string; extra?: { label: string; href: string }[] };
   /** Star projects only: frame colour and running order. */
-  accent?: "violet" | "tomato" | "sunflower";
+  /** Star projects: whose app colours to use (lib/brand.ts). */
+  brand?: StarBrand;
   order?: number;
 };
 
@@ -27,7 +30,7 @@ export const STAR_PROJECTS: Project[] = [
     name: "Arcee",
     tier: "star",
     order: 1,
-    accent: "violet",
+    brand: "arcee",
     category: "ai",
     year: "2026",
     day: "A desktop agent you talk or type to. It plans the request, uses your apps and reports back.",
@@ -40,7 +43,7 @@ export const STAR_PROJECTS: Project[] = [
     name: "PatentIQ",
     tier: "star",
     order: 2,
-    accent: "tomato",
+    brand: "patentiq",
     category: "ai",
     year: "2026",
     day: "Scores student patent drafts on an 11-part, 100-point rubric before anyone files them.",
@@ -57,7 +60,7 @@ export const STAR_PROJECTS: Project[] = [
     name: "DiaChat",
     tier: "star",
     order: 3,
-    accent: "sunflower",
+    brand: "diachat",
     category: "ai",
     year: "2025–2026",
     day: "A private Gen Z AI companion that runs entirely in your browser.",

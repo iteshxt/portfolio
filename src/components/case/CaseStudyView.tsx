@@ -7,28 +7,23 @@ import { ShiftHeadline } from "@/components/type/ShiftHeadline";
 import type { CaseStudy } from "@/content/case-studies";
 import { PAGES } from "@/content/pages";
 import type { Project } from "@/content/projects";
+import { brandOf } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 import { StarStage } from "./StarStage";
-
-const ACCENT = {
-  violet: { frame: "border-violet bg-violet", dot: "bg-violet", onDot: "text-white" },
-  tomato: { frame: "border-tomato bg-tomato", dot: "bg-tomato", onDot: "text-[#2A0700]" },
-  sunflower: { frame: "border-sunflower bg-sunflower", dot: "bg-sunflower", onDot: "text-[#4A3A00]" },
-} as const;
 
 /**
  * Star project case study (docs/prd.md §7.2). Both stories are always on the
  * page; the current shift's story comes first (day: what, night: how).
  */
 export function CaseStudyView({ study, project, next }: { study: CaseStudy; project: Project; next: Project }) {
-  const accent = ACCENT[project.accent ?? "violet"];
+  const brand = brandOf(project);
 
   return (
     <main className="flex-1">
       {/* Hero */}
       <section className="px-gutter flex flex-col items-center gap-10 pt-28 pb-16 text-center">
         <ShiftHeadline copy={PAGES[study.slug]} />
-        <div className={cn("relative w-full max-w-[1200px] border-[clamp(8px,1.1vw,16px)]", accent.frame)}>
+        <div className={cn("relative w-full max-w-[1200px] border-[clamp(8px,1.1vw,16px)]", brand.frame, brand.fill)}>
           <StarStage slug={study.slug} className="h-[clamp(320px,58vh,620px)]" />
         </div>
       </section>
@@ -102,7 +97,7 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
             <ul className="grid gap-5 md:grid-cols-2">
               {study.day.points.map((p, i) => (
                 <Reveal as="li" key={p.title} delay={(i % 2) * 90} className="rounded-[26px] border border-line bg-surface p-6">
-                  <span className={cn("mb-4 block size-3 rounded-full", accent.dot)} />
+                  <span className={cn("mb-4 block size-3 rounded-full", brand.dot)} />
                   <h3 className="text-[clamp(20px,1.8vw,24px)] font-semibold tracking-tight">{p.title}</h3>
                   <p className="mt-2 leading-snug text-fg-muted">{p.body}</p>
                 </Reveal>
@@ -123,7 +118,7 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
             <ol className="relative mb-16 flex flex-col gap-0 before:absolute before:top-3 before:bottom-3 before:left-[19px] before:w-px before:bg-line">
               {study.night.pipeline.map((s, i) => (
                 <Reveal as="li" key={s.step} delay={i * 60} className="relative grid grid-cols-[40px_1fr] gap-5 py-4">
-                  <span className={cn("relative z-10 flex size-10 items-center justify-center rounded-full font-mono text-[13px]", accent.dot, accent.onDot)}>
+                  <span className={cn("relative z-10 flex size-10 items-center justify-center rounded-full font-mono text-[13px]", brand.dot, brand.onDot)}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <div className="pt-1.5">
@@ -162,7 +157,7 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
                         {r.note && <span className="ml-2 rounded-full bg-lime px-2 py-0.5 text-[11px] text-[#2B3600]">{r.note}</span>}
                       </span>
                       <span className="h-3 overflow-hidden rounded-full bg-line">
-                        <span className={cn("block h-full rounded-full", accent.dot)} style={{ width: `${(r.value / r.max) * 100}%` }} />
+                        <span className={cn("block h-full rounded-full", brand.dot)} style={{ width: `${(r.value / r.max) * 100}%` }} />
                       </span>
                       <span className="text-right font-mono text-[14px]">{r.value} pts</span>
                     </Reveal>

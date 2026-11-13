@@ -2,20 +2,9 @@ import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import { Scribble } from "@/components/motion/Scribble";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import type { Project } from "@/content/projects";
+import { brandOf } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 import { StarVisual } from "./StarVisual";
-
-const FRAME = {
-  violet: "border-violet",
-  tomato: "border-tomato",
-  sunflower: "border-sunflower",
-} as const;
-
-const FILL = {
-  violet: "bg-violet",
-  tomato: "bg-tomato",
-  sunflower: "bg-sunflower",
-} as const;
 
 /**
  * Star projects as a stack of framed cards (docs/design.md §6 "featured
@@ -27,14 +16,14 @@ export function StarStack({ projects }: { projects: Project[] }) {
   return (
     <ol className="mt-12 flex flex-col gap-10 pb-[6vh] md:gap-[14vh]">
       {projects.map((p, i) => {
-        const accent = p.accent ?? "violet";
+        const brand = brandOf(p);
         return (
           <li key={p.slug} className="md:sticky" style={{ top: `calc(10vh + ${i * 26}px)` }}>
             <article
               data-fly-card=""
               className={cn(
                 "grid overflow-hidden border-[clamp(8px,1.1vw,16px)] bg-surface shadow-[0_30px_80px_-40px_rgb(0_0_0/0.45)] md:min-h-[min(70vh,620px)] md:grid-cols-[1.15fr_1fr]",
-                FRAME[accent],
+                brand.frame,
               )}
               style={{ rotate: `${i % 2 === 0 ? -0.8 : 0.9}deg` }}
             >
@@ -74,7 +63,7 @@ export function StarStack({ projects }: { projects: Project[] }) {
                   </div>
                 </div>
               </div>
-              <div data-fly-source={p.slug} className={cn("relative flex min-h-56 items-center justify-center", FILL[accent])}>
+              <div data-fly-source={p.slug} className={cn("relative flex min-h-56 items-center justify-center", brand.fill)}>
                 <StarVisual slug={p.slug} />
               </div>
             </article>

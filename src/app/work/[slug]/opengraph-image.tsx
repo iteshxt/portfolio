@@ -6,7 +6,8 @@ export const alt = "A star project by Itesh Singh Tomar";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
-const ACCENT: Record<StarSlug, string> = { arcee: "#7A2CFF", patentiq: "#FF4B2B", diachat: "#D99A00" };
+// Each project's own colour, the darker shade where it's headline text on paper.
+const ACCENT: Record<StarSlug, string> = { arcee: "#E05A00", patentiq: "#452CF9", diachat: "#D99A00" };
 
 export function generateStaticParams() {
   return STAR_SLUGS.map((slug) => ({ slug }));

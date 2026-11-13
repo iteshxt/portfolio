@@ -3,9 +3,8 @@ import { StarVisual } from "@/components/home/StarVisual";
 import { Reveal } from "@/components/motion/Reveal";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import type { Project } from "@/content/projects";
+import { brandOf } from "@/lib/brand";
 import { cn } from "@/lib/cn";
-
-const FRAME = { violet: "border-violet bg-violet", tomato: "border-tomato bg-tomato", sunflower: "border-sunflower bg-sunflower" } as const;
 
 /** Compact framed cards for the three star projects (work page). */
 export function StarCards({ projects }: { projects: Project[] }) {
@@ -17,7 +16,7 @@ export function StarCards({ projects }: { projects: Project[] }) {
             href={`/work/${p.slug}`}
             transitionLabel={p.name}
             data-fly-card=""
-            className={cn("group block border-[10px] transition-transform duration-500 ease-[var(--ease-expo-out)] hover:-translate-y-1.5", FRAME[p.accent ?? "violet"])}
+            className={cn("group block border-[10px] transition-transform duration-500 ease-[var(--ease-expo-out)] hover:-translate-y-1.5", brandOf(p).frame, brandOf(p).fill)}
             style={{ rotate: `${[-1.2, 0.8, -0.6][i % 3]}deg` }}
           >
             <div data-fly-source={p.slug} className="flex aspect-[4/3] items-center justify-center">

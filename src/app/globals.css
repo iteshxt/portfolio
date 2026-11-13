@@ -19,6 +19,15 @@
   --night-2: #15121d;
   --night-ink: #f4f2ff;
 
+  /* Star projects keep their own app's colours in both themes (docs/design.md §3.4). */
+  --arcee: #ff8c1a; /* Arcee's amber, from its icon */
+  --arcee-deep: #1c1108; /* the warm near-black its particle ring is drawn on */
+  --arcee-ink: #1c1108;
+  --patentiq: #452cf9; /* PatentIQ's logo indigo */
+  --patentiq-ink: #ffffff;
+  --diachat: #ffb000; /* DiaChat's primary amber */
+  --diachat-ink: #3d2a00;
+
   /* Day is the default until the bootstrap script picks the real shift. */
   --bg: var(--paper);
   --surface: var(--paper-2);
@@ -413,6 +422,13 @@
   --color-lime: var(--lime);
   --color-tomato: var(--tomato);
   --color-sunflower: var(--sunflower);
+  --color-arcee: var(--arcee);
+  --color-arcee-deep: var(--arcee-deep);
+  --color-arcee-ink: var(--arcee-ink);
+  --color-patentiq: var(--patentiq);
+  --color-patentiq-ink: var(--patentiq-ink);
+  --color-diachat: var(--diachat);
+  --color-diachat-ink: var(--diachat-ink);
   --color-paper: var(--paper);
   --color-ink: var(--ink);
   --color-night: var(--night);
