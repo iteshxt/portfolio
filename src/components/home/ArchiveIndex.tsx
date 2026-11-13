@@ -87,7 +87,7 @@ export function ArchiveIndex({ projects }: { projects: Project[] }) {
             }}
             className={cn("filter-chip", filter === key && "is-on")}
           >
-            {key === "all" ? "All" : CATEGORY_LABELS[key]} <span className="opacity-60">{count}</span>
+            {key === "all" ? "All" : CATEGORY_LABELS[key]} <span className="font-normal">{count}</span>
           </button>
         ))}
       </div>
