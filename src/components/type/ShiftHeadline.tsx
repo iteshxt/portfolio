@@ -6,10 +6,12 @@ export function ShiftHeadline({
   copy,
   cycle = false,
   as = "h1",
+  heightScale,
 }: {
   copy: PageCopy;
   cycle?: boolean;
   as?: "h1" | "h2";
+  heightScale?: number;
 }) {
   return (
     <div className="flex w-full flex-col items-center gap-[clamp(8px,1.4vw,18px)]">
@@ -18,10 +20,10 @@ export function ShiftHeadline({
         <span className="night-only">{copy.kicker.night}</span>
       </p>
       <div className="day-only w-full">
-        <Headline lines={copy.day} cycle={cycle} as={as} />
+        <Headline lines={copy.day} cycle={cycle} as={as} heightScale={heightScale} />
       </div>
       <div className="night-only w-full">
-        <Headline lines={copy.night} cycle={cycle} as={as} />
+        <Headline lines={copy.night} cycle={cycle} as={as} heightScale={heightScale} />
       </div>
     </div>
   );

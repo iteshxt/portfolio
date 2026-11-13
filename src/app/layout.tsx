@@ -11,6 +11,7 @@ import { Footer } from "@/components/shell/Footer";
 import { NavBar } from "@/components/shell/NavBar";
 import { PeelCorner } from "@/components/shell/PeelCorner";
 import { TopBar } from "@/components/shell/TopBar";
+import { IntroScreen } from "@/components/transition/IntroScreen";
 import { TransitionProvider } from "@/components/transition/TransitionProvider";
 import { SITE } from "@/content/site";
 import { getNowBuilding } from "@/lib/github";
@@ -99,7 +100,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: shiftBootstrapScript }} />
       </head>
       <body className="min-h-full flex flex-col">
-        <TransitionProvider>
+        <TransitionProvider intro={<IntroScreen />}>
           <SmoothScroll />
           <TopBar />
           {children}

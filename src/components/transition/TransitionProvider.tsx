@@ -93,8 +93,20 @@ const HOLD_TILT = -1.5;
 /** A white die-cut edge plus a drop shadow while the visual is lifted (it reads on the violet sticker). */
 const liftShadow = (k: number) =>
   `0 0 0 ${6 * k}px rgb(255 255 255 / ${k}), 0 ${40 * k}px ${90 * k}px -30px rgb(0 0 0 / ${0.5 * k})`;
+/** The intro counter runs at least this long on a first visit, so it reads as a loader, not a flash. */
+const INTRO_MIN_MS = 1100;
+/** Repeat visits in the same tab get a much shorter intro. */
+const INTRO_REPEAT_MS = 350;
+const INTRO_SEEN_KEY = "intro-seen";
 
-export function TransitionProvider({ children }: { children: ReactNode }) {
+export function TransitionProvider({
+  children,
+  intro,
+}: {
+  children: ReactNode;
+  /** Server-rendered loader shown on the intro sticker (IntroScreen). */
+  intro?: ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const setPhaseInStore = useUI((s) => s.setTransitionPhase);
@@ -322,12 +334,56 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       return;
     }
     let cancelled = false;
+    let fontsLoaded = false;
+    let raf = 0;
+    let fadeTimer = 0;
     const fontsReady = Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]);
     fontsReady.then(() => {
-      if (!cancelled) setTimeout(reveal, 120);
+      fontsLoaded = true;
     });
+
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(INTRO_SEEN_KEY) === "1";
+      sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+    } catch {}
+    const minMs = seen ? INTRO_REPEAT_MS : INTRO_MIN_MS;
+
+    // The counter eases towards ~90% while things load, then runs to 100.
+    const start = performance.now();
+    let shown = 0;
+    const counter = rootRef.current?.querySelector<HTMLElement>("[data-intro-counter]");
+    const bar = rootRef.current?.querySelector<HTMLElement>("[data-intro-bar]");
+    const finish = () => {
+      const ui = rootRef.current?.querySelector<HTMLElement>(".intro-ui");
+      if (!ui) return reveal();
+      ui.animate([{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-16px)" }], {
+        duration: 260,
+        easing: "cubic-bezier(.16,1,.3,1)",
+        fill: "forwards",
+      });
+      fadeTimer = window.setTimeout(() => {
+        if (!cancelled) reveal();
+      }, 200);
+    };
+    const tick = () => {
+      if (cancelled) return;
+      const elapsed = performance.now() - start;
+      const done = fontsLoaded && elapsed >= minMs;
+      const target = done ? 100 : 90 * (1 - Math.exp(-elapsed / (minMs * 0.45)));
+      shown += (target - shown) * (done ? 0.28 : 0.16);
+      if (done && shown > 99.4) shown = 100;
+      const n = Math.floor(shown);
+      if (counter) counter.textContent = String(n).padStart(3, "0");
+      if (bar) bar.style.transform = `scaleX(${shown / 100})`;
+      if (shown >= 100) fadeTimer = window.setTimeout(finish, 140);
+      else raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
     return () => {
       cancelled = true;
+      cancelAnimationFrame(raf);
+      window.clearTimeout(fadeTimer);
     };
   }, [reveal, setPhase]);
 
@@ -362,6 +418,7 @@ export function TransitionProvider({ children }: { children: ReactNode }) {
       >
         <div ref={sheetRef} className="absolute inset-0 flex items-center justify-center bg-violet will-change-transform">
           <span ref={labelRef} className="display-serif px-6 text-center text-[clamp(40px,8vw,120px)] text-white" />
+          {intro}
         </div>
         <svg className="absolute inset-0 h-full w-full overflow-visible">
           <defs>

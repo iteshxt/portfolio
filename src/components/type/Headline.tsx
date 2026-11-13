@@ -19,6 +19,8 @@ type Props = {
   as?: "h1" | "h2";
   cycle?: boolean;
   className?: string;
+  /** Scales the height-based size caps, for heroes that share the screen with more content. */
+  heightScale?: number;
 };
 
 const TYPE_MS = 80;
@@ -27,7 +29,7 @@ const HOLD_MS = 1700;
 
 const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
-export function Headline({ lines, as: Tag = "h1", cycle = false, className }: Props) {
+export function Headline({ lines, as: Tag = "h1", cycle = false, className, heightScale = 1 }: Props) {
   const wrapRef = useRef<HTMLHeadingElement>(null);
   const sansRef = useRef<HTMLSpanElement>(null);
   const serifRef = useRef<HTMLSpanElement>(null);
@@ -48,7 +50,7 @@ export function Headline({ lines, as: Tag = "h1", cycle = false, className }: Pr
       const ms = measureSansRef.current;
       const mf = measureSerifRef.current;
       if (!width || !ms || !mf || !sansRef.current || !serifRef.current) return;
-      const height = window.innerHeight;
+      const height = window.innerHeight * heightScale;
       // Phones get a higher cap so short statements still fill the width.
       const narrow = width < 640;
       const sansMax = Math.min(width * (narrow ? 0.36 : 0.24), height * 0.3);
@@ -71,7 +73,7 @@ export function Headline({ lines, as: Tag = "h1", cycle = false, className }: Pr
       mo.disconnect();
       document.fonts.removeEventListener("loadingdone", fit);
     };
-  }, [lines]);
+  }, [lines, heightScale]);
 
   // Clear the serif line before the reveal so it can type itself in.
   useIsoLayoutEffect(() => {

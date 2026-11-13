@@ -189,7 +189,7 @@ The name only; it's a separate thing from the Arcee agent project.
 
 ### 7.1 Home
 
-Intro peel → hero cycling through two-line statements ("AGENTS / that act") → short who-he-is → star projects (Arcee first) → archive teaser → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
+Intro loader + peel → hero cycling through two-line statements ("AGENTS / that act"), with an availability line and Delhi clock, a one-line "right now" summary, fact stickers, "See the work" / "Ask Arcee" buttons and the latest GitHub push → short who-he-is with an at-a-glance grid (now, last role, shipped, building) → star projects (Arcee first) → archive teaser → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
 
 ### 7.2 Star case studies (`/work/arcee`, `/work/patentiq`, `/work/diachat`)
 
