@@ -1,16 +1,19 @@
 import { Shape, type ShapeName } from "@/components/ui/Shape";
 
-/** Where the loader's stickers end up: around the edges of the home hero, clear of the text. */
+/** Around the edges of the home hero, clear of the text, the peel hint and the corners' UI. */
 const PLACES: { name: ShapeName; where: string; tilt: number; delay: number }[] = [
-  { name: "burst", where: "top-[16%] left-[7%] w-[clamp(56px,6vw,92px)]", tilt: -10, delay: 1.9 },
-  { name: "blob", where: "top-[28%] right-[6%] w-[clamp(50px,5.4vw,84px)]", tilt: 8, delay: 2.05 },
-  { name: "squiggle", where: "bottom-[24%] left-[9%] w-[clamp(64px,6.6vw,104px)]", tilt: -6, delay: 2.2 },
-  { name: "arch", where: "bottom-[27%] right-[12%] w-[clamp(50px,5vw,80px)]", tilt: 12, delay: 2.35 },
+  { name: "terminal", where: "top-[15%] left-[6%] w-[clamp(64px,6.6vw,104px)]", tilt: -9, delay: 1.9 },
+  { name: "neural", where: "top-[11%] left-[30%] w-[clamp(48px,4.6vw,74px)]", tilt: 7, delay: 2.0 },
+  { name: "sparkle", where: "top-[30%] right-[6%] w-[clamp(52px,5.2vw,82px)]", tilt: 10, delay: 2.1 },
+  { name: "branch", where: "bottom-[24%] left-[8%] w-[clamp(56px,5.6vw,88px)]", tilt: -12, delay: 2.2 },
+  { name: "chip", where: "bottom-[11%] left-[25%] w-[clamp(52px,5vw,80px)]", tilt: 6, delay: 2.3 },
+  { name: "braces", where: "bottom-[27%] right-[12%] w-[clamp(56px,5.4vw,86px)]", tilt: -6, delay: 2.4 },
 ];
 
 /**
- * The intro loader's die-cut shapes, stuck around the hero once it peels away
- * (docs/design.md §2.5): they slap on, then drift gently. CSS only; still for
+ * Field stickers (terminal, braces, neural net, chip, git branch, sparkle)
+ * stuck around the hero once the intro peels away (docs/design.md §2.5): they
+ * slap on, then drift gently. CSS only; still for
  * reduced motion. Hidden on phones, where they'd crowd the headline.
  */
 export function HeroShapes() {
