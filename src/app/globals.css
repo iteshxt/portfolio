@@ -1024,6 +1024,132 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* The footer's whisper: faint until you look at it. */
+.psst {
+  opacity: 0.5;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+.psst:hover,
+.psst:focus-visible {
+  opacity: 1;
+  color: var(--accent-text);
+}
+.psst-arrows {
+  transition: translate 0.4s var(--ease-expo-out);
+}
+.psst:hover .psst-arrows {
+  translate: 4px 0;
+}
+.psst:hover .psst-egg {
+  animation: egg-wobble 0.6s ease-in-out;
+  --tilt: 0deg;
+}
+
+/* /easter-eggs (docs/design.md §2.16): an egg carton; cracked eggs drop a slip. */
+.carton {
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgb(255 255 255 / 0.5), transparent 60%),
+    color-mix(in srgb, #c9b79a 55%, var(--surface));
+  box-shadow:
+    inset 0 2px 0 rgb(255 255 255 / 0.4),
+    0 40px 70px -40px rgb(0 0 0 / 0.55);
+}
+[data-shift="night"] .carton {
+  background: color-mix(in srgb, #c9b79a 14%, var(--surface));
+}
+.carton-cup {
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.16), rgb(0 0 0 / 0.08) 70%, transparent 72%);
+  aspect-ratio: 1 / 1.12;
+}
+.egg {
+  rotate: var(--tilt);
+  filter: drop-shadow(0 10px 10px rgb(0 0 0 / 0.28));
+  transition: rotate 0.4s var(--ease-slap), translate 0.4s var(--ease-expo-out);
+}
+.egg:hover {
+  animation: egg-wobble 0.6s ease-in-out;
+}
+@keyframes egg-wobble {
+  25% {
+    rotate: calc(var(--tilt) - 7deg);
+  }
+  60% {
+    rotate: calc(var(--tilt) + 6deg);
+  }
+}
+.egg-cap,
+.egg-inside {
+  transition:
+    transform 0.55s var(--ease-slap),
+    opacity 0.4s ease;
+  transform-box: fill-box;
+  transform-origin: 80% 100%;
+}
+.egg-inside {
+  opacity: 0;
+}
+.egg[data-cracked] {
+  rotate: 0deg;
+  translate: 0 -6px;
+}
+.egg[data-cracked] .egg-cap {
+  transform: translate(12%, -22%) rotate(22deg);
+}
+.egg[data-cracked] .egg-inside {
+  opacity: 1;
+}
+.egg[data-cracked] .egg-edge {
+  opacity: 0;
+}
+.egg-edge {
+  transition: opacity 0.2s ease;
+}
+.egg-found {
+  color: #3d7a00;
+  border-color: currentColor;
+  background: var(--surface);
+  rotate: 8deg;
+}
+[data-shift="night"] .egg-found {
+  color: var(--lime);
+}
+/* The slip of paper that comes out of a cracked egg. */
+.egg-slip {
+  box-shadow: 0 24px 40px -26px rgb(0 0 0 / 0.5);
+  background-image: repeating-linear-gradient(transparent 0 31px, var(--line) 31px 32px);
+  rotate: -0.8deg;
+  animation: egg-slip 0.6s var(--ease-slap) both;
+}
+.egg-slip::before {
+  /* A torn top edge. */
+  content: "";
+  position: absolute;
+  inset: -7px 0 auto;
+  height: 8px;
+  background: var(--surface);
+  -webkit-mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+  mask: conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+}
+@keyframes egg-slip {
+  from {
+    opacity: 0;
+    translate: 0 -40px;
+    rotate: 4deg;
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(-20px 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg:hover {
+    animation: none;
+  }
+  .egg-slip {
+    animation: none;
+  }
+}
+
 /* The Arcee pop-up slaps up out of the navigator pill and drops back into it. */
 .arcee-panel {
   translate: -50% 0;

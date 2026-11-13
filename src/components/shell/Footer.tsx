@@ -5,6 +5,7 @@ import { Sticker, type StickerTone } from "@/components/ui/Sticker";
 import { SITE } from "@/content/site";
 import { BackToTop } from "./BackToTop";
 import { NowBuilding } from "./NowBuilding";
+import { TransitionLink } from "@/components/transition/TransitionLink";
 
 async function currentYear() {
   "use cache";
@@ -69,6 +70,18 @@ export async function Footer() {
         <p className="text-[13px] text-fg-muted">
           © {year} iteshxt
         </p>
+        {/* A whisper, not a link anyone needs: it leads to /easter-eggs. */}
+        <TransitionLink href="/easter-eggs" transitionLabel="psst" data-cursor="shh…" className="psst group flex items-center gap-1.5 text-fg-muted">
+          <span className="font-hand text-[clamp(17px,1.5vw,21px)] leading-none">psst… psst… psst…</span>
+          <svg viewBox="0 0 64 24" aria-hidden="true" className="psst-arrows w-[48px] overflow-visible">
+            <path d="M2 14c8-8 14 6 22-2s14 4 20-2" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            <path d="M40 4l6 4-6 4M50 4l6 4-6 4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <svg viewBox="0 0 100 130" aria-hidden="true" className="psst-egg w-[14px]">
+            <path d="M50 4C24 4 6 52 6 80c0 28 19 46 44 46s44-18 44-46C94 52 76 4 50 4Z" fill="var(--sunflower)" stroke="currentColor" strokeWidth="8" />
+          </svg>
+          <span className="sr-only">Easter eggs</span>
+        </TransitionLink>
         <BackToTop />
       </div>
     </footer>

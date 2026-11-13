@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { Close } from "@/components/icons";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { cn } from "@/lib/cn";
-import { foundEgg } from "@/lib/eggs";
+import { foundEgg, markEgg } from "@/lib/eggs";
 import { play } from "@/lib/sound";
 import { complete, runCommand, type TermAction, type TermLine } from "@/lib/terminal";
 import { useUI } from "@/store/ui";
@@ -90,6 +90,7 @@ export function Terminal({ now }: { now: { repo: string; message: string } | nul
 
   function submit() {
     const value = input;
+    if (/^\s*(sudo|rm|ls\s+secrets|scuba|cat-in-a-mask)\b/.test(value)) markEgg("commands");
     const result = runCommand(value, { shift: useUI.getState().shift, date: new Date(), now });
     setEntries((prev) => [...prev, { text: value, prompt: true }, ...result.lines]);
     if (value.trim()) setPast((p) => [...p.slice(-30), value]);

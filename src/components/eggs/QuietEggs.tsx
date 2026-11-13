@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { foundEgg } from "@/lib/eggs";
+import { foundEgg, markEgg } from "@/lib/eggs";
 
-const AWAY_TITLE = "come back (╥﹏╥)";
+export const AWAY_TITLE = "come back (╥﹏╥)";
 
 /**
  * The small, no-UI eggs (docs/prd.md §6.5):
@@ -16,6 +16,7 @@ export function QuietEggs() {
     let saved = "";
     const onVisibility = () => {
       if (document.hidden) {
+        markEgg("tab");
         saved = document.title;
         document.title = AWAY_TITLE;
       } else if (saved) {
@@ -23,8 +24,13 @@ export function QuietEggs() {
         saved = "";
       }
     };
+    const onPrint = () => markEgg("print");
     document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
+    window.addEventListener("beforeprint", onPrint);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("beforeprint", onPrint);
+    };
   }, []);
 
   useEffect(() => {

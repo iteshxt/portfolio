@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
+import { MarkEgg } from "@/components/eggs/MarkEgg";
 import { ArrowRight, Spark } from "@/components/icons";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { Sticker } from "@/components/ui/Sticker";
@@ -21,6 +22,7 @@ const GUESSES = [
 export default function NotFound() {
   return (
     <main className="faded-mat px-gutter flex flex-1 flex-col items-center justify-center pt-24 pb-32 text-center">
+      <MarkEgg id="404" />
       <p data-animate="rise" className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">
         404
       </p>

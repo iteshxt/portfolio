@@ -118,6 +118,13 @@ The folder from the work page, open, in the project's own colours (each page wea
 - Below it, where the page was: an empty dashed die-cut outline with a speckle of leftover adhesive and "this page used to be here". The violet "404" sticker that sat in it lifts and peels off, landing askew below and to the side with its corner curled to show the lavender back (lands closer on phones; shown already peeled for reduced motion).
 - "Did you mean…": the pages as die-cut stickers with a model's misplaced confidence (Home 97%, Work 91%, About 88%, DiaLabs 84%, Contact 79%), then "Take me home" and "Ask Arcee instead".
 
+### 2.16 /easter-eggs (2026-11-14): the egg carton
+
+Not in the navigator, the sitemap or search (noindex). The only way in is a whisper in the footer's bottom row: a faint handwritten "psst… psst… psst…" with squiggly arrows and a tiny sunflower egg, which darkens, nudges and wobbles on hover (cursor: "shh…").
+- **Hero:** handwritten "psst… you made it", "The secret *eggs*.", "Eight things hidden around this site. Couldn't find them all? Crack one open and try it right here."
+- **The carton:** a cardboard egg carton (a die-cut tray with eight cups and a "GRADE A · 8 EGGS · HAND-HIDDEN" label) holding eight dyed, sticker-patterned eggs (zigzags, dots, stripes, stars), each a die-cut SVG egg that wobbles on hover. Cracking one pops its cap off along a zigzag crack (a yolk-yellow inside shows) and a torn, lined slip slides out below (scrolled into view): "Egg 03 of 08", the name, "How to find it" with keycaps, and "Try it", which really triggers it: opens the terminal, sends the scuba cat, flips the tab title, switches to 3am night with its toast, opens print, goes to a hallucinated address, or shows the live latest push.
+- **Found stamps:** eggs found on your own (kept in this browser; `markEgg` in lib/eggs) wear a green "FOUND" stamp, live, with "Found on your own: N of 8" below.
+
 ## 3. Colour
 
 ### 3.1 Palette
