@@ -3,7 +3,7 @@ import { ArchiveMarquee } from "@/components/home/ArchiveMarquee";
 import { ContactCta } from "@/components/home/ContactCta";
 import { DiaLabsTeaser } from "@/components/home/DiaLabsTeaser";
 import { ExperienceList } from "@/components/home/ExperienceList";
-import { StarStack } from "@/components/home/StarStack";
+import { StarPosters } from "@/components/home/StarPosters";
 import { Suspense } from "react";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowDown, ArrowRight, Spark } from "@/components/icons";
@@ -87,18 +87,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Star projects */}
-      <section data-section="Selected work" className="px-gutter pt-[clamp(32px,6vw,80px)] pb-[clamp(48px,8vw,120px)]">
-        <div className="mx-auto max-w-[1440px]">
-          <SectionTitle kicker="Selected work">
-            Three I&rsquo;m most{" "}
-            <Sticker size="word" tone="tomato" tilt={-2.5}>
-              proud
-            </Sticker>{" "}
-            of.
-          </SectionTitle>
-          <StarStack projects={STAR_PROJECTS} />
-        </div>
+      {/* Star projects: posters sliding through a pinned section */}
+      <section data-section="Selected work" className="pt-[clamp(32px,6vw,80px)] pb-[clamp(48px,8vw,120px)] md:py-0">
+        <StarPosters
+          projects={STAR_PROJECTS}
+          header={
+            <div className="px-gutter mx-auto w-full max-w-[1440px]">
+              <SectionTitle kicker="Selected work">
+                Three I&rsquo;m most{" "}
+                <Sticker size="word" tone="tomato" tilt={-2.5}>
+                  proud
+                </Sticker>{" "}
+                of.
+              </SectionTitle>
+            </div>
+          }
+        />
       </section>
 
       {/* Archive */}
