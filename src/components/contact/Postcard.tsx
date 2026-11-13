@@ -77,7 +77,7 @@ export function Postcard() {
         onSubmit={submit}
         data-state={state}
         aria-label="Write a postcard to Itesh"
-        className="postcard relative grid overflow-hidden rounded-[22px] border-[5px] border-[var(--die)] bg-surface md:grid-cols-[1.15fr_1fr]"
+        className="contact-card relative grid overflow-hidden rounded-[22px] border-[5px] border-[var(--die)] bg-surface md:grid-cols-[1.15fr_1fr]"
       >
         {/* Left: the message, on ruled lines. */}
         <label className="relative flex flex-col p-[clamp(18px,2.6vw,36px)] md:border-r-2 md:border-dashed md:border-line">

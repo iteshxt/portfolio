@@ -3,14 +3,14 @@
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Close } from "@/components/icons";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
-import { cn } from "@/lib/cn";
 import { useUI } from "@/store/ui";
 import { ArceeChat, ArceeStamp } from "./ArceeChat";
 
 /**
- * The floating Arcee panel above the nav bar (docs/prd.md §6.4): a sticker panel
- * with Arcee's own dark header and its animated ring. "Open full page" moves the
- * same conversation to /arcee. Not shown on /arcee itself.
+ * The floating Arcee chat (docs/design.md §2.8): a die-cut sheet that slaps up out
+ * of the "Where to?" pill. A paper header with Arcee's ring as a postage stamp,
+ * the conversation on a cutting mat, and an ink composer like the navigator's
+ * field. "Open full page" moves the same conversation to /arcee (not shown there).
  */
 export function ArceePanel() {
   const open = useUI((s) => s.arceeOpen);
@@ -27,16 +27,19 @@ export function ArceePanel() {
       data-open={open}
       data-lenis-prevent=""
       inert={!open}
-      className={cn(
-        "fixed bottom-[84px] left-1/2 z-[55] flex h-[min(68vh,600px)] w-[min(460px,calc(100vw-24px))] -translate-x-1/2 flex-col overflow-hidden rounded-[28px] border-[4px] border-white bg-surface text-fg shadow-[0_30px_80px_-30px_rgb(0_0_0/0.55)] transition-[opacity,translate] duration-300 ease-[var(--ease-expo-out)]",
-        open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
-      )}
+      className="arcee-panel fixed bottom-[86px] left-1/2 z-[55] flex h-[min(70vh,620px)] w-[min(440px,calc(100vw-24px))] flex-col overflow-hidden rounded-[30px] border-[5px] border-[var(--die)] bg-bg text-fg"
     >
-      <header className="flex items-center gap-3 bg-violet px-4 py-3 text-white">
-        <ArceeStamp className="size-11 rounded-full border-2 border-white/70" />
+      <header className="relative flex items-center gap-3.5 border-b-2 border-dashed border-line bg-surface px-4 pt-4 pb-3.5">
+        <ArceeStamp className="size-12" />
         <div className="min-w-0 flex-1">
-          <p className="text-[17px] leading-tight font-semibold tracking-[-0.01em]">Arcee</p>
-          <p className="truncate text-[13px] text-white/85">The site&apos;s guide. Ask about Itesh&apos;s work.</p>
+          <p className="text-[24px] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_80]">Arcee</p>
+          <p className="mt-1 flex items-center gap-1.5 truncate text-[13px] text-fg-muted">
+            <span className="relative flex size-2 shrink-0">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-lime opacity-70 motion-reduce:animate-none" />
+              <span className="relative inline-flex size-2 rounded-full bg-[#7bd600]" />
+            </span>
+            The site&rsquo;s guide · answers in cats
+          </p>
         </div>
         <button
           type="button"
@@ -46,11 +49,11 @@ export function ArceePanel() {
           }}
           aria-label="Open Arcee full page"
           data-cursor="Full page"
-          className="flex size-9 items-center justify-center rounded-full text-[17px] text-white/85 hover:bg-white/15 hover:text-white"
+          className="arcee-panel-btn"
         >
           <ArrowUpRight />
         </button>
-        <button type="button" onClick={close} aria-label="Close chat" className="flex size-9 items-center justify-center rounded-full text-[18px] text-white/85 hover:bg-white/15 hover:text-white">
+        <button type="button" onClick={close} aria-label="Close chat" data-cursor="Close" className="arcee-panel-btn">
           <Close />
         </button>
       </header>

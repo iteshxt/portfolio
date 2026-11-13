@@ -3,7 +3,7 @@
 import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { ArrowUpRight } from "@/components/icons";
+import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { arceeChat } from "@/lib/arcee/chat-client";
 import { allowedUrls } from "@/lib/arcee/corpus";
@@ -21,7 +21,7 @@ function Sticker({ mood }: { mood: StickerMood }) {
   const s = STICKERS[mood];
   if (!s) return null;
   // eslint-disable-next-line @next/next/no-img-element -- tiny local SVG stickers; next/image adds nothing here
-  return <img src={s.src} alt={s.alt} width={96} height={96} className="sticker-pop mt-2 size-24 -rotate-6" />;
+  return <img src={s.src} alt={s.alt} width={96} height={96} className="sticker-pop float-right -mt-1 mb-1 ml-2 size-16 rotate-6" />;
 }
 
 function RichText({ text, allowed }: { text: string; allowed: Set<string> }) {
@@ -42,6 +42,32 @@ function RichText({ text, allowed }: { text: string; allowed: Set<string> }) {
 
 const MORE_SUGGESTIONS = ["What's DiaLabs?", "Which project uses WebGPU?"];
 const KNOWS = ["The three star projects and how they work", "Everything else he has shipped", "Where he has worked and what he did", "DiaLabs and its releases", "How to reach him, or take a message"];
+
+const CHIP_TONES = ["bg-lime text-[#2B3600]", "bg-lavender text-violet-ink", "bg-sunflower text-[#4A3A00]", "bg-surface text-fg"];
+
+/** The pop-up's opening: a short greeting and questions to try, as stickers. */
+function PanelWelcome({ ask }: { ask: (q: string) => void }) {
+  return (
+    <div className="flex flex-col gap-3 pt-1 pb-2">
+      <p className="font-serif text-[18px] text-fg-muted italic">Hey, I&rsquo;m Arcee.</p>
+      <p className="max-w-[16ch] text-[30px] leading-[1.02] font-semibold tracking-[-0.045em] [font-variation-settings:'wdth'_80]">Ask me anything about Itesh.</p>
+      <p className="max-w-[34ch] text-[14px] text-fg-muted">His projects, where he&rsquo;s worked, how to reach him. I can take a message for him too.</p>
+      <div className="mt-1 flex flex-wrap gap-2">
+        {SUGGESTIONS.map((q, i) => (
+          <button
+            key={q}
+            type="button"
+            onClick={() => ask(q)}
+            style={{ rotate: `${[-1.5, 1, -0.5, 1.5][i % 4]}deg` }}
+            className={cn("arcee-chip rounded-[12px] border-[3px] border-[var(--die)] px-3 py-1.5 text-left text-[13px] font-semibold shadow-[0_6px_14px_-8px_rgb(0_0_0/0.4)]", CHIP_TONES[i % CHIP_TONES.length])}
+          >
+            {q}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 /** Arcee's opening message, a postcard. On the full page it also lists what Arcee knows and what to try. */
 function Welcome({ page, ask }: { page: boolean; ask: (q: string) => void }) {
@@ -209,7 +235,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
         className={cn("flex flex-col gap-3 leading-snug", page ? "pb-6 text-[16px]" : "cutting-mat flex-1 overflow-y-auto px-4 py-4 text-[15px]")}
         aria-live="polite"
       >
-        <Welcome page={page} ask={ask} />
+        {page ? <Welcome page ask={ask} /> : <PanelWelcome ask={ask} />}
         {messages.map((m) => (
           <div
             key={m.id}
@@ -222,12 +248,10 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
           </div>
         ))}
         {status === "submitted" && (
-          <div className="self-start rounded-[18px] rounded-bl-md border-[3px] border-white bg-surface px-4 py-3" aria-label="Arcee is typing">
-            <span className="typing-dots flex gap-1">
-              <span />
-              <span />
-              <span />
-            </span>
+          <div className="flex items-center gap-2 self-start" aria-label="Arcee is thinking">
+            {/* eslint-disable-next-line @next/next/no-img-element -- tiny local SVG sticker */}
+            <img src="/stickers/thinking.svg" alt="" width={56} height={56} className="arcee-thinking size-14" />
+            <span className="font-hand text-[22px] text-fg-muted">thinking…</span>
           </div>
         )}
         {error && (
@@ -237,14 +261,45 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
         )}
       </div>
 
+      {!page && (
+        <form onSubmit={onSubmit} className="border-t-2 border-dashed border-line bg-surface p-3">
+          <div className="flex items-end gap-2 rounded-[26px] border-[3px] border-[var(--die)] bg-fg py-1.5 pr-1.5 pl-4 text-bg shadow-[0_12px_24px_-14px_rgb(0_0_0/0.6)]">
+            <textarea
+              ref={inputRef}
+              rows={1}
+              value={input}
+              maxLength={500}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  ask(input);
+                  setInput("");
+                } else if (e.key === "Escape") {
+                  useUI.getState().closeArcee();
+                }
+              }}
+              placeholder="Ask about Itesh…"
+              aria-label="Message Arcee"
+              className="max-h-28 min-h-10 flex-1 resize-none bg-transparent py-2 text-[15px] outline-none placeholder:text-bg/60"
+            />
+            {busy ? (
+              <button type="button" onClick={() => stop()} aria-label="Stop" className="grid size-10 shrink-0 place-items-center rounded-full bg-surface text-fg">
+                <span className="size-3 rounded-[3px] bg-current" />
+              </button>
+            ) : (
+              <button type="submit" disabled={!input.trim()} aria-label="Send" className="grid size-10 shrink-0 place-items-center rounded-full bg-lime text-[18px] text-[#2B3600] transition-transform duration-200 hover:scale-105 disabled:opacity-40">
+                <ArrowRight />
+              </button>
+            )}
+          </div>
+        </form>
+      )}
+
+      {page && (
       <form
         onSubmit={onSubmit}
-        className={cn(
-          "flex items-end gap-2",
-          page
-            ? "sticky bottom-[88px] z-30 rounded-[26px] border-[4px] border-white bg-surface p-2.5 shadow-[0_18px_40px_-20px_rgb(0_0_0/0.5)]"
-            : "border-t border-line bg-surface p-3",
-        )}
+        className="sticky bottom-[88px] z-30 flex items-end gap-2 rounded-[26px] border-[4px] border-white bg-surface p-2.5 shadow-[0_18px_40px_-20px_rgb(0_0_0/0.5)]"
       >
         <textarea
           ref={inputRef}
@@ -275,6 +330,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
           </button>
         )}
       </form>
+      )}
     </>
   );
 }
