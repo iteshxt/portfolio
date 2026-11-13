@@ -1,7 +1,7 @@
 /**
- * "Show me ___" navigation: the visitor finishes the sentence (docs/prd.md
- * §6.2, docs/design.md §11). Day completions point at what, night
- * completions at how; both lead to the same page.
+ * Pages for the "Where to?" navigator (docs/design.md §2.8): each shows as a
+ * die-cut sticker with its name and a one-line description (`day`). `night`
+ * is kept as an extra search term.
  */
 
 export type NavItem = {
@@ -11,8 +11,6 @@ export type NavItem = {
   day: string;
   night: string;
 };
-
-export const NAV_PROMPT = "Show me";
 
 export const NAV_ITEMS: NavItem[] = [
   { href: "/work/arcee", label: "Arcee", kind: "star", day: "the desktop agent", night: "how the agent thinks" },

@@ -485,29 +485,68 @@ html {
 
 /* "Itesh ___" nav panel (docs/design.md §6): rises 12px and fades in; options stagger. */
 .nav-panel {
-  transition:
-    opacity 0.22s var(--ease-expo-out),
-    transform 0.22s var(--ease-expo-out),
-    visibility 0s linear 0s;
+  transition: visibility 0s linear 0s;
 }
 .nav-panel[data-open="false"] {
-  opacity: 0;
-  transform: translateY(12px) scale(0.98);
   visibility: hidden;
-  transition:
-    opacity 0.16s ease,
-    transform 0.16s ease,
-    visibility 0s linear 0.16s;
+  transition: visibility 0s linear 0.3s;
 }
-.nav-option {
+/* Page stickers fan out of the pill: they start small, low and straight, and land tilted. */
+.nav-sticker {
+  rotate: var(--r);
+  box-shadow: 0 10px 22px -12px rgb(0 0 0 / 0.45);
   transition:
-    opacity 0.26s ease,
-    transform 0.26s var(--ease-expo-out),
-    background-color 0.15s ease;
+    transform 0.5s var(--ease-slap),
+    opacity 0.25s ease,
+    rotate 0.5s var(--ease-slap),
+    scale 0.25s var(--ease-expo-out),
+    translate 0.25s var(--ease-expo-out);
 }
-.nav-panel[data-open="false"] .nav-option {
+.nav-panel[data-open="false"] .nav-sticker {
   opacity: 0;
-  transform: translateY(6px);
+  rotate: 0deg;
+  transform: translate(var(--from-x, 0), 160%) scale(0.4);
+  transition-duration: 0.22s;
+  transition-delay: 0s !important;
+}
+.nav-sticker[aria-selected="true"] {
+  translate: 0 -4px;
+  scale: 1.04;
+  box-shadow:
+    0 0 0 3px var(--fg),
+    0 16px 26px -14px rgb(0 0 0 / 0.5);
+}
+.nav-search {
+  transition-delay: 0s;
+}
+/* The pill's mini stack fans when hovered or open. */
+.nav-pill {
+  transition: transform 0.3s var(--ease-expo-out);
+}
+.nav-pill:hover {
+  transform: translateY(-2px) rotate(-1deg);
+}
+.nav-pill:active {
+  transform: scale(0.97);
+}
+.nav-mini {
+  rotate: calc(var(--m) * 0.45);
+  translate: calc(var(--mx) * 0.4) 0;
+  transition:
+    rotate 0.35s var(--ease-slap),
+    translate 0.35s var(--ease-slap);
+}
+.nav-pill:hover .nav-mini,
+.nav-pill[data-open="true"] .nav-mini {
+  rotate: var(--m);
+  translate: var(--mx) 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sticker,
+  .nav-mini,
+  .nav-pill {
+    transition: none;
+  }
 }
 
 /* Fallback shift change: a short crossfade. */

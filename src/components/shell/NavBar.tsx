@@ -1,19 +1,32 @@
 "use client";
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
-import { filterNav, NAV_ITEMS, NAV_PROMPT, type NavItem } from "@/content/nav";
+import { filterNav, NAV_ITEMS, type NavItem } from "@/content/nav";
 import { cn } from "@/lib/cn";
 import { isTypingTarget } from "@/lib/motion";
 import { play } from "@/lib/sound";
 import { preloadArcee } from "./LazyOverlays";
 import { useUI } from "@/store/ui";
 
+/** Each page's sticker colour; the star projects wear their own brand colours. */
+const TONE: Record<string, string> = {
+  Arcee: "bg-arcee-deep text-arcee",
+  PatentIQ: "bg-patentiq text-patentiq-ink",
+  DiaChat: "bg-diachat text-diachat-ink",
+  Work: "bg-lime text-[#2B3600]",
+  DiaLabs: "bg-violet text-white",
+  About: "bg-lavender text-violet-ink",
+  Contact: "bg-tomato text-[#2A0700]",
+  Home: "bg-surface text-fg",
+};
+const TILTS = [-3, 2.5, 1.5, -2, -1.5, 3, 2, -2.5];
+
 /**
- * The "Show me ___" bar (docs/prd.md §6.2, docs/spec.md §5.5): one pill that
- * opens into sentence completions the visitor picks from. Each completion is
- * a page; anything else is handed to Arcee (a placeholder until the chatbot
- * milestone).
+ * The "Where to?" navigator (docs/design.md §2.8, docs/spec.md §5.5): a pill with
+ * a tiny sticker stack that fans out a sheet of die-cut page stickers, each in
+ * its page's colour, over a search field. Typing filters; anything that isn't a
+ * page goes to Arcee ("terminal" opens the hidden terminal).
  */
 export function NavBar() {
   const open = useUI((s) => s.navOpen);
@@ -115,15 +128,39 @@ export function NavBar() {
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
       {/* Clicks pass through the column; only the open panel and the pill take them. */}
-      <div ref={shellRef} className="flex w-full max-w-[440px] flex-col items-center gap-2">
-        <div
-          id={panelId}
-          data-open={open}
-          inert={!open}
-          className="nav-panel pointer-events-auto w-full origin-bottom rounded-2xl border border-line bg-surface p-2 text-fg shadow-[0_24px_60px_-24px_rgb(0_0_0/0.45)]"
-        >
-          <label className="flex items-baseline gap-2 rounded-xl px-3 pt-2 pb-3">
-            <span className="shrink-0 font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>
+      <div ref={shellRef} className="flex w-full max-w-[560px] flex-col items-center gap-3">
+        <div id={panelId} data-open={open} inert={!open} className="nav-panel pointer-events-auto flex w-full flex-col gap-3">
+          <ul id={listId} role="listbox" aria-label="Pages" className="grid grid-cols-2 gap-x-3 gap-y-3 px-1">
+            {items.map((item, i) => (
+              <li
+                key={item.href}
+                id={`${listId}-${i}`}
+                role="option"
+                aria-selected={i === activeIndex}
+                onPointerEnter={() => setActive(i)}
+                onClick={() => choose(item)}
+                style={
+                  {
+                    "--r": `${TILTS[i % TILTS.length]}deg`,
+                    "--from-x": `${(i % 2 ? -1 : 1) * 40}%`,
+                    transitionDelay: open ? `${(items.length - 1 - i) * 35}ms` : "0ms",
+                  } as CSSProperties
+                }
+                className={cn(
+                  "nav-sticker flex min-h-[68px] cursor-pointer flex-col justify-center rounded-[18px] border-[3px] border-white px-4 py-2.5",
+                  TONE[item.label] ?? "bg-surface text-fg",
+                )}
+              >
+                <span className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{item.label}</span>
+                <span className="text-[13px] leading-snug opacity-80">{item.day}</span>
+              </li>
+            ))}
+          </ul>
+
+          <label className="nav-sticker nav-search flex items-center gap-3 rounded-full border-[3px] border-white bg-surface px-4 py-2.5 text-fg" style={{ "--r": "0deg" } as CSSProperties}>
+            <span aria-hidden="true" className="font-serif text-[20px] whitespace-nowrap italic leading-none text-fg-muted">
+              Go to
+            </span>
             <input
               ref={inputRef}
               role="combobox"
@@ -131,8 +168,8 @@ export function NavBar() {
               aria-controls={listId}
               aria-autocomplete="list"
               aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined}
-              aria-label="Finish the sentence to navigate, or ask Arcee"
-              placeholder="… or ask Arcee anything"
+              aria-label="Type a page to go to, or ask Arcee"
+              placeholder="a page, or ask Arcee anything"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -143,63 +180,18 @@ export function NavBar() {
               spellCheck={false}
               className="w-full min-w-0 bg-transparent text-[16px] outline-none placeholder:text-fg-muted"
             />
-          </label>
-
-          <ul id={listId} role="listbox" aria-label="Pages" className="flex flex-col">
-            {items.map((item, i) => (
-              <li
-                key={item.href}
-                id={`${listId}-${i}`}
-                role="option"
-                aria-selected={i === activeIndex}
-                onPointerEnter={() => setActive(i)}
-                onClick={() => choose(item)}
-                style={{ transitionDelay: open ? `${i * 30}ms` : "0ms" }}
-                className="nav-option flex min-h-11 cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2 text-[15px] aria-selected:bg-violet/12"
-              >
-                <span className="font-medium">
-                  <span className="day-only">{item.day}</span>
-                  <span className="night-only">{item.night}</span>
-                </span>
-                <span
-                  className={cn(
-                    "shrink-0 rounded-full px-2 py-0.5 text-[12px]",
-                    item.kind === "star" ? "bg-violet text-white" : "bg-bg text-fg-muted",
-                  )}
-                >
-                  {item.kind === "star" ? `star · ${item.label}` : item.label}
-                </span>
-              </li>
-            ))}
-          </ul>
-
-          {!items.length && query.trim() && (
             <button
               type="button"
               onClick={() => {
                 const q = query.trim();
                 closeNav();
-                useUI.getState().openArcee(q);
+                useUI.getState().openArcee(q || undefined);
               }}
-              className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[14px] hover:bg-violet/12"
+              className="shrink-0 rounded-full bg-violet px-3 py-1 text-[12px] font-semibold text-white"
             >
-              <span className="rounded-full bg-violet px-2 py-0.5 text-[12px] text-white">Arcee</span>
-              No page for that. Press Enter and Arcee will answer it.
+              {query.trim() && !items.length ? "Ask Arcee ↵" : "Arcee"}
             </button>
-          )}
-          {!query.trim() && (
-            <button
-              type="button"
-              onClick={() => {
-                closeNav();
-                useUI.getState().openArcee();
-              }}
-              className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[14px] text-fg-muted hover:bg-violet/12 hover:text-fg"
-            >
-              <span className="rounded-full bg-violet px-2 py-0.5 text-[12px] text-white">Arcee</span>
-              Or just ask Arcee anything about Itesh
-            </button>
-          )}
+          </label>
         </div>
 
         <button
@@ -208,23 +200,17 @@ export function NavBar() {
           aria-haspopup="listbox"
           aria-expanded={open}
           aria-controls={panelId}
+          data-open={open}
           onClick={() => (open ? closeNav() : openNav())}
-          className="group pointer-events-auto flex min-h-12 items-center gap-3 rounded-full bg-violet px-5 py-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)] transition-transform duration-200 ease-[var(--ease-expo-out)] hover:-translate-y-0.5 active:scale-[0.97]"
+          className="nav-pill group pointer-events-auto flex min-h-12 items-center gap-3 rounded-full border-[3px] border-white bg-violet py-2.5 pr-5 pl-3 text-white shadow-[0_14px_34px_-14px_rgb(122_44_255/0.75)]"
         >
-          <span className="font-serif text-[22px] italic leading-none">{NAV_PROMPT}</span>
-          <span aria-hidden="true" className="h-[2px] w-12 translate-y-[7px] rounded-full bg-white/70" />
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 24 24"
-            className={cn("size-5 transition-transform duration-300", open && "rotate-180")}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M6 14.5 12 8.5l6 6" />
-          </svg>
+          {/* A tiny stack of stickers that fans out on hover and when open. */}
+          <span aria-hidden="true" className="relative h-6 w-8">
+            <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-sunflower" style={{ "--m": "-14deg", "--mx": "-5px" } as CSSProperties} />
+            <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-lime" style={{ "--m": "12deg", "--mx": "5px" } as CSSProperties} />
+            <span className="nav-mini absolute inset-y-0 left-1 w-5 rounded-[6px] border-2 border-white bg-lavender" style={{ "--m": "0deg", "--mx": "0px" } as CSSProperties} />
+          </span>
+          <span className="font-serif text-[22px] italic leading-none">Where to?</span>
           <span className="sr-only">{open ? "Close navigation" : "Open navigation"}</span>
         </button>
       </div>
