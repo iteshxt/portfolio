@@ -14,41 +14,34 @@ export function ScrollStatus() {
   const [current, setCurrent] = useState(0);
   const barRef = useRef<HTMLSpanElement>(null);
 
+  // The current section is the last one whose top has passed the middle of the screen.
   useEffect(() => {
-    // Wait a frame so the new page's sections are in the DOM.
-    let io: IntersectionObserver | undefined;
-    const raf = requestAnimationFrame(() => {
-      const els = [...document.querySelectorAll<HTMLElement>("main [data-section]")].filter((el) => el.offsetParent !== null);
-      setSections(els.map((el) => el.dataset.section ?? ""));
-      setCurrent(0);
-      io = new IntersectionObserver(
-        (entries) => {
-          for (const e of entries) if (e.isIntersecting) setCurrent(els.indexOf(e.target as HTMLElement));
-        },
-        { rootMargin: "-45% 0px -54% 0px" },
-      );
-      els.forEach((el) => io!.observe(el));
-    });
-    return () => {
-      cancelAnimationFrame(raf);
-      io?.disconnect();
-    };
-  }, [pathname]);
-
-  useEffect(() => {
+    let els: HTMLElement[] = [];
     let raf = 0;
     const update = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       if (barRef.current) barRef.current.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+      const mid = window.innerHeight / 2;
+      let idx = 0;
+      els.forEach((el, k) => {
+        if (el.getBoundingClientRect().top <= mid) idx = k;
+      });
+      setCurrent(idx);
     };
     const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(update);
     };
-    update();
+    // Wait a frame so the new page's sections are in the DOM.
+    const start = requestAnimationFrame(() => {
+      els = [...document.querySelectorAll<HTMLElement>("main [data-section]")].filter((el) => el.offsetParent !== null);
+      setSections(els.map((el) => el.dataset.section ?? ""));
+      update();
+    });
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     return () => {
+      cancelAnimationFrame(start);
       cancelAnimationFrame(raf);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);

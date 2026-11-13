@@ -1,8 +1,9 @@
 import { cacheLife } from "next/cache";
 import { Suspense } from "react";
 import { ArrowUpRight } from "@/components/icons";
-import { Scribble } from "@/components/motion/Scribble";
+import { Sticker, type StickerTone } from "@/components/ui/Sticker";
 import { SITE } from "@/content/site";
+import { BackToTop } from "./BackToTop";
 import { NowBuilding } from "./NowBuilding";
 
 async function currentYear() {
@@ -11,50 +12,65 @@ async function currentYear() {
   return new Date().getFullYear();
 }
 
-const LINKS = [
-  { label: "Email", href: `mailto:${SITE.email}` },
-  { label: "LinkedIn", href: SITE.socials.linkedin },
-  { label: "GitHub", href: SITE.socials.github },
-  { label: "X", href: SITE.socials.x },
+const LINKS: { label: string; href: string; tone: StickerTone; tilt: number }[] = [
+  { label: "Email", href: `mailto:${SITE.email}`, tone: "lime", tilt: -3 },
+  { label: "LinkedIn", href: SITE.socials.linkedin, tone: "lavender", tilt: 2.5 },
+  { label: "GitHub", href: SITE.socials.github, tone: "sunflower", tilt: -1.5 },
+  { label: "X", href: SITE.socials.x, tone: "tomato", tilt: 3 },
 ];
 
+/**
+ * The footer as a sticker sheet on a cutting mat (docs/design.md §2.12): the
+ * wordmark as a big die-cut sticker, the links as flickable stickers, the
+ * latest push printed as a receipt, and a peel tab back to the top.
+ */
 export async function Footer() {
   const year = await currentYear();
 
   return (
-    <footer className="px-gutter mt-auto border-t border-line pt-14 pb-32">
-      <div className="mx-auto grid max-w-[1440px] gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
-        <div>
-          <p className="font-serif text-[clamp(44px,6vw,88px)] italic leading-[0.9]">itesh</p>
-          <p className="mt-3 max-w-xs text-fg-muted">{SITE.role}.</p>
+    <footer className="cutting-mat px-gutter mt-auto border-t border-line pt-[clamp(56px,8vw,100px)] pb-32">
+      <div className="mx-auto grid max-w-[1440px] items-start gap-12 md:grid-cols-[1.2fr_1fr_1fr]">
+        <div className="flex flex-col items-start gap-5">
+          <p className="wordmark-sticker inline-block rounded-[28px] border-[6px] border-white bg-violet px-8 pt-3 pb-5 font-serif text-[clamp(64px,8vw,120px)] leading-none text-white italic">
+            itesh
+          </p>
+          <p className="max-w-xs text-fg-muted">{SITE.role}.</p>
         </div>
 
         <nav aria-label="Elsewhere">
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-wrap gap-3">
             {LINKS.map((link) => (
               <li key={link.label}>
                 <a
                   href={link.href}
                   target={link.href.startsWith("http") ? "_blank" : undefined}
                   rel={link.href.startsWith("http") ? "noreferrer" : undefined}
-                  className="group inline-flex items-center gap-1.5 text-[18px] hover:text-accent-text"
                 >
-                  <Scribble>{link.label}</Scribble>
-                  <ArrowUpRight className="text-[15px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  <Sticker tone={link.tone} tilt={link.tilt} className="text-[16px] font-semibold">
+                    {link.label} <ArrowUpRight className="text-[13px]" />
+                  </Sticker>
                 </a>
               </li>
             ))}
           </ul>
         </nav>
 
-        <Suspense fallback={null}>
-          <NowBuilding />
-        </Suspense>
+        {/* The shadow sits on a wrapper: the receipt's torn-edge mask would clip it. */}
+        <div className="w-full max-w-[320px] rotate-[1.5deg] drop-shadow-[0_12px_18px_rgb(0_0_0/0.18)]">
+          <div className="receipt bg-surface px-5 pt-5 pb-8">
+            <Suspense fallback={<p className="font-mono text-[13px] text-fg-muted">Fetching the latest push…</p>}>
+              <NowBuilding />
+            </Suspense>
+          </div>
+        </div>
       </div>
 
-      <p className="mx-auto mt-14 max-w-[1440px] text-[13px] text-fg-muted">
-        © {year} {SITE.name}
-      </p>
+      <div className="mx-auto mt-16 flex max-w-[1440px] items-center justify-between gap-6">
+        <p className="text-[13px] text-fg-muted">
+          © {year} {SITE.name}
+        </p>
+        <BackToTop />
+      </div>
     </footer>
   );
 }
