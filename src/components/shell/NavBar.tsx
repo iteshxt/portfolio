@@ -9,23 +9,22 @@ import { play } from "@/lib/sound";
 import { preloadArcee } from "./LazyOverlays";
 import { useUI } from "@/store/ui";
 
-/** Each page's sticker colour; the star projects wear their own brand colours. */
-const TONE: Record<string, string> = {
-  Arcee: "bg-arcee-deep text-arcee",
-  PatentIQ: "bg-patentiq text-patentiq-ink",
-  DiaChat: "bg-diachat text-diachat-ink",
-  Work: "bg-lime text-[#2B3600]",
-  DiaLabs: "bg-violet text-white",
-  About: "bg-lavender text-violet-ink",
-  Contact: "bg-tomato text-[#2A0700]",
-  Home: "bg-surface text-fg",
+/** A small dot of each page's colour; the stickers themselves stay plain and straight. */
+const DOT: Record<string, string> = {
+  Arcee: "bg-arcee",
+  PatentIQ: "bg-patentiq",
+  DiaChat: "bg-diachat",
+  Work: "bg-lime",
+  DiaLabs: "bg-violet",
+  About: "bg-lavender",
+  Contact: "bg-tomato",
+  Home: "bg-fg-muted",
 };
-const TILTS = [-3, 2.5, 1.5, -2, -1.5, 3, 2, -2.5];
 
 /**
  * The "Where to?" navigator (docs/design.md §2.8, docs/spec.md §5.5): a pill with
- * a tiny sticker stack that fans out a sheet of die-cut page stickers, each in
- * its page's colour, over a search field. Typing filters; anything that isn't a
+ * a tiny sticker stack that fans out a sheet of plain die-cut page stickers
+ * (a dot of each page's colour) over a search field. Typing filters; anything that isn't a
  * page goes to Arcee ("terminal" opens the hidden terminal).
  */
 export function NavBar() {
@@ -141,18 +140,18 @@ export function NavBar() {
                 onClick={() => choose(item)}
                 style={
                   {
-                    "--r": `${TILTS[i % TILTS.length]}deg`,
+                    "--r": "0deg",
                     "--from-x": `${(i % 2 ? -1 : 1) * 40}%`,
                     transitionDelay: open ? `${(items.length - 1 - i) * 35}ms` : "0ms",
                   } as CSSProperties
                 }
-                className={cn(
-                  "nav-sticker flex min-h-[68px] cursor-pointer flex-col justify-center rounded-[18px] border-[3px] border-white px-4 py-2.5",
-                  TONE[item.label] ?? "bg-surface text-fg",
-                )}
+                className="nav-sticker flex min-h-[64px] cursor-pointer flex-col justify-center rounded-[18px] border-[3px] border-white bg-surface px-4 py-2.5 text-fg"
               >
-                <span className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{item.label}</span>
-                <span className="text-[13px] leading-snug opacity-80">{item.day}</span>
+                <span className="flex items-center gap-2 text-[18px] leading-tight font-semibold tracking-[-0.02em]">
+                  <span aria-hidden="true" className={cn("size-2.5 shrink-0 rounded-full", DOT[item.label] ?? "bg-violet")} />
+                  {item.label}
+                </span>
+                <span className="text-[13px] leading-snug text-fg-muted">{item.day}</span>
               </li>
             ))}
           </ul>

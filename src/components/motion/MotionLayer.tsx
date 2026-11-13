@@ -10,7 +10,8 @@ import { prefersReducedMotion } from "@/lib/motion";
  *   the rest: headings rise, stickers slap on, rows stagger via --d);
  * - [data-parallax] elements drift with scroll by their factor and fade;
  * - .btn buttons lean towards the cursor (magnetic);
- * - a sticker cursor follows fine pointers and shows [data-cursor] labels.
+ * - a custom pointer sticker replaces the system cursor on fine pointers (text
+ *   fields keep the native I-beam) and shows [data-cursor] labels.
  * Reduced motion: everything shows at rest, no cursor, no parallax.
  */
 export function MotionLayer() {
@@ -73,63 +74,72 @@ export function MotionLayer() {
     };
   }, [pathname]);
 
-  // Magnetic buttons and the sticker cursor (fine pointers only).
+  // Magnetic buttons and the custom cursor, which replaces the system one (fine pointers only).
   useEffect(() => {
     const el = cursor.current;
     if (!el || prefersReducedMotion() || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    const pos = { x: -100, y: -100, tx: -100, ty: -100 };
+    const root = document.documentElement;
+    root.dataset.customCursor = "";
     let raf = 0;
+    let x = -100;
+    let y = -100;
     let magnet: HTMLElement | null = null;
 
-    const loop = () => {
-      pos.x += (pos.tx - pos.x) * 0.22;
-      pos.y += (pos.ty - pos.y) * 0.22;
-      el.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
-      raf = requestAnimationFrame(loop);
+    const place = () => {
+      el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     };
     const release = () => {
       if (magnet) magnet.style.translate = "";
       magnet = null;
     };
     const onMove = (e: PointerEvent) => {
-      pos.tx = e.clientX;
-      pos.ty = e.clientY;
+      x = e.clientX;
+      y = e.clientY;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(place);
       el.dataset.on = "";
       const target = e.target as HTMLElement;
+      const typing = target.closest("input, textarea, [contenteditable=true]");
       const tagged = target.closest<HTMLElement>("[data-cursor]");
-      const interactive = target.closest("a, button, [role=option], input, label");
-      el.dataset.mode = tagged ? "label" : interactive ? "hover" : "";
+      const interactive = target.closest("a, button, [role=option], label, summary");
+      el.dataset.mode = typing ? "text" : tagged ? "label" : interactive ? "hover" : "";
       if (label.current) label.current.textContent = tagged?.dataset.cursor ?? "";
       const btn = target.closest<HTMLElement>(".btn");
       if (btn !== magnet) release();
       if (btn) {
         magnet = btn;
         const r = btn.getBoundingClientRect();
-        const dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
-        const dy = (e.clientY - (r.top + r.height / 2)) * 0.35;
-        btn.style.translate = `${dx.toFixed(1)}px ${dy.toFixed(1)}px`;
+        btn.style.translate = `${((e.clientX - (r.left + r.width / 2)) * 0.25).toFixed(1)}px ${((e.clientY - (r.top + r.height / 2)) * 0.35).toFixed(1)}px`;
       }
     };
+    const onDown = () => (el.dataset.down = "");
+    const onUp = () => delete el.dataset.down;
     const onLeave = () => {
       delete el.dataset.on;
       release();
     };
-    raf = requestAnimationFrame(loop);
     window.addEventListener("pointermove", onMove, { passive: true });
-    document.documentElement.addEventListener("pointerleave", onLeave);
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointerup", onUp);
+    root.addEventListener("pointerleave", onLeave);
     return () => {
       cancelAnimationFrame(raf);
       release();
+      delete root.dataset.customCursor;
       window.removeEventListener("pointermove", onMove);
-      document.documentElement.removeEventListener("pointerleave", onLeave);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", onUp);
+      root.removeEventListener("pointerleave", onLeave);
     };
   }, []);
 
   return (
-    <div ref={cursor} aria-hidden="true" className="sticker-cursor pointer-events-none fixed top-0 left-0 z-[95] hidden md:block">
-      <span className="sticker-cursor-dot">
-        <span ref={label} className="sticker-cursor-label" />
-      </span>
+    <div ref={cursor} aria-hidden="true" className="site-cursor pointer-events-none fixed top-0 left-0 z-[200]">
+      {/* A rounded pointer sticker; its tip sits exactly on the pointer. */}
+      <svg viewBox="0 0 28 32" className="site-cursor-arrow">
+        <path d="M3 2.5 24.5 14.2c1.4.8 1.2 2.9-.4 3.3l-8.6 2.4-4.4 7.8c-.8 1.4-2.9 1.1-3.3-.5L2 4.3C1.7 3 2 2.1 3 2.5Z" />
+      </svg>
+      <span ref={label} className="site-cursor-label" />
     </div>
   );
 }

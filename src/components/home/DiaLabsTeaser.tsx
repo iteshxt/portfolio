@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import { GrowIn } from "@/components/motion/GrowIn";
+import { Scribble } from "@/components/motion/Scribble";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionTitle } from "@/components/type/SectionTitle";
 import { PeelReveal } from "@/components/ui/PeelReveal";
@@ -50,8 +51,8 @@ export function DiaLabsTeaser() {
                   <p className="text-[15px] leading-snug">{r.day}</p>
                   <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[14px] font-semibold">
                     {r.links.map((l) => (
-                      <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 underline-offset-4 hover:underline">
-                        {l.label} <ArrowUpRight className="text-[12px]" />
+                      <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1">
+                        <Scribble inverse>{l.label}</Scribble> <ArrowUpRight className="text-[12px]" />
                       </a>
                     ))}
                   </p>

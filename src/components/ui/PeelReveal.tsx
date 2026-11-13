@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type ReactNode } from "react";
+import { Scribble } from "@/components/motion/Scribble";
 import { cn } from "@/lib/cn";
 
 /**
@@ -43,8 +44,8 @@ export function PeelReveal({
         <span className="text-[clamp(20px,1.8vw,26px)] leading-tight font-semibold tracking-[-0.02em]">{label}</span>
       </button>
       {open && (
-        <button type="button" onClick={() => setOpen(false)} className="mt-3 text-[13px] text-fg-muted underline underline-offset-4 hover:text-fg">
-          Stick it back
+        <button type="button" onClick={() => setOpen(false)} className="mt-3 text-[13px] font-medium opacity-80 hover:opacity-100">
+          <Scribble>Stick it back</Scribble>
         </button>
       )}
     </div>

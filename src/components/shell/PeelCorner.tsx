@@ -268,6 +268,7 @@ export function PeelCorner() {
         onPointerCancel={onPointerUp}
         onClick={onClick}
         aria-label={`Switch to the ${next} shift`}
+        data-cursor="Peel me"
         title={`Peel to switch to the ${next} shift`}
         className="group fixed top-0 right-0 z-[70] size-16 cursor-grab touch-none select-none active:cursor-grabbing"
       >

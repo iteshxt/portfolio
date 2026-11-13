@@ -39,9 +39,9 @@ export function ContactCta() {
             <EmailButton email={SITE.email} />
             <OpenArceeButton
               seed="I want to leave a message for Itesh"
-              className="group inline-flex items-center gap-2 text-[16px] underline decoration-white/40 underline-offset-[6px] transition-colors hover:decoration-current"
+              className="group inline-flex items-center gap-2 text-[16px]"
             >
-              Or leave Arcee a message
+              <Scribble inverse>Or leave Arcee a message</Scribble>
               <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
             </OpenArceeButton>
           </div>

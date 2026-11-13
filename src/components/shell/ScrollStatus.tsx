@@ -53,16 +53,19 @@ export function ScrollStatus() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed top-4 left-1/2 z-40 hidden -translate-x-1/2 overflow-hidden rounded-full border-[3px] border-white bg-surface shadow-[0_8px_18px_-10px_rgb(0_0_0/0.4)] sm:block"
+      className="status-pill pointer-events-none fixed top-4 left-1/2 z-40 hidden -translate-x-1/2 overflow-hidden rounded-full border-[3px] border-white bg-surface text-fg sm:block"
     >
-      <span className="flex items-center gap-2 px-4 pt-1.5 pb-2 font-mono text-[12px] tracking-wide uppercase">
-        <span className="text-accent-text font-bold">{String(current + 1).padStart(2, "0")}</span>
-        <span key={label} className="status-label text-fg">
+      <span className="flex items-center gap-2.5 py-1.5 pr-4 pl-1.5">
+        <span className="rounded-full bg-violet px-2 py-0.5 text-[12px] leading-none font-bold text-white tabular-nums">
+          {String(current + 1).padStart(2, "0")}
+        </span>
+        <span key={label} className="status-label text-[14px] leading-none font-semibold tracking-[-0.01em]">
           {label}
         </span>
-        <span className="text-fg-muted">/ {String(sections.length).padStart(2, "0")}</span>
+        <span className="text-[12px] leading-none text-fg-muted tabular-nums">of {String(sections.length).padStart(2, "0")}</span>
       </span>
-      <span ref={barRef} className="absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 bg-violet" />
+      {/* No scale utility here: it would multiply with the scaleX set on scroll and pin the bar at zero. */}
+      <span ref={barRef} className="absolute inset-x-0 bottom-0 h-[4px] origin-left bg-violet" style={{ transform: "scaleX(0)" }} />
     </div>
   );
 }

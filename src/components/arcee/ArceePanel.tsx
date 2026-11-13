@@ -15,19 +15,6 @@ import { DraftCard, type Draft } from "./DraftCard";
 
 const SUGGESTIONS = ["What's his best project?", "What did he do at Sutr?", "How does PatentIQ work?", "I want to leave a message"];
 
-/** A small 2D Arcee mark: woven rings around a dot. */
-function ArceeMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
-      <circle cx="20" cy="20" r="20" fill="#7A2CFF" />
-      {[0, 60, 120].map((r) => (
-        <ellipse key={r} cx="20" cy="20" rx="13" ry="7" fill="none" stroke="#FFC24A" strokeWidth="1.6" transform={`rotate(${r} 20 20)`} />
-      ))}
-      <circle cx="20" cy="20" r="4" fill="#FFD98A" />
-    </svg>
-  );
-}
-
 function Sticker({ mood }: { mood: StickerMood }) {
   const s = STICKERS[mood];
   if (!s) return null;
@@ -159,29 +146,33 @@ export function ArceePanel() {
       data-lenis-prevent=""
       inert={!open}
       className={cn(
-        "fixed bottom-[84px] left-1/2 z-[55] flex h-[min(68vh,600px)] w-[min(460px,calc(100vw-24px))] -translate-x-1/2 flex-col overflow-hidden rounded-[26px] border border-line bg-surface text-fg shadow-[0_30px_80px_-30px_rgb(0_0_0/0.5)] transition-[opacity,translate] duration-300 ease-[var(--ease-expo-out)]",
+        "fixed bottom-[84px] left-1/2 z-[55] flex h-[min(68vh,600px)] w-[min(460px,calc(100vw-24px))] -translate-x-1/2 flex-col overflow-hidden rounded-[28px] border-[4px] border-white bg-surface text-fg shadow-[0_30px_80px_-30px_rgb(0_0_0/0.55)] transition-[opacity,translate] duration-300 ease-[var(--ease-expo-out)]",
         open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
       )}
     >
-      <header className="flex items-center gap-3 border-b border-line px-4 py-3">
-        <ArceeMark className="size-9 shrink-0" />
+      {/* Arcee's own colours and its real particle-ring animation. */}
+      <header className="flex items-center gap-3 bg-arcee-deep px-4 py-3 text-paper">
+        <picture className="block size-11 shrink-0 overflow-hidden rounded-full border-2 border-arcee/60 bg-black">
+          <source srcSet="/projects/arcee-wave-still.webp" media="(prefers-reduced-motion: reduce)" />
+          <img src="/projects/arcee-wave.webp" alt="" width={44} height={44} className="size-full scale-[1.35] object-cover" />
+        </picture>
         <div className="min-w-0 flex-1">
-          <p className="font-semibold leading-tight">Arcee</p>
-          <p className="truncate text-[13px] text-fg-muted">The site&apos;s guide. Ask about Itesh&apos;s work.</p>
+          <p className="text-[17px] leading-tight font-semibold tracking-[-0.01em] text-arcee">Arcee</p>
+          <p className="truncate text-[13px] text-paper/80">The site&apos;s guide. Ask about Itesh&apos;s work.</p>
         </div>
-        <button type="button" onClick={close} aria-label="Close chat" className="flex size-9 items-center justify-center rounded-full text-[18px] text-fg-muted hover:bg-fg/5 hover:text-fg">
+        <button type="button" onClick={close} aria-label="Close chat" className="flex size-9 items-center justify-center rounded-full text-[18px] text-paper/80 hover:bg-white/10 hover:text-paper">
           <Close />
         </button>
       </header>
 
-      <div ref={listRef} className="flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4 text-[15px] leading-snug" aria-live="polite">
-        <div className="max-w-[88%] self-start rounded-[18px] rounded-bl-md bg-bg px-4 py-2.5">
+      <div ref={listRef} className="cutting-mat flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4 text-[15px] leading-snug" aria-live="polite">
+        <div className="max-w-[88%] self-start rounded-[18px] rounded-bl-md border-[3px] border-white bg-surface px-4 py-2.5 shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]">
           Hey, I&apos;m Arcee. Ask me anything about Itesh: projects, experience, or how to reach him.
         </div>
         {messages.length === 0 && (
           <div className="flex flex-wrap gap-2">
             {SUGGESTIONS.map((s) => (
-              <button key={s} type="button" onClick={() => ask(s)} className="rounded-full border border-line px-3 py-1.5 text-[13px] hover:border-fg">
+              <button key={s} type="button" onClick={() => ask(s)} className="filter-chip text-[13px]">
                 {s}
               </button>
             ))}
@@ -192,7 +183,7 @@ export function ArceePanel() {
             key={m.id}
             className={cn(
               "max-w-[88%] rounded-[18px] px-4 py-2.5",
-              m.role === "user" ? "self-end rounded-br-md bg-violet text-white" : "self-start rounded-bl-md bg-bg",
+              m.role === "user" ? "self-end rounded-br-md border-[3px] border-white bg-violet text-white" : "self-start rounded-bl-md border-[3px] border-white bg-surface shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]",
             )}
           >
             {m.parts.map((p, i) => renderPart(m, p as ToolPart & { text?: string; data?: unknown }, i))}
@@ -214,7 +205,7 @@ export function ArceePanel() {
         )}
       </div>
 
-      <form onSubmit={onSubmit} className="flex items-end gap-2 border-t border-line p-3">
+      <form onSubmit={onSubmit} className="flex items-end gap-2 border-t border-line bg-surface p-3">
         <textarea
           ref={inputRef}
           rows={1}
@@ -232,14 +223,14 @@ export function ArceePanel() {
           }}
           placeholder="Ask about Itesh…"
           aria-label="Message Arcee"
-          className="max-h-28 min-h-11 flex-1 resize-none rounded-2xl bg-bg px-4 py-2.5 text-[15px] outline-none placeholder:text-fg-muted"
+          className="max-h-28 min-h-11 flex-1 resize-none rounded-[20px] border-[3px] border-white bg-bg px-4 py-2 text-[15px] shadow-[inset_0_0_0_1.5px_var(--line)] outline-none placeholder:text-fg-muted"
         />
         {busy ? (
-          <button type="button" onClick={() => stop()} className="min-h-11 rounded-full border border-line px-4 text-[14px]">
+          <button type="button" onClick={() => stop()} className="btn btn-paper">
             Stop
           </button>
         ) : (
-          <button type="submit" disabled={!input.trim()} className="min-h-11 rounded-full bg-violet px-4 text-[14px] font-medium text-white disabled:opacity-40">
+          <button type="submit" disabled={!input.trim()} className="btn btn-violet disabled:pointer-events-none disabled:opacity-40">
             Send
           </button>
         )}
