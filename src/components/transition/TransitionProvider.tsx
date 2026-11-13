@@ -100,6 +100,11 @@ const INTRO_MIN_MS = 1100;
 const INTRO_REPEAT_MS = 350;
 const INTRO_SEEN_KEY = "intro-seen";
 
+/** A star project's case study takes on that project's colours while the sticker covers the page. */
+function themeFor(pathname: string) {
+  return pathname.match(/^\/work\/(arcee|patentiq|diachat)\/?$/)?.[1] ?? "";
+}
+
 export function TransitionProvider({
   children,
   intro,
@@ -248,6 +253,7 @@ export function TransitionProvider({
       shadeRef.current?.setAttribute("points", "");
       if (labelRef.current) labelRef.current.textContent = "";
       delete root.dataset.route;
+      delete root.dataset.theme;
       setPhase("idle");
     };
 
@@ -337,6 +343,11 @@ export function TransitionProvider({
       if (target.pathname === window.location.pathname && target.search === window.location.search) return;
 
       router.prefetch(href);
+      const theme = themeFor(target.pathname);
+      if (rootRef.current) {
+        if (theme) rootRef.current.dataset.theme = theme;
+        else delete rootRef.current.dataset.theme;
+      }
       play("slap");
       setPhase("covering");
       cover(options).then(() => {
@@ -440,6 +451,9 @@ export function TransitionProvider({
       sheet.style.clipPath = "none";
       root.style.display = "block";
       root.dataset.fly = "false";
+      const theme = themeFor(window.location.pathname);
+      if (theme) root.dataset.theme = theme;
+      else delete root.dataset.theme;
       startRouteUi();
       setPhase("covered");
       pendingPath.current = null;
@@ -460,7 +474,7 @@ export function TransitionProvider({
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-[80]"
       >
-        <div ref={sheetRef} className="absolute inset-0 flex items-center justify-center bg-violet will-change-transform">
+        <div ref={sheetRef} className="slap-sheet absolute inset-0 flex items-center justify-center bg-violet will-change-transform">
           {/* Route UI (not during the intro): where you're going, a counter, a bar and a few stickers. */}
           <div ref={routeUiRef} className="route-ui px-gutter absolute inset-0 text-white">
             {(["burst", "sparkle", "zigzag"] as const).map((name) => (
@@ -493,7 +507,7 @@ export function TransitionProvider({
           <polygon
             ref={flapRef}
             points=""
-            style={{ fill: "var(--lavender)" }}
+            style={{ fill: "var(--slap-back, var(--lavender))" }}
             className="[filter:drop-shadow(-10px_14px_18px_rgb(0_0_0/0.28))]"
           />
           <polygon ref={shadeRef} points="" fill="url(#slap-shade)" />

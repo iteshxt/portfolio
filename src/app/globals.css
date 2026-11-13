@@ -1024,6 +1024,37 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* Going to a case study, the covering sticker wears that project's colours (the artwork flies
+   over it), and its back matches; the random stickers stay out of the way. */
+[data-slap-root][data-theme="arcee"] {
+  --slap-back: var(--arcee);
+}
+[data-slap-root][data-theme="arcee"] .slap-sheet {
+  background: var(--arcee-deep);
+  color: var(--arcee);
+}
+[data-slap-root][data-theme="patentiq"] {
+  --slap-back: color-mix(in srgb, var(--patentiq) 55%, white);
+}
+[data-slap-root][data-theme="patentiq"] .slap-sheet {
+  background: var(--patentiq);
+}
+[data-slap-root][data-theme="diachat"] {
+  --slap-back: color-mix(in srgb, var(--diachat) 50%, white);
+}
+[data-slap-root][data-theme="diachat"] .slap-sheet {
+  background: var(--diachat);
+}
+[data-slap-root][data-theme="arcee"] .route-ui {
+  color: var(--arcee);
+}
+[data-slap-root][data-theme="diachat"] .route-ui {
+  color: var(--diachat-ink);
+}
+[data-slap-root][data-theme] [data-route-shape] {
+  display: none;
+}
+
 /* Case files (docs/design.md §2.11): the opened folder in the project's colours. */
 .case-tab {
   translate: 0 4px;
