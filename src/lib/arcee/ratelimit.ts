@@ -32,10 +32,10 @@ const limiters = new Map<string, Ratelimit>();
 
 function upstash(): Redis | null {
   if (redis === undefined) {
-    redis =
-      process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-        ? new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN })
-        : null;
+    // Upstash's own names, or the KV_* names Vercel's Marketplace integration sets.
+    const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+    const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+    redis = url && token ? new Redis({ url, token }) : null;
   }
   return redis;
 }

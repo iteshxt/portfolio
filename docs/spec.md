@@ -301,7 +301,7 @@ Techniques: Server Components by default (only interactive pieces are client com
 | `NEXT_PUBLIC_SITE_URL` | metadata, OG | yes (prod) |
 | `GROQ_API_KEY` | Arcee | yes for Arcee |
 | `ARCEE_MODEL` | Arcee (default `openai/gpt-oss-20b`) | no |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | rate limits | yes for Arcee in prod |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN` from Vercel's Marketplace integration) | rate limits | yes for Arcee in prod |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL` | leave-a-message | yes for messages |
 | `GITHUB_TOKEN` | currently building (higher rate limit) | no |
 

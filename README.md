@@ -39,7 +39,7 @@ See `.env.example`. Everything runs without keys; these switch features on:
 |---|---|
 | `GROQ_API_KEY` | Arcee answers (otherwise it says it's offline) |
 | `ARCEE_MOCK=1` | Arcee uses a local stand-in model, for development without a key |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Production rate limits for Arcee (in-memory fallback locally) |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Production rate limits for Arcee (in-memory fallback locally). Vercel's Upstash integration sets `KV_REST_API_URL` / `KV_REST_API_TOKEN` instead; either pair works |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL` | Emails messages left with Arcee |
 | `GITHUB_TOKEN` | Optional, higher rate limit for the footer's "currently building" feed |
 
