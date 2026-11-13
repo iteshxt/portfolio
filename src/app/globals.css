@@ -956,9 +956,9 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
   .nav-hand > li[aria-selected="true"] {
     z-index: 5;
-    translate: calc(var(--o) * var(--gap)) calc(var(--o) * var(--o) * 6px - 34px);
-    rotate: 0deg;
-    scale: 1.08;
+    /* `transform` runs after the card's own rotate, so it lifts along the card's tilt. */
+    translate: calc(var(--o) * var(--gap)) calc(var(--o) * var(--o) * 6px);
+    transform: translateY(-34px) scale(1.06);
   }
   .nav-panel[data-open="false"] .nav-hand > li {
     translate: 0 40px;
