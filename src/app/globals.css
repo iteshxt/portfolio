@@ -338,9 +338,6 @@
   font-family: var(--font-hand);
   font-weight: 600;
 }
-[data-peeled] .peel-hint {
-  display: none;
-}
 .peel-hint {
   animation: peel-hint-in 0.5s var(--ease-expo-out) 2.2s both;
 }

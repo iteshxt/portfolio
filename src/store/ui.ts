@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { PEELED_SESSION_KEY, SHIFT_STORAGE_KEY, type Shift } from "@/lib/shift";
+import { SHIFT_STORAGE_KEY, type Shift } from "@/lib/shift";
 import { setSoundMuted } from "@/lib/sound";
 
 /**
@@ -73,11 +73,6 @@ export const useUI = create<UIState>((set, get) => ({
       } catch {
         // Storage can be unavailable (private mode); the shift still applies.
       }
-      // A completed peel: the "peel here" hint rests for the rest of this visit.
-      document.documentElement.dataset.peeled = "";
-      try {
-        sessionStorage.setItem(PEELED_SESSION_KEY, "1");
-      } catch {}
     }
     set({ shift });
   },
