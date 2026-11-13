@@ -1024,6 +1024,73 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* 404 (docs/design.md §2.15): the sticker that was this page peels off its outline. */
+.lost-outline {
+  align-items: start;
+  padding-top: 18%;
+  border: 3px dashed color-mix(in srgb, var(--fg) 30%, transparent);
+  /* Leftover adhesive: a faint speckle where the sticker was. */
+  background:
+    radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--fg) 5%, transparent) 0 2px, transparent 3px) 0 0 / 22px 18px,
+    color-mix(in srgb, var(--fg) 3%, transparent);
+}
+.lost-sticker {
+  /* Where it lands: down and to the side, clear of the outline's label. */
+  --land-x: 8%;
+  --land-y: 62%;
+  --land-r: 7deg;
+  transform-origin: 85% 90%;
+  box-shadow: 0 30px 50px -26px rgb(0 0 0 / 0.55);
+  animation: lost-peel 1.3s var(--ease-expo-out) 1.2s both;
+}
+@media (min-width: 768px) {
+  .lost-sticker {
+    --land-x: 40%;
+    --land-y: 52%;
+    --land-r: 11deg;
+  }
+}
+@keyframes lost-peel {
+  0% {
+    translate: 0 0;
+    rotate: 0deg;
+    box-shadow: 0 0 0 0 rgb(0 0 0 / 0);
+  }
+  35% {
+    translate: -2% -8%;
+    rotate: -5deg;
+    scale: 1.03;
+  }
+  100% {
+    translate: var(--land-x) var(--land-y);
+    rotate: var(--land-r);
+    scale: 0.82;
+    box-shadow: 0 30px 50px -26px rgb(0 0 0 / 0.55);
+  }
+}
+/* The curled corner shows the sticker's lavender back. */
+.lost-curl {
+  width: clamp(56px, 7vw, 86px);
+  height: clamp(56px, 7vw, 86px);
+  border-radius: 0 0 22px 0;
+  background: linear-gradient(315deg, var(--bg) 49%, var(--lavender) 51%, color-mix(in srgb, var(--lavender) 70%, white));
+  box-shadow: -6px -6px 12px -6px rgb(0 0 0 / 0.35);
+}
+.lost-guess {
+  transition: scale 0.3s var(--ease-expo-out);
+}
+.lost-guess:hover {
+  scale: 1.07;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lost-sticker {
+    animation: none;
+    translate: var(--land-x) var(--land-y);
+    rotate: var(--land-r);
+    scale: 0.82;
+  }
+}
+
 /* Contact (docs/design.md §2.14): a postcard and postage stamps. */
 .postcard {
   rotate: -1deg;

@@ -111,6 +111,12 @@ The folder from the work page, open, in the project's own colours (each page wea
 - **Or pick a stamp:** the other ways in as perforated postage stamps (dotted mask edges, an inner frame), slightly askew, flicking when knocked: Airmail (the email address, tap to copy), LinkedIn, GitHub, X, and Express: Arcee (opens the chat to leave a message).
 - No ending block: the contact page is the end; the footer follows.
 
+### 2.15 404 (2026-11-14): the peeled sticker
+
+- On a faded mat: serif "404", "The model *hallucinated* this page."
+- Below it, where the page was: an empty dashed die-cut outline with a speckle of leftover adhesive and "this page used to be here". The violet "404" sticker that sat in it lifts and peels off, landing askew below and to the side with its corner curled to show the lavender back (lands closer on phones; shown already peeled for reduced motion).
+- "Did you mean…": the pages as die-cut stickers with a model's misplaced confidence (Home 97%, Work 91%, About 88%, DiaLabs 84%, Contact 79%), then "Take me home" and "Ask Arcee instead".
+
 ## 3. Colour
 
 ### 3.1 Palette
@@ -231,4 +237,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13), Contact (§2.14). Still to do: the 404. For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
+Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13), Contact (§2.14), 404 (§2.15). Every page is done; new pages follow the same rule. For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
