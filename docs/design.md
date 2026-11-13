@@ -90,6 +90,14 @@ The folder from the work page, open, in the project's own colours (each page wea
 - **Ending:** under the next file, the same "Still curious?" block as the work page (`CuriousEnd`): "Ask anything about *Name*." with "Ask Arcee about it" and "The person behind it".
 - **Getting there:** from a card in the project's colours (work-page file, home poster, next file), the transition is seamless: no slap, no peel, no white frame or tilt. The card's coloured panel opens out to fill the screen (one clip), the artwork floats on it, then the colour fades into the page as the artwork glides into the stage. Other routes into a case study use the slap in the project's colours. On the work page the case files stack as you scroll (tablet up).
 
+### 2.12 About (2026-11-14): the laptop lid
+
+- **Hero:** serif "About", "Most of me fits on a *laptop lid*." and a one-line lead. Below it, a dark aluminium lid with an embossed "itesh", covered in die-cut stickers, every one of them true: the three star projects' artwork as round stickers, DiaLabs, Ubuntu, Python, TS, PyTorch, Next.js, Caudal AI Labs (a guest-pass sticker), Sutr, `git commit -m "small"`, "evals before claims", "local-first" and a cat. They slap on as the lid scrolls in, tilt as stuck, and react to the cursor (flick). Pointing at or tapping one shows its story on a dashed label under the lid, with a link where it fits (case file, the lab, the store, Arcee). Tablet up: hand-placed; phones: a wrapped pile, and tapping scrolls the label into view.
+- **How I work:** "A few *house rules*." Five big statements that reveal word by word, each with a mono footnote of real proof from the work.
+- **Shipped for others:** "Two *guest passes*." Each job as a die-cut lanyard pass (punched slot, coloured band with the company, role, "valid" dates, what was shipped, link), hanging slightly askew and straightening on hover.
+- **The fine print:** small type below a dashed line: the degree (no scores, no places) and certificates. Kept quiet on purpose: background, not a CV.
+- **Ending:** "Still curious?" "Ask the *chatbot* about me." with Ask Arcee and Say hi.
+
 ## 3. Colour
 
 ### 3.1 Palette
@@ -210,4 +218,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10), case studies (§2.11). Still to do: About, DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
+Done: Work (§2.10), case studies (§2.11), About (§2.12). Still to do: DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.

@@ -9,7 +9,20 @@ import { SectionTitle } from "@/components/type/SectionTitle";
  * tear line, a nudge to ask Arcee (the site's own AI) about the work, or to
  * meet the person behind it. Not a contact block; that belongs to the home page.
  */
-export function CuriousEnd({ kicker, title, seed, className }: { kicker: string; title: ReactNode; seed: string; className?: string }) {
+export function CuriousEnd({
+  kicker,
+  title,
+  seed,
+  className,
+  second = { href: "/about", label: "The person behind it", transitionLabel: "About" },
+}: {
+  kicker: string;
+  title: ReactNode;
+  seed: string;
+  className?: string;
+  /** The paper button: who's behind the work, or a way to say hi. */
+  second?: { href: string; label: string; transitionLabel: string };
+}) {
   return (
     <section data-section={kicker} className={className ?? "px-gutter pt-[clamp(24px,4vw,48px)] pb-[clamp(110px,12vw,170px)]"}>
       <div className="mx-auto flex max-w-[1320px] flex-col items-start gap-8 border-t-2 border-dashed border-line pt-[clamp(40px,6vw,80px)] md:flex-row md:items-end md:justify-between">
@@ -19,8 +32,8 @@ export function CuriousEnd({ kicker, title, seed, className }: { kicker: string;
             <Spark />
             Ask Arcee about it
           </OpenArceeButton>
-          <TransitionLink href="/about" transitionLabel="About" className="btn btn-paper">
-            The person behind it
+          <TransitionLink href={second.href} transitionLabel={second.transitionLabel} className="btn btn-paper">
+            {second.label}
             <ArrowRight />
           </TransitionLink>
         </div>
