@@ -1024,6 +1024,69 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
+/* DiaLabs (docs/design.md §2.13): the lab's robot and its notebook. */
+.labbot-light {
+  animation: labbot-light 2.4s ease-in-out infinite;
+}
+@keyframes labbot-light {
+  0%,
+  100% {
+    fill: transparent;
+  }
+  50% {
+    fill: var(--lime);
+    stroke: var(--lime);
+  }
+}
+.labbot-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: labbot-blink 4.6s infinite;
+}
+@keyframes labbot-blink {
+  0%,
+  93%,
+  100% {
+    scale: 1 1;
+  }
+  96% {
+    scale: 1 0.1;
+  }
+}
+.labbot {
+  rotate: 4deg;
+  transition: rotate 0.6s var(--ease-slap);
+}
+.labbot:hover {
+  rotate: -3deg;
+}
+/* Graph paper with a red margin line, like a lab notebook. */
+.notebook {
+  background-image:
+    linear-gradient(90deg, transparent calc(clamp(20px, 3.4vw, 56px) - 14px), rgb(255 75 43 / 0.45) calc(clamp(20px, 3.4vw, 56px) - 14px), rgb(255 75 43 / 0.45) calc(clamp(20px, 3.4vw, 56px) - 12px), transparent calc(clamp(20px, 3.4vw, 56px) - 12px)),
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    26px 26px,
+    26px 26px;
+}
+.notebook-stamp {
+  color: #3d7a00;
+  border-color: currentColor;
+  rotate: -3deg;
+  background: var(--surface);
+}
+[data-shift="night"] .notebook-stamp {
+  color: var(--lime);
+}
+@media (prefers-reduced-motion: reduce) {
+  .labbot-light,
+  .labbot-eyes {
+    animation: none;
+  }
+}
+
 /* About (docs/design.md §2.12): a laptop lid covered in stickers. */
 .lid {
   background:

@@ -98,6 +98,12 @@ The folder from the work page, open, in the project's own colours (each page wea
 - **The fine print:** small type below a dashed line: the degree (no scores, no places) and certificates. Kept quiet on purpose: background, not a CV.
 - **Ending:** "Still curious?" "Ask the *chatbot* about me." with Ask Arcee and Say hi.
 
+### 2.13 DiaLabs (2026-11-14): the lab notebook
+
+- **Hero:** serif "DiaLabs · co-founded", "A lab that works in the *open*.", one line ("Every release starts as a question"), "Open the notebook" (ink, glides down) and "DiaLabs on GitHub" (paper). Beside it, the lab's own robot mark (from its site icon) as a big violet die-cut sticker: its eyes follow the cursor, it blinks every few seconds, the antenna light pulses lime; tilted, it rocks the other way on hover. A handwritten "it's watching you" points at it.
+- **The notebook:** "Every release was a *question*." A sheet of graph paper with a red margin line. Each release is a numbered experiment (EXP 01…): a kind sticker, the name, the question it set out to answer in serif italic ("Can a browser turn a football clip into match stats without uploading it?"), then Method, Result, a green rubber stamp (Live, Live · beta, On Hugging Face) and its links. Below: "Also from the lab, by the rest of the team" as chips (credited, not claimed).
+- **Ending:** "Next experiment": "Everything here is *open*." with "Read the code" and "Ask Arcee about the lab".
+
 ## 3. Colour
 
 ### 3.1 Palette
@@ -218,4 +224,4 @@ Microcopy:
 
 ## 13. Pages still to redesign in this language
 
-Done: Work (§2.10), case studies (§2.11), About (§2.12). Still to do: DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
+Done: Work (§2.10), case studies (§2.11), About (§2.12), DiaLabs (§2.13). Still to do: DiaLabs, Contact (and 404). For each: its own concept and hero drawn from that page's content (§2.9), built from the shared language, with real artwork and links, peel-to-reveal or similar for technical detail, and no leftover day/night copy.
