@@ -120,6 +120,189 @@
   }
 }
 
+/* Star project artwork (components/home/StarVisual). */
+.piq {
+  aspect-ratio: 656 / 859;
+}
+.piq-glow,
+.piq-mark,
+.piq-scan {
+  position: absolute;
+  inset: 0;
+}
+.piq-mark,
+.piq-scan {
+  -webkit-mask: url("/projects/patentiq-mark.webp") center / contain no-repeat;
+  mask: url("/projects/patentiq-mark.webp") center / contain no-repeat;
+}
+.piq-mark {
+  background: #fff;
+}
+/* A lime band sweeps down the document, lighting the strokes as it passes. */
+.piq-scan {
+  background: linear-gradient(180deg, transparent, var(--lime) 50%, transparent) 0 -80% / 100% 40% no-repeat;
+  animation: piq-scan 3.6s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+/* The soft pulse behind the logo in PatentIQ's own loader. */
+.piq-glow {
+  inset: -14%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 255 255 / 0.42), transparent);
+  filter: blur(12px);
+  animation: piq-glow 3s ease-in-out infinite;
+}
+.piq-node {
+  position: absolute;
+  width: 3.6%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--lime);
+  translate: -50% -50%;
+  opacity: 0;
+  animation: piq-node 3.6s ease-out infinite;
+}
+@keyframes piq-scan {
+  0% {
+    background-position: 0 -80%;
+  }
+  60%,
+  100% {
+    background-position: 0 180%;
+  }
+}
+@keyframes piq-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    scale: 1;
+  }
+  50% {
+    opacity: 0.9;
+    scale: 1.08;
+  }
+}
+@keyframes piq-node {
+  0% {
+    opacity: 0;
+    scale: 0.3;
+  }
+  6% {
+    opacity: 1;
+    scale: 1.5;
+  }
+  16% {
+    scale: 1;
+  }
+  62% {
+    opacity: 1;
+  }
+  80%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* DiaChat's preloader on a loop: bubble draws, heart draws and fills, beats, then fades. */
+.dia-bubble,
+.dia-heart {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+/* White on our (lighter) sunflower needs a lift; DiaChat's own amber is darker. */
+.dia {
+  filter: drop-shadow(0 3px 8px rgb(120 60 0 / 0.28));
+}
+.dia-bubble {
+  stroke-width: 2.8;
+  animation: dia-bubble 4.8s ease-in-out infinite;
+}
+.dia-heart {
+  stroke-width: 2.3;
+  animation: dia-heart 4.8s ease-in-out infinite;
+}
+.dia-beat {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: dia-beat 4.8s ease-in-out infinite;
+}
+@keyframes dia-bubble {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 1;
+  }
+  17%,
+  84% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  94%,
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes dia-heart {
+  0%,
+  5% {
+    stroke-dashoffset: 1;
+    fill: rgb(255 255 255 / 0);
+    opacity: 1;
+  }
+  18% {
+    stroke-dashoffset: 0;
+    fill: rgb(255 255 255 / 0);
+  }
+  24%,
+  84% {
+    stroke-dashoffset: 0;
+    fill: #fff;
+    opacity: 1;
+  }
+  94%,
+  100% {
+    stroke-dashoffset: 0;
+    fill: #fff;
+    opacity: 0;
+  }
+}
+@keyframes dia-beat {
+  0%,
+  36%,
+  48%,
+  100% {
+    scale: 1;
+  }
+  40%,
+  52% {
+    scale: 1.14;
+  }
+  44% {
+    scale: 1.02;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .piq-scan,
+  .piq-node {
+    display: none;
+  }
+  .piq-glow,
+  .dia-beat {
+    animation: none;
+  }
+  .dia-bubble,
+  .dia-heart {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .dia-heart {
+    fill: #fff;
+  }
+}
+
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
 .font-hand {
   font-family: var(--font-hand);
