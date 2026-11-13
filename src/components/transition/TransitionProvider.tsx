@@ -5,6 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, type ReactNo
 import { prefersReducedMotion } from "@/lib/motion";
 import { animatePoint, peelEnd, peelShape, toClipPath, toSvgPoints, type Point } from "@/lib/peel";
 import { play } from "@/lib/sound";
+import { Shape } from "@/components/ui/Shape";
 import { useUI, type TransitionPhase } from "@/store/ui";
 
 /**
@@ -114,6 +115,10 @@ export function TransitionProvider({
   const rootRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const labelRef = useRef<HTMLSpanElement>(null);
+  const routeUiRef = useRef<HTMLDivElement>(null);
+  const routeCounterRef = useRef<HTMLSpanElement>(null);
+  const routeBarRef = useRef<HTMLSpanElement>(null);
+  const routeRaf = useRef(0);
   const flapRef = useRef<SVGPolygonElement>(null);
   const shadeRef = useRef<SVGPolygonElement>(null);
   const gradRef = useRef<SVGLinearGradientElement>(null);
@@ -228,6 +233,10 @@ export function TransitionProvider({
     if (!root || !sheet || phase.current === "revealing" || phase.current === "idle") return;
     setPhase("revealing");
     delete root.dataset.intro;
+    // The route counter jumps to 100 as the sticker peels away.
+    cancelAnimationFrame(routeRaf.current);
+    if (routeCounterRef.current) routeCounterRef.current.textContent = "100";
+    if (routeBarRef.current) routeBarRef.current.style.transform = "scaleX(1)";
     if (introDone.current) play("peel");
     introDone.current = true;
 
@@ -238,6 +247,7 @@ export function TransitionProvider({
       flapRef.current?.setAttribute("points", "");
       shadeRef.current?.setAttribute("points", "");
       if (labelRef.current) labelRef.current.textContent = "";
+      delete root.dataset.route;
       setPhase("idle");
     };
 
@@ -251,6 +261,34 @@ export function TransitionProvider({
     land();
     animatePoint([w - 2, 2], peelEnd(w, h), PEEL_MS, (p) => renderPeel(w, h, p), done);
   }, [land, renderPeel, setPhase]);
+
+  // While a route loads under the sticker: the counter eases towards 90%, and a few
+  // stickers slap on at random spots (clear of the name and counter).
+  const startRouteUi = useCallback(() => {
+    const ui = routeUiRef.current;
+    if (!ui) return;
+    if (rootRef.current) rootRef.current.dataset.route = "";
+    cancelAnimationFrame(routeRaf.current);
+    const start = performance.now();
+    const tick = (now: number) => {
+      const v = 90 * (1 - Math.exp(-(now - start) / 420));
+      if (routeCounterRef.current) routeCounterRef.current.textContent = String(Math.floor(v)).padStart(3, "0");
+      if (routeBarRef.current) routeBarRef.current.style.transform = `scaleX(${(v / 100).toFixed(3)})`;
+      routeRaf.current = requestAnimationFrame(tick);
+    };
+    routeRaf.current = requestAnimationFrame(tick);
+    ui.querySelectorAll<HTMLElement>("[data-route-shape]").forEach((el, i) => {
+      el.style.left = `${8 + Math.random() * 80}%`;
+      el.style.top = `${10 + Math.random() * 42}%`;
+      el.animate(
+        [
+          { opacity: 0, transform: `translate(-50%, -50%) scale(1.8) rotate(${Math.random() * 40 - 20}deg)` },
+          { opacity: 1, transform: `translate(-50%, -50%) scale(1) rotate(${Math.random() * 30 - 15}deg)` },
+        ],
+        { duration: 420, delay: 160 + i * 110, easing: "cubic-bezier(.2,.9,.3,1.2)", fill: "both" },
+      );
+    });
+  }, []);
 
   const cover = useCallback(async (options: GoOptions) => {
     const root = rootRef.current;
@@ -268,6 +306,8 @@ export function TransitionProvider({
     }
 
     if (options.fly) launch(options.fly);
+    root.dataset.fly = options.fly ? "true" : "false";
+    startRouteUi();
 
     const x = options.origin?.x ?? window.innerWidth / 2;
     const y = options.origin?.y ?? window.innerHeight - 40;
@@ -286,7 +326,7 @@ export function TransitionProvider({
       ],
       { duration: SLAP_MS, easing: "cubic-bezier(.2,.9,.3,1.2)" },
     ).finished;
-  }, [launch]);
+  }, [launch, startRouteUi]);
 
   const go = useCallback<Go>(
     (href, options = {}) => {
@@ -397,13 +437,15 @@ export function TransitionProvider({
       if (!root || !sheet || phase.current !== "idle" || prefersReducedMotion()) return;
       sheet.style.clipPath = "none";
       root.style.display = "block";
+      root.dataset.fly = "false";
+      startRouteUi();
       setPhase("covered");
       pendingPath.current = null;
       safety.current = window.setTimeout(reveal, 900);
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
-  }, [reveal, setPhase]);
+  }, [reveal, setPhase, startRouteUi]);
 
   return (
     <TransitionContext.Provider value={go}>
@@ -417,7 +459,28 @@ export function TransitionProvider({
         className="pointer-events-none fixed inset-0 z-[80]"
       >
         <div ref={sheetRef} className="absolute inset-0 flex items-center justify-center bg-violet will-change-transform">
-          <span ref={labelRef} className="display-serif px-6 text-center text-[clamp(40px,8vw,120px)] text-white" />
+          {/* Route UI (not during the intro): where you're going, a counter, a bar and a few stickers. */}
+          <div ref={routeUiRef} className="route-ui px-gutter absolute inset-0 text-white">
+            {(["burst", "flower", "zigzag"] as const).map((name) => (
+              <Shape key={name} name={name} data-route-shape="" className="absolute w-[clamp(52px,6vw,92px)] opacity-0" />
+            ))}
+            <div className="absolute inset-x-[clamp(16px,4vw,48px)] bottom-[clamp(28px,4vw,48px)] flex items-end justify-between gap-6">
+              <div className="route-label min-w-0">
+                <p className="font-mono text-[12px] tracking-wide uppercase opacity-75">Going to</p>
+                <span
+                  ref={labelRef}
+                  className="mt-2 block truncate text-[clamp(52px,9vw,150px)] leading-[0.9] font-semibold tracking-[-0.05em] [font-variation-settings:'wdth'_78]"
+                />
+              </div>
+              <span className="display-sans flex shrink-0 items-start text-[clamp(56px,10vw,170px)] leading-none tabular-nums">
+                <span ref={routeCounterRef}>000</span>
+                <span className="display-serif mt-[0.08em] text-[0.32em] text-lavender">%</span>
+              </span>
+            </div>
+            <span className="absolute inset-x-[clamp(16px,4vw,48px)] bottom-4 block h-[3px] overflow-hidden rounded-full bg-white/20">
+              <span ref={routeBarRef} className="block h-full origin-left rounded-full bg-lime" style={{ transform: "scaleX(0)" }} />
+            </span>
+          </div>
           {intro}
         </div>
         <svg className="absolute inset-0 h-full w-full overflow-visible">

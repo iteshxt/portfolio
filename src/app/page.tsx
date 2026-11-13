@@ -24,7 +24,7 @@ export default function Home() {
   return (
     <main className="flex-1">
       {/* Hero */}
-      <section data-section="Hello" className="px-gutter relative isolate flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
+      <section data-section="Hello" data-curl="" className="hero-peel px-gutter relative isolate flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
         <HeroBackdrop />
         <PeelHint />
 

@@ -7,7 +7,8 @@ import { prefersReducedMotion } from "@/lib/motion";
  * Pins its area while the page scroll drives a horizontal track of children
  * (docs/design.md §2.9): the outer box gets the height the sideways travel
  * needs, the inner box sticks to the viewport and the track slides left. From
- * tablet width up; phones and reduced motion get a plain vertical stack.
+ * tablet width up; phones get a swipeable snap carousel instead, and reduced
+ * motion a plain row.
  * Exposes progress as --track-progress (0–1) for counters and bars.
  */
 export function PinnedTrack({ header, children }: { header?: ReactNode; children: ReactNode }) {
@@ -65,7 +66,10 @@ export function PinnedTrack({ header, children }: { header?: ReactNode; children
     <div ref={outer} className="relative">
       <div className="flex flex-col gap-10 md:sticky md:top-0 md:h-screen md:justify-center md:gap-[4vh] md:overflow-hidden">
         {header}
-        <div ref={track} className="px-gutter flex flex-col gap-10 will-change-transform md:w-max md:flex-row md:items-center md:gap-[3vw] md:pr-[12vw]">
+        <div
+          ref={track}
+          className="px-gutter flex snap-x snap-mandatory gap-4 overflow-x-auto pb-6 [scrollbar-width:none] will-change-transform md:w-max md:snap-none md:items-center md:gap-[3vw] md:overflow-visible md:pr-[12vw] md:pb-0"
+        >
           {children}
         </div>
       </div>

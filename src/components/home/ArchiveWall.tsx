@@ -33,6 +33,7 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
   }, [projects]);
   const shown = projects.filter((p) => filter === "all" || p.category === filter);
   const visible = all ? shown : shown.slice(0, FIRST);
+  const PHONE = 4; // phones show fewer before "Show all"
 
   return (
     <div className="mt-10">
@@ -55,7 +56,12 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
 
       <ul className="mt-10 grid gap-x-5 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
         {visible.map((p, i) => (
-          <li key={`${filter}-${p.slug}`} data-animate="slap" style={{ "--d": `${(i % 4) * 60}ms` } as CSSProperties}>
+          <li
+            key={`${filter}-${p.slug}`}
+            data-animate="slap"
+            style={{ "--d": `${(i % 4) * 60}ms` } as CSSProperties}
+            className={cn(!all && i >= PHONE && "max-sm:hidden")}
+          >
             <article
               style={{ "--tilt": `${TILTS[i % TILTS.length]}deg` } as CSSProperties}
               className={cn("wall-sticker flex h-full flex-col gap-3 rounded-[22px] border-[5px] border-white p-5", TONES[i % TONES.length])}
@@ -82,8 +88,8 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
         ))}
       </ul>
 
-      {shown.length > FIRST && (
-        <button type="button" onClick={() => setAll((v) => !v)} className="btn btn-paper mt-10">
+      {shown.length > PHONE && (
+        <button type="button" onClick={() => setAll((v) => !v)} className={cn("btn btn-paper mt-10", shown.length <= FIRST && !all && "sm:hidden")}>
           {all ? "Show fewer" : `Show all ${shown.length}`}
         </button>
       )}

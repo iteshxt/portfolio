@@ -32,12 +32,34 @@ const ART = {
   ),
 };
 
-export type ShapeName = keyof typeof ART;
+/** Extra loader shapes: a sparkle, a flower, a zigzag and a capsule. */
+const MORE = {
+  sparkle: <path d="M50 6C54 34 66 46 94 50 66 54 54 66 50 94 46 66 34 54 6 50 34 46 46 34 50 6Z" fill="var(--paper)" {...DIE_CUT} />,
+  flower: (
+    <>
+      {[0, 72, 144, 216, 288].map((a) => (
+        <ellipse key={a} cx="50" cy="28" rx="16" ry="22" fill="var(--tomato)" {...DIE_CUT} transform={`rotate(${a} 50 50)`} />
+      ))}
+      <circle cx="50" cy="50" r="13" fill="var(--sunflower)" />
+    </>
+  ),
+  zigzag: (
+    <>
+      <path d="M8 62 26 38 44 62 62 38 80 62 94 44" fill="none" stroke="#fff" strokeWidth="26" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8 62 26 38 44 62 62 38 80 62 94 44" fill="none" stroke="var(--lime)" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" />
+    </>
+  ),
+  capsule: <rect x="12" y="32" width="76" height="36" rx="18" fill="var(--lavender)" {...DIE_CUT} transform="rotate(-20 50 50)" />,
+};
 
-export function Shape({ name, className, style }: { name: ShapeName; className?: string; style?: CSSProperties }) {
+const ALL = { ...ART, ...MORE };
+
+export type ShapeName = keyof typeof ALL;
+
+export function Shape({ name, className, style, ...rest }: { name: ShapeName; className?: string; style?: CSSProperties; "data-route-shape"?: string }) {
   return (
-    <svg viewBox="0 0 100 100" aria-hidden="true" className={cn("overflow-visible drop-shadow-[0_10px_14px_rgb(0_0_0/0.28)]", className)} style={style}>
-      {ART[name]}
+    <svg {...rest} viewBox="0 0 100 100" aria-hidden="true" className={cn("overflow-visible drop-shadow-[0_10px_14px_rgb(0_0_0/0.28)]", className)} style={style}>
+      {ALL[name]}
     </svg>
   );
 }

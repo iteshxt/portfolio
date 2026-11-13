@@ -74,6 +74,14 @@ The day/night content split is being retired page by page: light and dark become
 
 The die-cut edge is a token (`--die`): white by day, a soft translucent white at night (also applied to `border-white`). At night, bright tiles become dark tinted tiles with coloured names (`night:` variants; covers that hide content use opaque color-mix tints), the DiaLabs band turns deep violet, the contact block a dark surface, and posters are toned down slightly. Heading word stickers stay bright as accents.
 
+### 2.15 Round of 2026-11-13, evening
+
+- **Hero peel:** the hero section is clipped along the sheet's fold (`.hero-peel`), so its content peels away with the sheet, and the folded flap lies over it. The sheet has a light paper grain.
+- **Loader:** no corner texts; eight wordless shapes land at random spots (an inline script sets `--isN*` variables on `<html>` before first paint), the "Warming up …" word keeps rotating.
+- **Page transitions:** the violet sticker shows "Going to" + the page name bottom-left, a 000→100% counter bottom-right that reaches 100 as it peels, a lime bar, and three random stickers. Not shown during the intro.
+- **Navigator:** two layouts to compare, switchable inside it and remembered: the hand of cards, or a full-screen sheet with big page names and a preview (star projects show their artwork).
+- **Phones:** star posters become a swipeable snap carousel of compact posters; More projects shows four before "Show all".
+
 ## 3. Colour
 
 ### 3.1 Palette

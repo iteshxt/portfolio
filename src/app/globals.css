@@ -93,32 +93,44 @@
   }
 }
 
+/* Route UI on the transition sticker: only during page transitions (never the intro); the name hides while a card visual flies in. */
+[data-slap-root]:not([data-route]) .route-ui {
+  display: none;
+}
+[data-slap-root][data-fly="true"] .route-label {
+  visibility: hidden;
+}
 /* Intro screen on the sticker: only during the intro. */
 [data-slap-root]:not([data-intro]) .intro-ui {
   display: none;
 }
 .intro-rotator-track {
-  animation: intro-rotate 1.8s var(--ease-expo-out) infinite;
+  animation: intro-rotate 2.4s var(--ease-expo-out) infinite;
 }
+/* Five words, then the first again for a seamless loop. */
 @keyframes intro-rotate {
   0%,
-  18% {
+  14% {
     transform: translateY(0);
   }
-  25%,
-  43% {
+  20%,
+  34% {
     transform: translateY(-1.1em);
   }
-  50%,
-  68% {
+  40%,
+  54% {
     transform: translateY(-2.2em);
   }
-  75%,
-  93% {
+  60%,
+  74% {
     transform: translateY(-3.3em);
   }
-  100% {
+  80%,
+  94% {
     transform: translateY(-4.4em);
+  }
+  100% {
+    transform: translateY(-5.5em);
   }
 }
 .intro-sticker {
@@ -723,11 +735,19 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 
 /* Hero backdrop: a lifted sheet on the page (components/home/HeroBackdrop). */
-.hero-backdrop {
+/* The whole hero is cut along the sheet's fold, so its content peels away with the sheet. */
+.hero-peel {
+  --inset: 12px;
   --corner: clamp(64px, 7vw, 112px);
   --c: calc(var(--corner) * var(--curl, 1));
-  overflow: clip;
-  overflow-clip-margin: 24px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2 * var(--inset) - var(--c)), calc(100% - 2 * var(--inset) - var(--c)) 100%, 0 100%);
+}
+@media (min-width: 640px) {
+  .hero-peel {
+    --inset: 24px;
+  }
+}
+.hero-backdrop {
   filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.08));
 }
 .hero-sheet {
@@ -737,6 +757,21 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   overflow: hidden;
   /* The curled corner is cut away from the sheet. */
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, 0 100%);
+}
+/* A light paper grain over the sheet. */
+.hero-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.45  0 0 0 0 0.4  0 0 0 0 0.35  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  mix-blend-mode: multiply;
+  opacity: 0.32;
+}
+[data-shift="night"] .hero-sheet::after {
+  mix-blend-mode: soft-light;
+  opacity: 0.5;
 }
 .hero-mat {
   background-image:
@@ -771,6 +806,8 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 /* The corner, folded up over the sheet: lavender underside, shaded at the fold. */
 .hero-flap {
+  right: var(--inset);
+  bottom: var(--inset);
   width: var(--c);
   height: var(--c);
   border-top-left-radius: 18px;
@@ -923,6 +960,51 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     translate: 0 40px;
     rotate: 0deg;
     transform: scale(0.5);
+  }
+}
+/* Full-screen sheet layout for the navigator. */
+.nav-sheet {
+  box-shadow: 0 -20px 60px -24px rgb(0 0 0 / 0.45);
+  transition:
+    translate 0.55s var(--ease-expo-out),
+    opacity 0.3s ease,
+    visibility 0s linear 0s;
+}
+.nav-sheet[data-open="false"] {
+  translate: 0 104%;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    translate 0.35s ease,
+    opacity 0.25s ease,
+    visibility 0s linear 0.35s;
+}
+.nav-sheet[data-open="true"] .sheet-row {
+  animation: rise-in 0.6s var(--ease-expo-out) var(--d, 0ms) backwards;
+}
+.sheet-name {
+  transition:
+    transform 0.35s var(--ease-expo-out),
+    color 0.2s ease;
+}
+.sheet-row[aria-selected="true"] .sheet-name {
+  transform: translateX(14px);
+  color: var(--violet);
+}
+[data-shift="night"] .sheet-row[aria-selected="true"] .sheet-name {
+  color: var(--lavender);
+}
+.sheet-preview {
+  animation: slap-in 0.45s var(--ease-slap);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sheet,
+  .nav-sheet[data-open="false"] {
+    transition: none;
+  }
+  .nav-sheet[data-open="true"] .sheet-row,
+  .sheet-preview {
+    animation: none;
   }
 }
 /* The pill's mini stack fans when hovered or open. */
