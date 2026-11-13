@@ -8,13 +8,14 @@ import { Sticker } from "@/components/ui/Sticker";
 import { RELEASES } from "@/content/dialabs";
 import type { CSSProperties } from "react";
 
+// Covers must stay opaque: they hide the details underneath (night tints are mixed, not translucent).
 const COVERS = [
   "bg-patentiq text-patentiq-ink",
-  "bg-diachat text-diachat-ink",
-  "bg-lime text-[#2B3600]",
+  "bg-diachat text-diachat-ink night:bg-[color-mix(in_oklab,var(--diachat)_16%,var(--night-2))] night:text-diachat",
+  "bg-lime text-[#2B3600] night:bg-[color-mix(in_oklab,var(--lime)_14%,var(--night-2))] night:text-lime",
   "bg-surface text-fg",
-  "bg-tomato text-[#2A0700]",
-  "bg-lavender text-violet-ink",
+  "bg-tomato text-[#2A0700] night:bg-[color-mix(in_oklab,var(--tomato)_16%,var(--night-2))] night:text-[#ff8f7a]",
+  "bg-lavender text-violet-ink night:bg-[color-mix(in_oklab,var(--lavender)_14%,var(--night-2))] night:text-lavender",
 ];
 
 /**
@@ -25,7 +26,7 @@ const COVERS = [
 export function DiaLabsTeaser() {
   return (
     <section data-section="DiaLabs" className="py-[clamp(24px,4vw,48px)]">
-      <GrowIn className="px-gutter bg-violet py-[clamp(72px,10vw,140px)] text-white">
+      <GrowIn className="px-gutter bg-violet py-[clamp(72px,10vw,140px)] text-white night:bg-[#1d1240]">
         <div className="mx-auto grid max-w-[1440px] gap-14 lg:grid-cols-[1fr_1.15fr] lg:items-center">
           <div className="flex flex-col items-start gap-7">
             <SectionTitle kicker="Co-founded" inverse>

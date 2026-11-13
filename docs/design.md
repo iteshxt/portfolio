@@ -68,7 +68,11 @@ The day/night content split is being retired page by page: light and dark become
 
 ### 2.13 Arcee, full page (2026-11-13)
 
-`/arcee` holds the same conversation as the floating panel (one shared chat instance), big, beside postcards: what Arcee knows, questions to try, and how leaving a message works. The panel's header has an "open full page" button; "Chat" is in the navigator. Arcee's greeting is a postcard with a stamp (its animated ring). Tilts are now reserved for accents: heading word stickers, the footer wordmark, the peel hint, the stamp, the loader.
+`/arcee` is itself the conversation (the same one as the floating panel, via a shared chat instance): a slim "Ask Arcee" intro with its animated ring, messages flowing down a faded mat, and a sticky message box docked above the navigator. Arcee's opening postcard holds what it knows, questions to try and a P.S. on leaving a message. Arcee uses the site's colours (violet, paper), not the Arcee project's amber. Tilts are reserved for accents: heading word stickers, the footer wordmark, the peel hint, the stamp, the loader.
+
+### 2.14 Night
+
+The die-cut edge is a token (`--die`): white by day, a soft translucent white at night (also applied to `border-white`). At night, bright tiles become dark tinted tiles with coloured names (`night:` variants; covers that hide content use opaque color-mix tints), the DiaLabs band turns deep violet, the contact block a dark surface, and posters are toned down slightly. Heading word stickers stay bright as accents.
 
 ## 3. Colour
 

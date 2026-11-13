@@ -6,12 +6,13 @@ import { Scribble } from "@/components/motion/Scribble";
 import { CATEGORY_LABELS, type Project, type ProjectCategory } from "@/content/projects";
 import { cn } from "@/lib/cn";
 
+/** Bright stickers by day; at night, dark tiles tinted with the colour (glare-free on black). */
 const TONES = [
-  "bg-lime text-[#2B3600]",
+  "bg-lime text-[#2B3600] night:bg-lime/10 night:text-lime",
   "bg-surface text-fg",
-  "bg-sunflower text-[#4A3A00]",
-  "bg-lavender text-violet-ink",
-  "bg-tomato text-[#2A0700]",
+  "bg-sunflower text-[#4A3A00] night:bg-sunflower/10 night:text-sunflower",
+  "bg-lavender text-violet-ink night:bg-lavender/10 night:text-lavender",
+  "bg-tomato text-[#2A0700] night:bg-tomato/12 night:text-[#ff8f7a]",
 ];
 const TILTS = [-0.8, 0.6, -0.4, 0.8, -0.6, 0.4];
 const FIRST = 8;
@@ -63,7 +64,7 @@ export function ArchiveWall({ projects }: { projects: Project[] }) {
                 {CATEGORY_LABELS[p.category]} · {p.year}
               </span>
               <h3 className="text-[30px] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_82]">{p.name}</h3>
-              <p className="text-[14px] leading-snug">{p.day}</p>
+              <p className="text-[14px] leading-snug night:text-fg-muted">{p.day}</p>
               <p className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[13px] font-semibold">
                 {p.links.live && (
                   <a href={p.links.live} target="_blank" rel="noreferrer" data-cursor="Live" className="inline-flex items-center gap-1">

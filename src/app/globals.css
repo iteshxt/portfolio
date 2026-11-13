@@ -18,6 +18,8 @@
   --night: #0b0a10;
   --night-2: #15121d;
   --night-ink: #f4f2ff;
+  /* The die-cut edge around stickers, cards and buttons. */
+  --die: #ffffff;
 
   /* Star projects keep their own app's colours in both themes (docs/design.md §3.4). */
   --arcee: #ff8c1a; /* Arcee's amber, from its icon */
@@ -320,7 +322,7 @@
     width: fit-content;
     align-items: center;
     gap: 0.5rem;
-    border: 3px solid #fff;
+    border: 3px solid var(--die);
     border-radius: 9999px;
     padding: 0.7rem 1.35rem;
     font-size: 15px;
@@ -368,7 +370,7 @@
     color: #fff;
   }
   [data-shift="night"] .btn {
-    border-color: rgb(255 255 255 / 0.9);
+    border-color: var(--die);
   }
   @media (prefers-reduced-motion: reduce) {
     .btn,
@@ -434,7 +436,7 @@ html {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  border: 3px solid #fff;
+  border: 3px solid var(--die);
   border-radius: 9999px;
   background: var(--surface);
   padding: 0.4rem 1rem;
@@ -520,6 +522,14 @@ html {
   .peel-cover::after {
     transition: none;
   }
+}
+
+/* At night the die-cut edges glow softly instead of shining white. */
+[data-shift="night"] {
+  --die: rgb(255 255 255 / 0.16);
+}
+[data-shift="night"] .border-white {
+  border-color: var(--die);
 }
 
 /* A faint cutting-mat grid that fades out towards the edges, drawn behind the content. */
@@ -682,7 +692,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   position: absolute;
   top: 22px;
   left: 18px;
-  border: 2px solid #fff;
+  border: 2px solid var(--die);
   border-radius: 9999px;
   background: var(--ink);
   padding: 3px 10px;
@@ -775,7 +785,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 
 /* Postcards (Arcee): a paper card with a stamp, a dashed divider and a soft shadow. */
 .postcard {
-  border: 4px solid #fff;
+  border: 4px solid var(--die);
   border-radius: 18px;
   background: var(--surface);
   padding: 1rem 1.15rem;
@@ -785,7 +795,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 /* A postage stamp: white frame, dashed "perforated" outline, a slight tilt. */
 .arcee-stamp:not(.rounded-full) {
-  border: 3px solid #fff;
+  border: 3px solid var(--die);
   border-radius: 4px;
   outline: 1.5px dashed rgb(0 0 0 / 0.28);
   outline-offset: 1px;

@@ -33,3 +33,10 @@ export function scrollToTop() {
   if (scroller) scroller.scrollTo(0, { duration: 1.2 });
   else window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
 }
+
+/** Smoothly scrolls to the bottom of the page (a full-page chat following new messages). */
+export function scrollToBottom() {
+  const y = document.documentElement.scrollHeight;
+  if (scroller) scroller.scrollTo(y, { duration: 0.8 });
+  else window.scrollTo({ top: y, behavior: prefersReducedMotion() ? "auto" : "smooth" });
+}

@@ -32,11 +32,11 @@ export function ArceePanel() {
         open ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
       )}
     >
-      <header className="flex items-center gap-3 bg-arcee-deep px-4 py-3 text-paper">
-        <ArceeStamp className="size-11 rounded-full border-2 border-arcee/60" />
+      <header className="flex items-center gap-3 bg-violet px-4 py-3 text-white">
+        <ArceeStamp className="size-11 rounded-full border-2 border-white/70" />
         <div className="min-w-0 flex-1">
-          <p className="text-[17px] leading-tight font-semibold tracking-[-0.01em] text-arcee">Arcee</p>
-          <p className="truncate text-[13px] text-paper/80">The site&apos;s guide. Ask about Itesh&apos;s work.</p>
+          <p className="text-[17px] leading-tight font-semibold tracking-[-0.01em]">Arcee</p>
+          <p className="truncate text-[13px] text-white/85">The site&apos;s guide. Ask about Itesh&apos;s work.</p>
         </div>
         <button
           type="button"
@@ -46,11 +46,11 @@ export function ArceePanel() {
           }}
           aria-label="Open Arcee full page"
           data-cursor="Full page"
-          className="flex size-9 items-center justify-center rounded-full text-[17px] text-paper/80 hover:bg-white/10 hover:text-paper"
+          className="flex size-9 items-center justify-center rounded-full text-[17px] text-white/85 hover:bg-white/15 hover:text-white"
         >
           <ArrowUpRight />
         </button>
-        <button type="button" onClick={close} aria-label="Close chat" className="flex size-9 items-center justify-center rounded-full text-[18px] text-paper/80 hover:bg-white/10 hover:text-paper">
+        <button type="button" onClick={close} aria-label="Close chat" className="flex size-9 items-center justify-center rounded-full text-[18px] text-white/85 hover:bg-white/15 hover:text-white">
           <Close />
         </button>
       </header>

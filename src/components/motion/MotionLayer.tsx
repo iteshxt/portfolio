@@ -39,10 +39,17 @@ export function MotionLayer() {
         else io.observe(el);
       });
     };
-    scan();
+    // Start once the browser is idle: marking elements before React has hydrated them would mismatch.
     const mo = new MutationObserver(scan);
-    mo.observe(document.body, { childList: true, subtree: true });
+    const start = () => {
+      scan();
+      mo.observe(document.body, { childList: true, subtree: true });
+    };
+    const canIdle = typeof window.requestIdleCallback === "function";
+    const idle: number = canIdle ? window.requestIdleCallback(start, { timeout: 600 }) : window.setTimeout(start, 300);
     return () => {
+      if (canIdle) window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
       io.disconnect();
       mo.disconnect();
     };

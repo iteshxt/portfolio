@@ -20,7 +20,7 @@ const CHANNELS = [
  */
 export function ContactCta() {
   return (
-    <section data-section="Contact" className="px-gutter bg-ink py-[clamp(72px,12vw,160px)] text-paper night:bg-violet night:text-white">
+    <section data-section="Contact" className="px-gutter bg-ink py-[clamp(72px,12vw,160px)] text-paper night:bg-surface night:text-night-ink">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-[clamp(40px,6vw,72px)]">
         <SectionTitle kicker="Contact" inverse>
           Got something{" "}

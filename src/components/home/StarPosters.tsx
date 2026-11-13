@@ -23,7 +23,7 @@ export function StarPosters({ projects, header }: { projects: Project[]; header:
             key={p.slug}
             data-fly-card=""
             className={cn(
-              "poster relative grid shrink-0 overflow-hidden rounded-[28px] border-[6px] border-white shadow-[0_30px_70px_-30px_rgb(0_0_0/0.5)] md:h-[min(68vh,620px)] md:w-[min(82vw,1120px)] md:grid-cols-[1fr_1.1fr]",
+              "poster relative grid shrink-0 overflow-hidden night:[filter:saturate(0.85)_brightness(0.88)] rounded-[28px] border-[6px] border-white shadow-[0_30px_70px_-30px_rgb(0_0_0/0.5)] md:h-[min(68vh,620px)] md:w-[min(82vw,1120px)] md:grid-cols-[1fr_1.1fr]",
               brand.fill,
               brand.onFill,
             )}

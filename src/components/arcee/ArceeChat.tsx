@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { ArrowUpRight } from "@/components/icons";
 import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { arceeChat } from "@/lib/arcee/chat-client";
@@ -10,6 +10,7 @@ import { allowedUrls } from "@/lib/arcee/corpus";
 import { splitLinks } from "@/lib/arcee/guard";
 import { STICKERS, type StickerMood } from "@/lib/arcee/stickers";
 import { cn } from "@/lib/cn";
+import { scrollToBottom } from "@/lib/motion";
 import { play } from "@/lib/sound";
 import { useUI } from "@/store/ui";
 import { DraftCard, type Draft } from "./DraftCard";
@@ -39,12 +40,62 @@ function RichText({ text, allowed }: { text: string; allowed: Set<string> }) {
   );
 }
 
+const MORE_SUGGESTIONS = ["What's DiaLabs?", "Which project uses WebGPU?"];
+const KNOWS = ["The three star projects and how they work", "Everything else he has shipped", "Where he has worked and what he did", "DiaLabs and its releases", "How to reach him, or take a message"];
+
+/** Arcee's opening message, a postcard. On the full page it also lists what Arcee knows and what to try. */
+function Welcome({ page, ask }: { page: boolean; ask: (q: string) => void }) {
+  const chips = (list: string[]): ReactNode => (
+    <div className="flex flex-wrap gap-2">
+      {list.map((s) => (
+        <button key={s} type="button" onClick={() => ask(s)} className="filter-chip text-[13px]">
+          {s}
+        </button>
+      ))}
+    </div>
+  );
+  return (
+    <div className={cn("postcard self-start", page ? "w-full p-6" : "max-w-[92%]")}>
+      <div className="flex items-start gap-4">
+        <p className={cn("flex-1", page && "text-[clamp(18px,1.6vw,22px)] leading-snug")}>
+          Hey, I&apos;m Arcee. Ask me anything about Itesh: projects, experience, or how to reach him.
+        </p>
+        <ArceeStamp className={page ? "size-16" : "size-11"} />
+      </div>
+      {page && (
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          <div>
+            <p className="font-mono text-[12px] tracking-wide text-fg-muted uppercase">What I know</p>
+            <ul className="mt-2 flex flex-col gap-1.5 text-[15px]">
+              {KNOWS.map((k) => (
+                <li key={k} className="flex gap-2">
+                  <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 rounded-full bg-violet" />
+                  {k}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-2 font-mono text-[12px] tracking-wide text-fg-muted uppercase">Try asking</p>
+            {chips([...SUGGESTIONS, ...MORE_SUGGESTIONS])}
+          </div>
+        </div>
+      )}
+      <p className="mt-5 border-t border-dashed border-line pt-3 text-[14px] text-fg-muted">
+        <span className="font-serif text-[16px] text-fg italic">P.S.</span> Want to leave Itesh a message? Tell me what to say. I&apos;ll draft it and show
+        you first; nothing is sent until you press send.
+      </p>
+      {!page && <div className="mt-4">{chips(SUGGESTIONS)}</div>}
+    </div>
+  );
+}
+
 type ToolPart = { type: string; state?: string; toolCallId?: string; output?: unknown };
 
-/** Arcee's ring as a little postage stamp. */
+/** Arcee's animated ring as an icon or a little postage stamp. */
 export function ArceeStamp({ className }: { className?: string }) {
   return (
-    <picture className={cn("arcee-stamp block shrink-0 overflow-hidden bg-arcee-deep", className)}>
+    <picture className={cn("arcee-stamp block shrink-0 overflow-hidden bg-ink", className)}>
       <source srcSet="/projects/arcee-wave-still.webp" media="(prefers-reduced-motion: reduce)" />
       <img src="/projects/arcee-wave.webp" alt="" width={64} height={64} className="size-full scale-[1.35] object-cover" />
     </picture>
@@ -84,7 +135,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
     if (!active) return;
     const seed = useUI.getState().takeArceeSeed();
     if (seed) ask(seed);
-    const raf = requestAnimationFrame(() => inputRef.current?.focus());
+    const raf = requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run when the view becomes active or a new hand-over arrives
   }, [active, arceeOpen]);
@@ -102,10 +153,17 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
     }
   }, [messages, go]);
 
+  // Follow new messages: inside the panel's list, or down the page on /arcee (not on first load).
+  const seen = useRef(messages.length);
   useEffect(() => {
+    if (variant === "page") {
+      if (messages.length !== seen.current || status === "submitted") scrollToBottom();
+      seen.current = messages.length;
+      return;
+    }
     const el = listRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, status]);
+  }, [messages, status, variant]);
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -147,27 +205,11 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
     <>
       <div
         ref={listRef}
-        data-lenis-prevent=""
-        className={cn("cutting-mat flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4 leading-snug", page ? "px-6 py-6 text-[16px]" : "text-[15px]")}
+        data-lenis-prevent={page ? undefined : ""}
+        className={cn("flex flex-col gap-3 leading-snug", page ? "pb-6 text-[16px]" : "cutting-mat flex-1 overflow-y-auto px-4 py-4 text-[15px]")}
         aria-live="polite"
       >
-        {/* Arcee's greeting arrives as a postcard. */}
-        <div className="postcard max-w-[92%] self-start">
-          <div className="flex items-start gap-3">
-            <p className="flex-1">Hey, I&apos;m Arcee. Ask me anything about Itesh: projects, experience, or how to reach him.</p>
-            <ArceeStamp className={page ? "size-14" : "size-11"} />
-          </div>
-          <p className="mt-3 border-t border-dashed border-line pt-2 font-serif text-[15px] text-fg-muted italic">From Arcee, the site&apos;s guide</p>
-        </div>
-        {messages.length === 0 && (
-          <div className="flex flex-wrap gap-2">
-            {SUGGESTIONS.map((s) => (
-              <button key={s} type="button" onClick={() => ask(s)} className="filter-chip text-[13px]">
-                {s}
-              </button>
-            ))}
-          </div>
-        )}
+        <Welcome page={page} ask={ask} />
         {messages.map((m) => (
           <div
             key={m.id}
@@ -195,7 +237,15 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
         )}
       </div>
 
-      <form onSubmit={onSubmit} className="flex items-end gap-2 border-t border-line bg-surface p-3">
+      <form
+        onSubmit={onSubmit}
+        className={cn(
+          "flex items-end gap-2",
+          page
+            ? "sticky bottom-[88px] z-30 rounded-[26px] border-[4px] border-white bg-surface p-2.5 shadow-[0_18px_40px_-20px_rgb(0_0_0/0.5)]"
+            : "border-t border-line bg-surface p-3",
+        )}
+      >
         <textarea
           ref={inputRef}
           rows={1}
