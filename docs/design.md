@@ -87,6 +87,8 @@ The folder from the work page, open, in the project's own colours (each page wea
 - **Decisions that mattered:** notes taped into the file (sunflower, lavender, lime, paper), slightly askew, with a strip of tape each; tinted at night.
 - **Exhibit A:** PatentIQ's rubric as bars that fill in; Arcee's gated phases as rows with stamps (gate passed, in progress, next).
 - **Next file:** the next project's tab and sheet in its colours, "Open it →"; its artwork flies into the next page. No contact block.
+- **Concrete over vague (2026-11-14):** each file shows what the project really is, from the repos: real numbers with what they measured; **The kit** ("What's in the *box*": Arcee's 110 tools by family, PatentIQ's students/mentors/reports); the real eval tasks it's tested on (mono chips with ticks); **The rules** ("What it *won't* do": Arcee's never-list as struck-through red stamps, plus its guard rules); gate rows with measured results; **From the work log** (true bugs and fixes); **On the bench next**. Optional blocks render only when a project has them.
+- **Getting there:** a transition into a case study covers the page in that project's colours (the artwork flies over it), not violet. On the work page the case files stack as you scroll (tablet up).
 
 ## 3. Colour
 

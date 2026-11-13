@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { ArrowRight, ArrowUpRight } from "@/components/icons";
+import { ArrowRight, ArrowUpRight, Check, Close } from "@/components/icons";
 import { StarVisual } from "@/components/home/StarVisual";
 import { RevealText } from "@/components/motion/RevealText";
 import { Scribble } from "@/components/motion/Scribble";
@@ -112,6 +112,24 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
             </li>
           ))}
         </ul>
+        {study.tested && (
+          <div className="mx-auto mt-8 max-w-[1320px]">
+            <p className="font-serif text-[18px] text-fg-muted italic">{study.tested.caption}</p>
+            <ul className="mt-3 flex flex-wrap gap-2" aria-label="Tested on">
+              {study.tested.items.map((t, i) => (
+                <li
+                  key={t}
+                  data-animate="slap"
+                  style={{ "--d": `${i * 35}ms` } as CSSProperties}
+                  className="inline-flex items-center gap-1.5 rounded-full border-[3px] border-[var(--die)] bg-surface px-3 py-1 font-mono text-[13px] shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]"
+                >
+                  <Check className="text-[12px] text-[#3d7a00] night:text-lime" />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       {/* What it does */}
@@ -140,6 +158,44 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
           </ol>
         </div>
       </section>
+
+      {/* The kit */}
+      {study.kit && (
+        <section data-section="The kit" className="px-gutter py-[clamp(48px,7vw,96px)]">
+          <div className="mx-auto max-w-[1320px]">
+            <SectionTitle kicker="The kit">
+              What&rsquo;s in the{" "}
+              <Sticker size="word" tone="tomato" tilt={-2}>
+                box
+              </Sticker>
+              .
+            </SectionTitle>
+            <p className="mt-4 max-w-[60ch] text-fg-muted">{study.kit.caption}</p>
+            <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {study.kit.groups.map((g, i) => (
+                <li
+                  key={g.name}
+                  data-animate="rise"
+                  style={{ "--d": `${(i % 4) * 60}ms` } as CSSProperties}
+                  className="flex flex-col gap-3 rounded-[20px] border-[4px] border-[var(--die)] bg-surface p-5 shadow-[0_12px_26px_-20px_rgb(0_0_0/0.35)]"
+                >
+                  <p className="flex items-center justify-between gap-3">
+                    <span className="text-[22px] leading-none font-semibold tracking-[-0.03em] [font-variation-settings:'wdth'_82]">{g.name}</span>
+                    {g.count && <span className={cn("rounded-full px-2 py-0.5 font-mono text-[12px] font-semibold", brand.dot, brand.onDot)}>{g.count}</span>}
+                  </p>
+                  <ul className="flex flex-wrap gap-1.5">
+                    {g.items.map((it) => (
+                      <li key={it} className="rounded-full bg-bg px-2.5 py-0.5 text-[13px] text-fg-muted">
+                        {it}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* How it works */}
       <section data-section="How it works" className="px-gutter py-[clamp(56px,8vw,120px)]">
@@ -189,6 +245,45 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
           </ul>
         </div>
       </section>
+
+      {/* The rules, and what it refuses */}
+      {study.guards && (
+        <section data-section="The rules" className="px-gutter py-[clamp(48px,7vw,96px)]">
+          <div className="mx-auto max-w-[1320px]">
+            <SectionTitle kicker="The rules">
+              What it{" "}
+              <Sticker size="word" tone="tomato" tilt={2}>
+                won&rsquo;t
+              </Sticker>{" "}
+              do.
+            </SectionTitle>
+            <p className="mt-4 max-w-[60ch] text-fg-muted">{study.guards.caption}</p>
+            {study.guards.refused && (
+              <ul className="mt-8 flex flex-wrap gap-2.5" aria-label="Refused outright">
+                {study.guards.refused.map((r, i) => (
+                  <li
+                    key={r}
+                    data-animate="slap"
+                    style={{ "--d": `${i * 40}ms`, rotate: `${[-2, 1.5, -1, 2.5, -2.5, 1][i % 6]}deg` } as CSSProperties}
+                    className="case-refused inline-flex items-center gap-1.5 rounded-[6px] border-[2.5px] px-2.5 py-1 font-mono text-[14px] font-semibold"
+                  >
+                    <Close className="text-[12px]" />
+                    {r}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <ul className="mt-10 grid gap-5 md:grid-cols-3">
+              {study.guards.rules.map((r, i) => (
+                <li key={r.title} data-animate="rise" style={{ "--d": `${i * 70}ms` } as CSSProperties} className="border-t-[3px] border-fg pt-4">
+                  <h3 className="text-[20px] leading-tight font-semibold tracking-[-0.02em]">{r.title}</h3>
+                  <p className="mt-2 text-[15px] leading-snug text-fg-muted">{r.body}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* The exhibit: PatentIQ's rubric, Arcee's gated phases */}
       {study.breakdown && (
@@ -242,6 +337,43 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+      )}
+
+      {/* From the work log */}
+      {study.log && (
+        <section data-section="Work log" className="px-gutter py-[clamp(48px,7vw,96px)]">
+          <div className="mx-auto max-w-[1320px]">
+            <h2 className="font-serif text-[clamp(26px,2.6vw,36px)] italic">From the work log</h2>
+            <ol className="mt-8 grid gap-x-10 md:grid-cols-2">
+              {study.log.map((l, i) => (
+                <li key={l.title} data-animate="rise" style={{ "--d": `${(i % 2) * 70}ms` } as CSSProperties} className="grid grid-cols-[4.5rem_1fr] gap-4 border-t border-dashed border-line py-6">
+                  <span className="font-mono text-[12px] tracking-wider text-fg-muted uppercase">Log {String(i + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3 className="text-[19px] leading-tight font-semibold tracking-[-0.02em]">{l.title}</h3>
+                    <p className="mt-1.5 text-[15px] leading-snug text-fg-muted">{l.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {/* What's next */}
+      {study.upcoming && (
+        <section data-section="Up next" className="px-gutter py-[clamp(40px,6vw,80px)]">
+          <div className="mx-auto max-w-[1320px]">
+            <h2 className="font-serif text-[clamp(26px,2.6vw,36px)] italic">On the bench next</h2>
+            <ul className="mt-6 flex flex-col gap-3">
+              {study.upcoming.map((u, i) => (
+                <li key={u} data-animate="rise" style={{ "--d": `${i * 60}ms` } as CSSProperties} className="flex items-center gap-3 text-[clamp(18px,1.6vw,22px)] font-medium tracking-[-0.01em]">
+                  <span className={cn("size-2.5 shrink-0 rounded-full", brand.dot)} />
+                  {u}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       )}
