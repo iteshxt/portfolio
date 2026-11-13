@@ -55,7 +55,21 @@ const STICKERS: LidSticker[] = [
     at: [47, 17, -4],
     shape: "word",
     className: "rounded-[16px] bg-violet px-5 pt-2 pb-3 text-white",
-    face: <span className="text-[clamp(26px,3vw,40px)] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_80]">DiaLabs</span>,
+    face: (
+      <span className="flex items-center gap-2.5">
+        {/* The lab's own mark (from its site's icon): a little robot head. */}
+        <svg viewBox="0 0 130 130" aria-hidden="true" className="size-[clamp(30px,3vw,42px)]" fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="65" cy="11" r="6" />
+          <path d="M65 17v11" />
+          <rect x="20" y="28" width="90" height="86" rx="34" />
+          <path d="M20 58h-6a6 6 0 0 0-6 6v14a6 6 0 0 0 6 6h6M110 58h6a6 6 0 0 1 6 6v14a6 6 0 0 1-6 6h-6" />
+          <rect x="36" y="46" width="58" height="52" rx="20" />
+          <ellipse cx="53" cy="72" rx="4" ry="8" fill="currentColor" stroke="none" />
+          <ellipse cx="77" cy="72" rx="4" ry="8" fill="currentColor" stroke="none" />
+        </svg>
+        <span className="text-[clamp(26px,3vw,40px)] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_80]">DiaLabs</span>
+      </span>
+    ),
     story: {
       title: "Co-founder, DiaLabs",
       body: "An open-source AI and ML organisation that releases free models, datasets and developer tools. PatentIQ and DiaChat were built there.",

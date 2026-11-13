@@ -83,11 +83,11 @@ export default function AboutPage() {
       <section data-section="Shipped for others" className="px-gutter py-[clamp(56px,8vw,120px)]">
         <div className="mx-auto max-w-[1240px]">
           <SectionTitle kicker="Shipped for others" className="mb-[clamp(32px,5vw,64px)]">
-            Two{" "}
+            Who I&rsquo;ve{" "}
             <Sticker size="word" tone="sunflower" tilt={-2}>
-              guest passes
-            </Sticker>
-            .
+              worked
+            </Sticker>{" "}
+            for.
           </SectionTitle>
           <GuestPasses items={EXPERIENCE} />
         </div>

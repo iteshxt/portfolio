@@ -1072,8 +1072,8 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     translate: -50% -50%;
   }
 }
-/* Guest passes hang straight on lanyards. Scrolling in: the strap drops, the clip snaps on,
-   then the pass falls from it and swings to rest around the clip. */
+/* Work badges hang straight on lanyards. Scrolling in: both ribbons curl in from their far ends
+   (a mask drawn along the path), the clip snaps on, then the badge falls onto it and swings to rest. */
 .pass {
   transform-origin: 50% 0;
   transition: translate 0.5s var(--ease-expo-out);
@@ -1084,39 +1084,52 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 .lanyard {
   z-index: 1;
 }
-.lanyard-strap {
-  transform-origin: top;
-  box-shadow: inset -6px 0 8px -6px rgb(0 0 0 / 0.35);
+.lanyard-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
 }
 .lanyard-clip {
-  width: 34px;
-  height: 22px;
-  margin-top: -2px;
-  border-radius: 6px 6px 10px 10px;
-  background: linear-gradient(180deg, #e9e9ee, #a7a7b0 60%, #d4d4da);
+  top: calc(100% - 26px);
+  width: 30px;
+  height: 34px;
+  border-radius: 8px 8px 6px 6px;
+  background: linear-gradient(90deg, #a9a9b2, #ececf1 45%, #b8b8c0);
   box-shadow:
     inset 0 1px 0 rgb(255 255 255 / 0.8),
-    0 3px 6px -2px rgb(0 0 0 / 0.4);
-  translate: 0 0;
+    inset 0 -6px 0 rgb(0 0 0 / 0.12),
+    0 4px 8px -3px rgb(0 0 0 / 0.45);
 }
-[data-animate="lanyard"][data-in] .lanyard-strap {
-  animation: lanyard-drop 0.7s var(--ease-expo-out) var(--d, 0ms) backwards;
+.lanyard-clip::before {
+  /* The ring the ribbons loop through. */
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 16px;
+  height: 14px;
+  translate: -50% 0;
+  border: 3px solid #b5b5bd;
+  border-bottom: 0;
+  border-radius: 10px 10px 0 0;
+}
+[data-animate="lanyard"][data-in] .lanyard-draw {
+  animation: lanyard-draw 0.9s var(--ease-expo-out) var(--d, 0ms) backwards;
 }
 [data-animate="lanyard"][data-in] .lanyard-clip {
-  animation: lanyard-clip 0.35s var(--ease-slap) calc(var(--d, 0ms) + 0.5s) backwards;
+  animation: lanyard-clip 0.35s var(--ease-slap) calc(var(--d, 0ms) + 0.6s) backwards;
 }
 [data-animate="lanyard"][data-in] .pass {
-  animation: pass-swing 1.5s var(--ease-expo-out) calc(var(--d, 0ms) + 0.7s) backwards;
+  animation: pass-swing 1.5s var(--ease-expo-out) calc(var(--d, 0ms) + 0.8s) backwards;
 }
-@keyframes lanyard-drop {
+@keyframes lanyard-draw {
   from {
-    scale: 1 0;
+    stroke-dashoffset: 1;
   }
 }
 @keyframes lanyard-clip {
   from {
     opacity: 0;
-    translate: 0 -24px;
+    scale: 0.4;
   }
 }
 @keyframes pass-swing {
@@ -1144,15 +1157,11 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  [data-animate="lanyard"][data-in] .lanyard-strap,
+  [data-animate="lanyard"][data-in] .lanyard-draw,
   [data-animate="lanyard"][data-in] .lanyard-clip,
   [data-animate="lanyard"][data-in] .pass {
     animation: none;
   }
-}
-.pass-hole {
-  background: var(--bg);
-  box-shadow: inset 0 2px 3px rgb(0 0 0 / 0.25);
 }
 
 /* Going to a case study, the covering sticker wears that project's colours (the artwork flies
