@@ -15,13 +15,12 @@ export type CaseStudy = {
   timeline: string;
   status: string;
   summary: { day: string; night: string };
+  /** Key numbers; not shown on the page, but Arcee (the chatbot) knows them. */
   stats: { value: string; label: string }[];
   day: {
     intro: string;
     points: { title: string; body: string }[];
   };
-  /** What's in the box: tools, features or roles, grouped. */
-  kit?: { caption: string; groups: { name: string; count?: number; items: string[] }[] };
   /** Real tasks it's tested on, by name. */
   tested?: { caption: string; items: string[] };
   night: {
@@ -36,8 +35,6 @@ export type CaseStudy = {
   progress?: { title: string; caption: string; rows: { label: string; state: "done" | "doing" | "next"; note: string }[] };
   /** Small true stories from building it. */
   log?: { title: string; body: string }[];
-  /** What's being built next. */
-  upcoming?: string[];
   next: StarSlug;
 };
 
@@ -65,21 +62,6 @@ export const CASE_STUDIES: Record<StarSlug, CaseStudy> = {
         { title: "Uses your computer like you do", body: "Files and the shell, your real signed-in Chrome, desktop apps through the accessibility tree, plus mail, calendar, reminders, music and WhatsApp." },
         { title: "Asks before it touches anything", body: "Reading is automatic. Anything that changes files stops at “Allow? [y/N]”. Commands like rm -rf and sudo are refused outright." },
         { title: "Any model, any role", body: "By default gpt-oss-20b, qwen3.8-27b and gpt-oss-120b on Groq, rotated within each one's free budget. Pass --core local and everything stays on your machine through Ollama." },
-      ],
-    },
-    kit: {
-      caption: "110 tools, by family. The step loop picks which ones each request gets to see.",
-      groups: [
-        { name: "Files", items: ["list", "read", "search", "move", "copy", "write", "trash", "disk usage"] },
-        { name: "Shell", items: ["run", "start", "scripts in a bubblewrap sandbox"] },
-        { name: "Browser", items: ["tabs", "navigate", "read", "click", "fill", "scroll", "bookmark"] },
-        { name: "Desktop", items: ["accessibility tree", "windows", "tiling", "find on screen", "click on screen"] },
-        { name: "Settings", items: ["volume", "brightness", "do not disturb", "appearance"] },
-        { name: "Mail", count: 8, items: ["read", "search", "draft", "send"] },
-        { name: "Calendar", count: 5, items: ["events", "create", "move"] },
-        { name: "Everyday", items: ["reminders", "routines", "music", "WhatsApp", "timers"] },
-        { name: "Web", items: ["search", "news", "weather", "stock quotes", "routes", "travel"] },
-        { name: "Memory", items: ["recall", "forget", "history", "undo the last task"] },
       ],
     },
     tested: {
@@ -159,15 +141,6 @@ export const CASE_STUDIES: Record<StarSlug, CaseStudy> = {
         { title: "Built for mentors", body: "A dashboard with analytics, every submission, a live view of the pipeline, retries, Excel export and PDF reports." },
       ],
     },
-    kit: {
-      caption: "Who gets what.",
-      groups: [
-        { name: "Students", items: ["public submission link", "no sign-up", "PDF drafts"] },
-        { name: "Mentors", items: ["groups", "dashboard", "analytics", "all submissions", "pipeline view", "retries"] },
-        { name: "Reports", items: ["PDF report per draft", "Excel export", "score breakdown"] },
-        { name: "Account", items: ["Firebase sign-in", "credits", "checkout"] },
-      ],
-    },
     night: {
       intro: "A deterministic stage runs before the generative one, so the model reasons from verified patents, not from memory.",
       pipeline: [
@@ -201,7 +174,6 @@ export const CASE_STUDIES: Record<StarSlug, CaseStudy> = {
         { label: "Drafting quality", value: 5, max: 20 },
       ],
     },
-    upcoming: ["Batch processing for 50+ drafts at once", "Latency and cost tracing for every model call", "Automatic retries for failed stages"],
     next: "diachat",
   },
 

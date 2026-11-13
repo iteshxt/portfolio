@@ -11,6 +11,7 @@ import type { Project } from "@/content/projects";
 import { STAR_PROJECTS } from "@/content/projects";
 import { brandOf } from "@/lib/brand";
 import { cn } from "@/lib/cn";
+import { CuriousEnd } from "@/components/ui/CuriousEnd";
 import { StarStage } from "./StarStage";
 
 const NOTE_TONES = ["case-note-sunflower", "case-note-lavender", "case-note-lime", "case-note-paper"];
@@ -23,9 +24,10 @@ const STATE = {
 /**
  * A star project's case study, as the case file opened (docs/design.md §2.11):
  * the folder from the work page, open on the desk, in the project's own colours.
- * An index card with a status stamp, the evidence, what it does, how it works
- * (a pipeline that draws itself as you scroll), notes taped in for the decisions,
- * the project's extra exhibit, and the next file's tab to finish.
+ * An index card with a status stamp, what it does, how it works (a pipeline that
+ * draws itself as you scroll, and what it's tested on), notes taped in for the
+ * decisions, the rules, the exhibit, the work log, the next file's tab, and a
+ * nudge to ask Arcee about it.
  */
 export function CaseStudyView({ study, project, next }: { study: CaseStudy; project: Project; next: Project }) {
   const brand = brandOf(project);
@@ -96,42 +98,6 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
         </div>
       </section>
 
-      {/* The evidence */}
-      <section data-section="Evidence" className="px-gutter pb-[clamp(64px,9vw,128px)]">
-        <ul className="mx-auto grid max-w-[1320px] gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {study.stats.map((s, i) => (
-            <li
-              key={s.label}
-              data-animate="slap"
-              style={{ "--d": `${i * 90}ms` } as CSSProperties}
-              className="flex flex-col gap-2 rounded-[22px] border-[4px] border-[var(--die)] bg-surface p-6 shadow-[0_14px_30px_-20px_rgb(0_0_0/0.35)]"
-            >
-              <span className={cn("size-2.5 rounded-full", brand.dot)} />
-              <p className="text-[clamp(48px,5vw,76px)] leading-none font-semibold tracking-[-0.05em] [font-variation-settings:'wdth'_78]">{s.value}</p>
-              <p className="text-[15px] leading-snug text-fg-muted">{s.label}</p>
-            </li>
-          ))}
-        </ul>
-        {study.tested && (
-          <div className="mx-auto mt-8 max-w-[1320px]">
-            <p className="font-serif text-[18px] text-fg-muted italic">{study.tested.caption}</p>
-            <ul className="mt-3 flex flex-wrap gap-2" aria-label="Tested on">
-              {study.tested.items.map((t, i) => (
-                <li
-                  key={t}
-                  data-animate="slap"
-                  style={{ "--d": `${i * 35}ms` } as CSSProperties}
-                  className="inline-flex items-center gap-1.5 rounded-full border-[3px] border-[var(--die)] bg-surface px-3 py-1 font-mono text-[13px] shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]"
-                >
-                  <Check className="text-[12px] text-[#3d7a00] night:text-lime" />
-                  {t}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </section>
-
       {/* What it does */}
       <section data-section="What it does" className="px-gutter py-[clamp(48px,7vw,96px)]">
         <div className="mx-auto grid max-w-[1320px] gap-[clamp(32px,5vw,80px)] lg:grid-cols-[0.85fr_1.15fr]">
@@ -158,44 +124,6 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
           </ol>
         </div>
       </section>
-
-      {/* The kit */}
-      {study.kit && (
-        <section data-section="The kit" className="px-gutter py-[clamp(48px,7vw,96px)]">
-          <div className="mx-auto max-w-[1320px]">
-            <SectionTitle kicker="The kit">
-              What&rsquo;s in the{" "}
-              <Sticker size="word" tone="tomato" tilt={-2}>
-                box
-              </Sticker>
-              .
-            </SectionTitle>
-            <p className="mt-4 max-w-[60ch] text-fg-muted">{study.kit.caption}</p>
-            <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {study.kit.groups.map((g, i) => (
-                <li
-                  key={g.name}
-                  data-animate="rise"
-                  style={{ "--d": `${(i % 4) * 60}ms` } as CSSProperties}
-                  className="flex flex-col gap-3 rounded-[20px] border-[4px] border-[var(--die)] bg-surface p-5 shadow-[0_12px_26px_-20px_rgb(0_0_0/0.35)]"
-                >
-                  <p className="flex items-center justify-between gap-3">
-                    <span className="text-[22px] leading-none font-semibold tracking-[-0.03em] [font-variation-settings:'wdth'_82]">{g.name}</span>
-                    {g.count && <span className={cn("rounded-full px-2 py-0.5 font-mono text-[12px] font-semibold", brand.dot, brand.onDot)}>{g.count}</span>}
-                  </p>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {g.items.map((it) => (
-                      <li key={it} className="rounded-full bg-bg px-2.5 py-0.5 text-[13px] text-fg-muted">
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
 
       {/* How it works */}
       <section data-section="How it works" className="px-gutter py-[clamp(56px,8vw,120px)]">
@@ -227,6 +155,25 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
               </li>
             ))}
           </ol>
+
+          {study.tested && (
+            <div className="mt-12">
+              <p className="font-serif text-[18px] text-fg-muted italic">{study.tested.caption}</p>
+              <ul className="mt-3 flex flex-wrap gap-2" aria-label="Tested on">
+                {study.tested.items.map((t, i) => (
+                  <li
+                    key={t}
+                    data-animate="slap"
+                    style={{ "--d": `${i * 35}ms` } as CSSProperties}
+                    className="inline-flex items-center gap-1.5 rounded-full border-[3px] border-[var(--die)] bg-surface px-3 py-1 font-mono text-[13px] shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]"
+                  >
+                    <Check className="text-[12px] text-[#3d7a00] night:text-lime" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Decisions: notes taped into the file */}
           <h3 className="mt-[clamp(64px,8vw,112px)] font-serif text-[clamp(26px,2.6vw,36px)] italic">Decisions that mattered</h3>
@@ -361,31 +308,14 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
         </section>
       )}
 
-      {/* What's next */}
-      {study.upcoming && (
-        <section data-section="Up next" className="px-gutter py-[clamp(40px,6vw,80px)]">
-          <div className="mx-auto max-w-[1320px]">
-            <h2 className="font-serif text-[clamp(26px,2.6vw,36px)] italic">On the bench next</h2>
-            <ul className="mt-6 flex flex-col gap-3">
-              {study.upcoming.map((u, i) => (
-                <li key={u} data-animate="rise" style={{ "--d": `${i * 60}ms` } as CSSProperties} className="flex items-center gap-3 text-[clamp(18px,1.6vw,22px)] font-medium tracking-[-0.01em]">
-                  <span className={cn("size-2.5 shrink-0 rounded-full", brand.dot)} />
-                  {u}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-
       {/* The next file's tab */}
-      <section className="px-gutter pt-[clamp(32px,5vw,64px)] pb-[clamp(96px,10vw,150px)]">
+      <section className="px-gutter pt-[clamp(32px,5vw,64px)] pb-[clamp(40px,5vw,72px)]">
         <div className="mx-auto max-w-[1320px]">
           <TransitionLink href={`/work/${next.slug}`} transitionLabel={next.name} data-fly-card="" className="case-next group block">
             <span className={cn("inline-block rounded-t-[14px] border-[4px] border-b-0 border-[var(--die)] px-4 pt-2 pb-3 font-mono text-[13px] tracking-wider uppercase", nextBrand.fill, nextBrand.onFill)}>
               Next file
             </span>
-            <span className={cn("case-next-body relative -mt-[2px] flex items-center justify-between gap-6 overflow-hidden rounded-[24px] rounded-tl-none border-[5px] border-[var(--die)] p-[clamp(20px,3vw,40px)]", nextBrand.fill, nextBrand.onFill)}>
+            <span data-fly-sheet="" className={cn("case-next-body relative -mt-[2px] flex items-center justify-between gap-6 overflow-hidden rounded-[24px] rounded-tl-none border-[5px] border-[var(--die)] p-[clamp(20px,3vw,40px)]", nextBrand.fill, nextBrand.onFill)}>
               <span>
                 <span className="block font-mono text-[13px] tracking-wide uppercase opacity-80">
                   Case {String(next.order).padStart(2, "0")}
@@ -402,6 +332,23 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
           </TransitionLink>
         </div>
       </section>
+
+      <CuriousEnd
+        kicker="Still curious?"
+        seed={`Tell me more about ${study.name}`}
+        className="px-gutter pb-[clamp(110px,12vw,170px)]"
+        title={
+          <>
+            Ask anything about{" "}
+            <span className="whitespace-nowrap">
+              <Sticker size="word" tone="lavender" tilt={-2}>
+                {study.name}
+              </Sticker>
+              .
+            </span>
+          </>
+        }
+      />
     </main>
   );
 }

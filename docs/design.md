@@ -81,14 +81,14 @@ The home page stays one of a kind: its lifted sheet, scroll peel, reactive headl
 
 The folder from the work page, open, in the project's own colours (each page wears its brand; site chrome stays the same).
 - **The opened file:** a "CASE 01 / 03" tab on a big brand-coloured sheet that unfolds from the top on arrival; "All work" back link. Left: year, the name huge, the plain summary, and an index card clipped on at a slight angle (role, when, links) with the status stamped on in red like a rubber stamp (it thumps in). Right: the project's artwork (the stage the work-page artwork flies into).
-- **Evidence:** the four stats as die-cut paper tiles that slap in.
 - **What it does:** "In plain *words*." with the intro pinned on the left while the numbered points scroll on the right.
 - **How it works:** "Under the *hood*." then the technical summary revealing word by word, then the pipeline: numbered dots in the brand colour joined by a line that fills as you scroll (scroll-driven; vertical on phones).
 - **Decisions that mattered:** notes taped into the file (sunflower, lavender, lime, paper), slightly askew, with a strip of tape each; tinted at night.
 - **Exhibit A:** PatentIQ's rubric as bars that fill in; Arcee's gated phases as rows with stamps (gate passed, in progress, next).
 - **Next file:** the next project's tab and sheet in its colours, "Open it →"; its artwork flies into the next page. No contact block.
-- **Concrete over vague (2026-11-14):** each file shows what the project really is, from the repos: real numbers with what they measured; **The kit** ("What's in the *box*": Arcee's 110 tools by family, PatentIQ's students/mentors/reports); the real eval tasks it's tested on (mono chips with ticks); **The rules** ("What it *won't* do": Arcee's never-list as struck-through red stamps, plus its guard rules); gate rows with measured results; **From the work log** (true bugs and fixes); **On the bench next**. Optional blocks render only when a project has them.
-- **Getting there:** a transition into a case study covers the page in that project's colours (the artwork flies over it), not violet. On the work page the case files stack as you scroll (tablet up).
+- **Concrete over vague (2026-11-14):** each file shows what the project really is, from the repos: the real eval tasks it's tested on (mono chips with ticks, after the pipeline); **The rules** ("What it *won't* do": Arcee's never-list as struck-through red stamps, plus its guard rules); gate rows with measured results; **From the work log** (true bugs and fixes). Dropped as fluff: stat cards with dots, "The kit", "On the bench next" (the numbers stay in the data for Arcee the chatbot). Optional blocks render only when a project has them.
+- **Ending:** under the next file, the same "Still curious?" block as the work page (`CuriousEnd`): "Ask anything about *Name*." with "Ask Arcee about it" and "The person behind it".
+- **Getting there:** from a card in the project's colours (work-page file, home poster, next file), the transition is seamless: no slap, no peel, no white frame or tilt. The card's coloured panel opens out to fill the screen (one clip), the artwork floats on it, then the colour fades into the page as the artwork glides into the stage. Other routes into a case study use the slap in the project's colours. On the work page the case files stack as you scroll (tablet up).
 
 ## 3. Colour
 
