@@ -70,7 +70,6 @@ const JSON_LD = {
       url: SITE_URL,
       jobTitle: SITE.role,
       email: `mailto:${SITE.email}`,
-      address: { "@type": "PostalAddress", addressLocality: "Delhi", addressCountry: "IN" },
       alumniOf: { "@type": "CollegeOrUniversity", name: "Lovely Professional University" },
       sameAs: [SITE.socials.github, SITE.socials.linkedin, SITE.socials.x],
       knowsAbout: ["Machine learning", "LLM fine-tuning", "AI agents", "Full-stack web development", "Next.js", "PyTorch"],

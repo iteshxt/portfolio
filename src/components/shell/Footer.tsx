@@ -26,7 +26,7 @@ export async function Footer() {
       <div className="mx-auto grid max-w-[1440px] gap-10 md:grid-cols-[1.3fr_1fr_1fr]">
         <div>
           <p className="font-serif text-[clamp(44px,6vw,88px)] italic leading-[0.9]">itesh</p>
-          <p className="mt-3 max-w-xs text-fg-muted">{SITE.role}, based in {SITE.location.split(",")[0]}.</p>
+          <p className="mt-3 max-w-xs text-fg-muted">{SITE.role}.</p>
         </div>
 
         <nav aria-label="Elsewhere">
@@ -52,10 +52,9 @@ export async function Footer() {
         </Suspense>
       </div>
 
-      <div className="mx-auto mt-14 flex max-w-[1440px] flex-wrap justify-between gap-3 text-[13px] text-fg-muted">
-        <p>© {year} {SITE.name}</p>
-        <p>Built by hand with Next.js. Peel the corner for the night shift. Psst: press ~</p>
-      </div>
+      <p className="mx-auto mt-14 max-w-[1440px] text-[13px] text-fg-muted">
+        © {year} {SITE.name}
+      </p>
     </footer>
   );
 }

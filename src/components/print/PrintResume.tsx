@@ -16,7 +16,7 @@ export function PrintResume() {
         <h1>{SITE.name}</h1>
         <p className="pr-role">{SITE.role}</p>
         <p className="pr-contact">
-          {SITE.email} · linkedin.com/in/iteshxt · github.com/iteshxt · iteshxt.me · {SITE.location}
+          {SITE.email} · linkedin.com/in/iteshxt · github.com/iteshxt · iteshxt.me
         </p>
       </header>
 

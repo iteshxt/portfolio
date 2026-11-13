@@ -23,7 +23,7 @@ export function buildCorpus(): Chunk[] {
     id: "about-itesh",
     title: "Who Itesh is",
     url: "/about",
-    text: `${SITE.name} is an ${SITE.role} based in ${SITE.location}. He fine-tunes models, builds agents and ships products. He co-founded DiaLabs, an open-source AI/ML organisation. He studies B.Tech Computer Science at Lovely Professional University (CGPA 8.53). Email: ${SITE.email}.`,
+    text: `${SITE.name} is an ${SITE.role}. He fine-tunes models, builds agents and ships products. He co-founded DiaLabs, an open-source AI/ML organisation. He studies B.Tech Computer Science at Lovely Professional University (CGPA 8.53). Email: ${SITE.email}.`,
   });
 
   for (const e of EXPERIENCE) {

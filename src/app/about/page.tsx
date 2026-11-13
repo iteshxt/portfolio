@@ -27,7 +27,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-[1440px]">
           <RevealText className="max-w-[24ch] text-[clamp(28px,4vw,60px)] leading-[1.06] font-medium tracking-[-0.03em] [font-variation-settings:'wdth'_85]">
             <span className="day-only">
-              Computer science student at LPU, based in Delhi. Works across the model and the product: fine-tuning, evaluation, and the app people actually use.
+              Computer science student at LPU. Works across the model and the product: fine-tuning, evaluation, and the app people actually use.
             </span>
             <span className="night-only">
               Small commits, written decisions, evals before claims, and models that run locally whenever they can.

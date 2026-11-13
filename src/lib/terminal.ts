@@ -71,7 +71,7 @@ function help(): TermLine[] {
 function resume(): TermLine[] {
   return [
     line(`${SITE.name} · ${SITE.role}`, "accent"),
-    line(`${SITE.email} · ${SITE.location}`, "muted"),
+    line(SITE.email, "muted"),
     line(""),
     line("experience", "accent"),
     ...EXPERIENCE.map((e) => line(`  ${e.company} · ${e.role} · ${e.period}`)),
@@ -100,7 +100,7 @@ export function runCommand(raw: string, ctx: TermContext): TermResult {
       return {
         lines: [
           line(SITE.name, "accent"),
-          line(`${SITE.role}, ${SITE.location}.`),
+          line(`${SITE.role}.`),
           line("co-founder @ DiaLabs · 320+ leetcode · b.tech cse @ lpu"),
           ...(ctx.now ? [line(`currently: ${ctx.now.message} (${ctx.now.repo})`, "muted")] : []),
         ],
