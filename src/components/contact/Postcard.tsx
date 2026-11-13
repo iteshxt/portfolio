@@ -104,9 +104,9 @@ export function Postcard() {
             </svg>
             <span className="stamp postcard-stamp shrink-0 bg-violet text-white" aria-hidden="true">
               <span className="flex flex-col items-center justify-center gap-0.5 px-3 py-2">
-                <span className="font-mono text-[9px] tracking-widest opacity-80">NO. 01</span>
+                <span className="font-mono text-[10px] tracking-widest">NO. 01</span>
                 <span className="font-serif text-[28px] leading-none italic">itesh</span>
-                <span className="font-mono text-[9px] tracking-widest opacity-80">FIRST CLASS</span>
+                <span className="font-mono text-[10px] tracking-widest">FIRST CLASS</span>
               </span>
             </span>
           </div>

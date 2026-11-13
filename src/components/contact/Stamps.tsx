@@ -13,13 +13,13 @@ function StampFace({ tone, label, name, note, icon }: Omit<StampProps, "tilt" | 
   return (
     <span className={cn("stamp flex w-full", tone)}>
       <span className="flex w-full flex-col justify-between gap-5 p-4">
-        <span className="flex items-center justify-between font-mono text-[10px] tracking-widest uppercase opacity-80">
+        <span className="flex items-center justify-between font-mono text-[10px] font-semibold tracking-widest uppercase">
           {label}
           {icon}
         </span>
         <span>
           <span className="block text-[clamp(24px,2.2vw,32px)] leading-none font-semibold tracking-[-0.04em] [font-variation-settings:'wdth'_80]">{name}</span>
-          <span className="mt-1.5 block text-[13px] leading-snug opacity-80">{note}</span>
+          <span className="mt-1.5 block text-[13px] leading-snug">{note}</span>
         </span>
       </span>
     </span>
@@ -62,7 +62,6 @@ export function Stamps() {
           ref={mailRef}
           type="button"
           onClick={copy}
-          aria-label={copied ? "Email copied" : `Copy email address ${SITE.email}`}
           data-cursor={copied ? "Copied" : "Copy"}
           data-animate="slap"
           style={{ rotate: "-1.5deg" } as CSSProperties}

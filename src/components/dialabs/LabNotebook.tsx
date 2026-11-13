@@ -38,7 +38,8 @@ export function LabNotebook({ releases }: { releases: Release[] }) {
               <h3 className="text-[clamp(32px,3.8vw,56px)] leading-[0.95] font-semibold tracking-[-0.045em] [font-variation-settings:'wdth'_80]">{r.name}</h3>
               <p className="mt-4 max-w-[34ch] font-serif text-[clamp(21px,2vw,28px)] leading-[1.2] italic">&ldquo;{r.question}&rdquo;</p>
             </div>
-            <dl className="flex flex-col gap-4 text-[15px] leading-snug">
+            <div className="flex flex-col gap-4 text-[15px] leading-snug">
+            <dl className="flex flex-col gap-4">
               <div>
                 <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Method</dt>
                 <dd className="mt-1">{r.night}</dd>
@@ -47,6 +48,7 @@ export function LabNotebook({ releases }: { releases: Release[] }) {
                 <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Result</dt>
                 <dd className="mt-1">{r.result}</dd>
               </div>
+            </dl>
               <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-3">
                 <span className="notebook-stamp rounded-[5px] border-[2.5px] px-2.5 py-0.5 font-mono text-[12px] font-semibold tracking-wider uppercase">{r.stamp}</span>
                 {r.links.map((l) => (
@@ -55,7 +57,7 @@ export function LabNotebook({ releases }: { releases: Release[] }) {
                   </a>
                 ))}
               </div>
-            </dl>
+            </div>
           </li>
         ))}
       </ol>

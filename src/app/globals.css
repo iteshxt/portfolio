@@ -1692,11 +1692,14 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 /* A rubber stamp: ink-coloured outline, slightly askew and faded at the edges. */
 .case-status-stamp {
-  color: var(--tomato);
+  color: #c23a1f;
   border-color: currentColor;
   background: var(--surface);
   rotate: -2.5deg;
   animation: stamp-in 0.45s var(--ease-slap) 1.1s backwards;
+}
+[data-shift="night"] .case-status-stamp {
+  color: #ff8f7a;
 }
 @keyframes stamp-in {
   from {
@@ -2162,8 +2165,8 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   animation: toast-in 0.45s var(--ease-slap) both;
 }
 @keyframes toast-in {
+  /* Motion only, no fade: the text keeps full contrast from the first frame. */
   from {
-    opacity: 0;
     transform: translateY(16px) rotate(-3deg) scale(0.9);
   }
 }

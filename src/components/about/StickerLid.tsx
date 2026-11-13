@@ -45,8 +45,8 @@ const STICKERS: LidSticker[] = [
     label: "Ubuntu",
     at: [31, 13, 9],
     shape: "badge",
-    className: "rounded-full bg-[#E95420] px-4 py-2 text-white",
-    face: <span className="font-semibold">ubuntu</span>,
+    className: "rounded-full bg-[#E95420] px-4 py-1.5 text-white",
+    face: <span className="text-[20px] font-bold">ubuntu</span>,
     story: { title: "Daily driver: Ubuntu and GNOME", body: "Which is why Arcee is built for Ubuntu, GNOME and Wayland first: it had to work on the machine it was written on." },
   },
   {
@@ -113,7 +113,7 @@ const STICKERS: LidSticker[] = [
   },
   {
     id: "typescript",
-    label: "TypeScript",
+    label: "TS, TypeScript",
     at: [53, 44, -3],
     shape: "word",
     className: "rounded-[14px] bg-[#3178C6] px-4 pt-1.5 pb-2.5 text-white",

@@ -69,29 +69,32 @@ export function CaseStudyView({ study, project, next }: { study: CaseStudy; proj
                 <p className="mt-5 max-w-[34ch] text-[clamp(17px,1.5vw,22px)] leading-snug">{study.summary.day}</p>
               </div>
               {/* The index card clipped to the file, with its status stamped on. */}
-              <dl className="case-card relative grid max-w-[460px] gap-x-6 gap-y-3 rounded-[16px] bg-surface p-5 pt-[60px] text-fg sm:grid-cols-2">
-                <div>
-                  <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Role</dt>
-                  <dd className="mt-0.5 text-[15px] leading-snug">{study.role}</dd>
-                </div>
-                <div>
-                  <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">When</dt>
-                  <dd className="mt-0.5 text-[15px] leading-snug">{study.timeline}</dd>
-                </div>
-                <div className="sm:col-span-2">
-                  <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Links</dt>
-                  <dd className="mt-1 flex flex-wrap gap-x-5 gap-y-1 text-[15px] font-semibold">
-                    {links.map((l) => (
-                      <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1">
-                        <Scribble>{l.label}</Scribble> <ArrowUpRight className="text-[13px]" />
-                      </a>
-                    ))}
-                  </dd>
-                </div>
-                <p aria-label={`Status: ${study.status}`} className="case-status-stamp absolute top-3.5 right-4 left-5 w-fit max-w-[calc(100%-36px)] rounded-[6px] border-[3px] px-2.5 py-1 text-center font-mono text-[12px] leading-tight font-semibold tracking-wider uppercase">
+              <div className="case-card relative max-w-[460px] rounded-[16px] bg-surface p-5 pt-[60px] text-fg">
+                <p className="case-status-stamp absolute top-3.5 right-4 left-5 w-fit max-w-[calc(100%-36px)] rounded-[6px] border-[3px] px-2.5 py-1 text-center font-mono text-[12px] leading-tight font-semibold tracking-wider uppercase">
+                  <span className="sr-only">Status: </span>
                   {study.status}
                 </p>
-              </dl>
+                <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+                  <div>
+                    <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Role</dt>
+                    <dd className="mt-0.5 text-[15px] leading-snug">{study.role}</dd>
+                  </div>
+                  <div>
+                    <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">When</dt>
+                    <dd className="mt-0.5 text-[15px] leading-snug">{study.timeline}</dd>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <dt className="font-mono text-[11px] tracking-wider text-fg-muted uppercase">Links</dt>
+                    <dd className="mt-1 flex flex-wrap gap-x-5 gap-y-1 text-[15px] font-semibold">
+                      {links.map((l) => (
+                        <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1">
+                          <Scribble>{l.label}</Scribble> <ArrowUpRight className="text-[13px]" />
+                        </a>
+                      ))}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
             </div>
             <StarStage slug={study.slug} className="min-h-[300px] night:[filter:saturate(0.85)_brightness(0.88)] lg:min-h-[560px]" />
           </div>
