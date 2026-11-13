@@ -7,7 +7,7 @@ import { ArrowDown, ArrowUpRight, Spark } from "@/components/icons";
 import { SectionTitle } from "@/components/type/SectionTitle";
 import { ScrollButton } from "@/components/ui/ScrollButton";
 import { Sticker } from "@/components/ui/Sticker";
-import { DIALABS_URL, RELEASES, TEAM_RELEASES } from "@/content/dialabs";
+import { DIALABS_SITE, DIALABS_URL, RELEASES, TEAM_RELEASES } from "@/content/dialabs";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
@@ -45,14 +45,24 @@ export default function DiaLabsPage() {
                 Open the notebook
                 <ArrowDown />
               </ScrollButton>
-              <a href={DIALABS_URL} target="_blank" rel="noreferrer" className="btn btn-paper">
-                DiaLabs on GitHub
+              <a href={DIALABS_SITE} target="_blank" rel="noreferrer" className="btn btn-paper">
+                Visit dialabs.tech
                 <ArrowUpRight />
               </a>
             </div>
           </div>
           <div data-animate="slap" style={{ "--d": "200ms" } as CSSProperties} className="relative flex justify-center lg:justify-end">
             <LabBot />
+            {/* The lab's address, stuck on the edge of its sticker like a URL sticker on a laptop. */}
+            <a
+              href={DIALABS_SITE}
+              target="_blank"
+              rel="noreferrer"
+              data-cursor="Visit the lab"
+              className="lab-url absolute right-[6%] bottom-[6%] inline-flex items-center gap-1.5 rounded-[12px] border-[4px] border-white bg-ink px-3.5 py-1.5 font-mono text-[clamp(13px,1.2vw,16px)] font-semibold text-lime shadow-[0_12px_22px_-10px_rgb(0_0_0/0.55)] lg:right-0"
+            >
+              dialabs.tech <ArrowUpRight className="text-[12px]" />
+            </a>
             <p aria-hidden="true" className="labbot-note absolute top-[2%] left-0 flex items-start gap-1 text-accent-text lg:-left-[4%]">
               <span className="-rotate-[8deg] font-hand text-[clamp(22px,2vw,28px)] leading-none whitespace-nowrap">it&rsquo;s watching you</span>
               <svg viewBox="0 0 60 48" className="mt-3 w-[46px] overflow-visible">
@@ -99,7 +109,11 @@ export default function DiaLabsPage() {
             .
           </SectionTitle>
           <div className="flex flex-wrap gap-3">
-            <a href={DIALABS_URL} target="_blank" rel="noreferrer" className="btn btn-ink">
+            <a href={DIALABS_SITE} target="_blank" rel="noreferrer" className="btn btn-ink">
+              Visit the lab
+              <ArrowUpRight />
+            </a>
+            <a href={DIALABS_URL} target="_blank" rel="noreferrer" className="btn btn-paper">
               Read the code
               <ArrowUpRight />
             </a>

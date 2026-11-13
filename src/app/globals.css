@@ -1060,6 +1060,16 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 .labbot:hover {
   rotate: -3deg;
 }
+.lab-url {
+  rotate: -6deg;
+  transition:
+    rotate 0.4s var(--ease-slap),
+    scale 0.3s var(--ease-expo-out);
+}
+.lab-url:hover {
+  rotate: -2deg;
+  scale: 1.06;
+}
 /* Graph paper with a red margin line, like a lab notebook. */
 .notebook {
   background-image:

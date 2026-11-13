@@ -17,6 +17,8 @@ export type Release = {
 };
 
 export const DIALABS_URL = "https://github.com/DiaLabs";
+/** The lab's own website. */
+export const DIALABS_SITE = "https://www.dialabs.tech";
 
 export const RELEASES: Release[] = [
   {
@@ -93,7 +95,7 @@ export const RELEASES: Release[] = [
     result: "Live, in a retro-brutalist style he designed.",
     stamp: "Live",
     links: [
-      { label: "Live", href: "https://dialabs-home.vercel.app" },
+      { label: "dialabs.tech", href: "https://www.dialabs.tech" },
       { label: "Code", href: "https://github.com/DiaLabs/dialabs-home" },
     ],
   },

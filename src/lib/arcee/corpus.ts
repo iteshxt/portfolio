@@ -1,6 +1,6 @@
 import { ARCEE_FACTS } from "@/content/arcee-facts";
 import { CASE_STUDIES } from "@/content/case-studies";
-import { DIALABS_URL, RELEASES, TEAM_NOTE } from "@/content/dialabs";
+import { DIALABS_SITE, DIALABS_URL, RELEASES, TEAM_NOTE } from "@/content/dialabs";
 import { ACHIEVEMENTS, CERTIFICATES, EDUCATION, EXPERIENCE, SKILLS } from "@/content/profile";
 import { ARCHIVE_PROJECTS, STAR_PROJECTS, type Project } from "@/content/projects";
 import { SITE } from "@/content/site";
@@ -115,7 +115,7 @@ export function buildCorpus(): Chunk[] {
     id: "dialabs",
     title: "DiaLabs",
     url: "/dialabs",
-    text: `Itesh co-founded DiaLabs (${DIALABS_URL}), an open-source AI/ML organisation that releases free AI products and developer tools. Releases he worked on: ${RELEASES.map((r) => `${r.name} (${r.kind}): ${r.day}`).join(" ")} ${TEAM_NOTE}`,
+    text: `Itesh co-founded DiaLabs (website ${DIALABS_SITE}, code ${DIALABS_URL}), an open-source AI/ML organisation that releases free AI products and developer tools. Releases he worked on: ${RELEASES.map((r) => `${r.name} (${r.kind}): ${r.day}`).join(" ")} ${TEAM_NOTE}`,
   });
 
   ARCEE_FACTS.forEach((f, i) => chunks.push({ id: `fact-${i}`, title: f.title, url: "/", text: f.text }));
@@ -131,6 +131,7 @@ export function allowedUrls(): Set<string> {
     SITE.socials.linkedin,
     SITE.socials.x,
     DIALABS_URL,
+    DIALABS_SITE,
   ]);
   for (const p of [...STAR_PROJECTS, ...ARCHIVE_PROJECTS]) {
     if (p.links.live) urls.add(p.links.live);

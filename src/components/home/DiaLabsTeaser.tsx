@@ -5,7 +5,7 @@ import { TransitionLink } from "@/components/transition/TransitionLink";
 import { SectionTitle } from "@/components/type/SectionTitle";
 import { PeelReveal } from "@/components/ui/PeelReveal";
 import { Sticker } from "@/components/ui/Sticker";
-import { RELEASES } from "@/content/dialabs";
+import { DIALABS_SITE, RELEASES } from "@/content/dialabs";
 import type { CSSProperties } from "react";
 
 // Covers must stay opaque: they hide the details underneath (night tints are mixed, not translucent).
@@ -39,10 +39,15 @@ export function DiaLabsTeaser() {
             <p className="max-w-md text-[clamp(17px,1.5vw,21px)] leading-snug">
               An open-source AI/ML organisation that releases free AI products and developer tools. Peel a sticker to see what each one is.
             </p>
-            <TransitionLink href="/dialabs" transitionLabel="DiaLabs" className="btn btn-paper">
-              Inside the lab
-              <ArrowRight />
-            </TransitionLink>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+              <TransitionLink href="/dialabs" transitionLabel="DiaLabs" className="btn btn-paper">
+                Inside the lab
+                <ArrowRight />
+              </TransitionLink>
+              <a href={DIALABS_SITE} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-[15px] font-medium">
+                <Scribble inverse>dialabs.tech</Scribble> <ArrowUpRight className="text-[14px]" />
+              </a>
+            </div>
           </div>
           <ul className="grid gap-x-5 gap-y-6 sm:grid-cols-2">
             {RELEASES.map((r, i) => (

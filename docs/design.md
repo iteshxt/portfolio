@@ -100,9 +100,9 @@ The folder from the work page, open, in the project's own colours (each page wea
 
 ### 2.13 DiaLabs (2026-11-14): the lab notebook
 
-- **Hero:** serif "DiaLabs · co-founded", "A lab that works in the *open*.", one line ("Every release starts as a question"), "Open the notebook" (ink, glides down) and "DiaLabs on GitHub" (paper). Beside it, the lab's own robot mark (from its site icon) as a big violet die-cut sticker: its eyes follow the cursor, it blinks every few seconds, the antenna light pulses lime; tilted, it rocks the other way on hover. A handwritten "it's watching you" points at it.
+- **Hero:** serif "DiaLabs · co-founded", "A lab that works in the *open*.", one line ("Every release starts as a question"), "Open the notebook" (ink, glides down) and "Visit dialabs.tech" (paper). Beside it, the lab's own robot mark (from its site icon) as a big violet die-cut sticker: its eyes follow the cursor, it blinks every few seconds, the antenna light pulses lime; tilted, it rocks the other way on hover. A handwritten "it's watching you" points at it, and a black `dialabs.tech` URL sticker (lime mono) is stuck on its edge, linking to the lab's website.
 - **The notebook:** "Every release was a *question*." A sheet of graph paper with a red margin line. Each release is a numbered experiment (EXP 01…): a kind sticker, the name, the question it set out to answer in serif italic ("Can a browser turn a football clip into match stats without uploading it?"), then Method, Result, a green rubber stamp (Live, Live · beta, On Hugging Face) and its links. Below: "Also from the lab, by the rest of the team" as chips (credited, not claimed).
-- **Ending:** "Next experiment": "Everything here is *open*." with "Read the code" and "Ask Arcee about the lab".
+- **Ending:** "Next experiment": "Everything here is *open*." with "Visit the lab" (dialabs.tech), "Read the code" (GitHub) and "Ask Arcee about the lab". The home teaser links dialabs.tech too, and Arcee knows the address.
 
 ## 3. Colour
 
