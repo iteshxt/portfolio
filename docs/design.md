@@ -46,6 +46,10 @@ The same sequence runs as the site intro on first load, starting from a sticker 
 
 On the home hero, a handwritten "peel here" (Caveat) with a squiggly arrow points at the corner. It writes itself in once the intro has peeled (2.2 s), then the arrow nudges towards the corner every few seconds. It's hidden for good once the visitor has peeled (the saved shift sets `data-peeled` on `<html>`). Reduced motion: shown still.
 
+### 2.5 Home hero (2026-11-13)
+
+No giant cycling headline and no day/night copy. A small serif "Hi, I'm Itesh." then one medium statement, "I build agents, train models and ship products.", where the three nouns are tilted, flickable word stickers (violet, lime, sunflower). Below: the "right now" line, "See the work" / "Ask Arcee", the latest push and the scroll hint. The loader's four die-cut shapes stay stuck around the edges once it peels (slap in, then drift; hidden on phones). The "peel here" hint rests after a peel for the rest of the visit and returns on the next one.
+
 ## 3. Colour
 
 ### 3.1 Palette
@@ -67,6 +71,10 @@ On the home hero, a handwritten "peel here" (Caveat) with a squiggly arrow point
 | `line-day` / `line-night` | `#E3E2E6` / `#2A2535` | Hairlines |
 
 Electric violet is the default. Ultraviolet `#5A2BFF` and grape pop `#A032FF` stay as fallbacks if it doesn't hold up on real screens.
+
+### 3.4 Star project colours
+
+Each star project uses its own app's colours in both themes (tokens `--arcee`, `--arcee-deep`, `--patentiq`, `--diachat`; classes in `lib/brand.ts`): Arcee is an amber (#FF8C1A) frame around its warm near-black (#1C1108), PatentIQ its logo indigo (#452CF9), DiaChat its amber (#FFB000). Share images use the darker shades for headline text.
 
 ### 3.2 Rules
 
@@ -149,7 +157,7 @@ Reduced motion (`prefers-reduced-motion: reduce`): no smooth scroll, no parallax
   - DiaChat: a squishy speech bubble with a wobbly jelly body
   - Archive: die-cut stickers as flat 3D cards that bend slightly when grabbed
 - Objects react to the cursor (look-at, squish, wobble) and scroll. On a case study, the object flies from its card to the hero during the transition.
-- *As built (2026-11-13):* cards and the stage's 2D layer show each project's real artwork instead of placeholder drawings. Arcee: the particle-ring animation from the Arcee app (`wave-active-dark.webp`, animated WebP, with a still frame for reduced motion). PatentIQ: its document-and-brain mark (from the PatentIQ repo) as a CSS mask, with a lime scan passing over the strokes, the circuit nodes lighting in turn and the glow pulse from its own loader. DiaChat: its preloader on a loop (bubble draws, heart draws and fills, beats, fades), white with a soft shadow on sunflower. All CSS; no JavaScript. The 3D objects still take over on case-study stages on capable devices.
+- *As built (2026-11-13):* cards and the stage's 2D layer show each project's real artwork instead of placeholder drawings. Arcee: the particle-ring animation from the Arcee app (`wave-active-dark.webp`, animated WebP, with a still frame for reduced motion). PatentIQ: its document-and-brain mark (from the PatentIQ repo) as a CSS mask, with a lime scan passing over the strokes, the circuit nodes lighting in turn and the glow pulse from its own loader. DiaChat: its preloader on a loop (bubble draws, heart draws and fills, beats, fades), white with a soft shadow on sunflower. All CSS; no JavaScript. The case-study stage shows the same artwork; the 3D objects and three.js were removed (2026-11-13).
 - Built with three.js through React Three Fiber; see spec §7 for performance rules.
 
 ## 8. Stickers, icons, photo

@@ -189,7 +189,7 @@ The name only; it's a separate thing from the Arcee agent project.
 
 ### 7.1 Home
 
-Intro loader + peel → hero cycling through two-line statements ("AGENTS / that act"), with a one-line "right now" summary, "See the work" / "Ask Arcee" buttons, the latest GitHub push and a handwritten "peel here" pointing at the corner → short who-he-is statement → star projects (Arcee first), each with its real artwork animated → archive teaser (every sticker links to the live project or its code) → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
+Intro loader + peel → hero ("Hi, I'm Itesh." and "I build agents, train models and ship products." with the nouns as stickers), with a one-line "right now" summary, "See the work" / "Ask Arcee" buttons, the latest GitHub push and a handwritten "peel here" pointing at the corner → short who-he-is statement → star projects (Arcee first), each with its real artwork animated → archive teaser (every sticker links to the live project or its code) → DiaLabs teaser → experience snapshot → contact CTA → footer with the "currently building" feed.
 
 No CV material on the home page (decided 2026-11-13): no degree, scores, availability badge, location or local time anywhere on the site. Background lives on the about page and in the print resume.
 

@@ -211,7 +211,7 @@ Case studies are typed TypeScript content in `content/case-studies.ts` (changed 
 - `frameloop="demand"` when idle; render loops pause off-screen and when the tab is hidden; DPR is clamped to `[1, 1.75]`; drei's `PerformanceMonitor` lowers quality when the frame rate drops.
 - Models are compressed GLB (meshopt) with KTX2 textures where needed. Procedural geometry is preferred (the Arcee orb and the speech bubble are procedural).
 
-*As built (milestone 4):* `components/case/StarStage` server-renders the 2D drawing and, on capable devices, lazy-loads `components/three/StarScene` (`next/dynamic`, `ssr: false`) once the stage is near the viewport, then crossfades to it when the canvas is created. All three objects are procedural (no model files): `ArceeOrb` (six additive torus rings around an icosahedron wireframe), `PatentStamp` (box/cylinder/sphere stamp with a CanvasTexture "VERIFIED" impression drawn in Instrument Serif) and `ChatBubble` (ellipsoid with back-face ink outline and a damped-spring squash). Hover speeds up or tilts the object towards the pointer; a click pokes it. `lib/device.ts` decides `off | lite | full`; `off` (reduced motion, Save-Data, ≤2 GB memory, or no WebGL2) keeps the 2D drawing. three.js ships as a separate ~244 KB gzipped chunk only on case-study pages. R3F currently logs a THREE.Clock deprecation warning from three r187; it's harmless and comes from the library.
+*Removed 2026-11-13:* the three.js stage objects (ArceeOrb, PatentStamp, ChatBubble), `StarScene`, `lib/device.ts` and the three / R3F / drei packages. `components/case/StarStage` is now a server component showing the project's real artwork (`StarVisual`), the same piece the card shows, so case-study pages ship no 3D.
 
 ## 8. Arcee chatbot
 
