@@ -96,11 +96,14 @@ const STICKERS: LidSticker[] = [
     label: "A cat sticker",
     at: [93, 12, 12],
     shape: "round",
-    // The cat SVG is already die-cut, so it skips the frame.
-    className: "lid-bare size-[clamp(62px,6vw,88px)]",
-    // eslint-disable-next-line @next/next/no-img-element -- a tiny local SVG, nothing to optimise
-    face: <img src="/stickers/happy.svg" alt="" width={88} height={88} className="size-full" />,
-    story: { title: "The chatbot replies in cats", body: "Arcee, the guide on this site, answers questions about the work and sends a cat sticker to match its mood. Ask it something.", href: "/arcee", link: "Ask Arcee" },
+    className: "size-[clamp(66px,6.4vw,92px)] rounded-[18px]",
+    face: (
+      <picture className="block size-full">
+        <source srcSet="/stickers/cats/hype-still.webp" media="(prefers-reduced-motion: reduce)" />
+        <img src="/stickers/cats/hype.webp" alt="" width={92} height={92} className="size-full object-cover" />
+      </picture>
+    ),
+    story: { title: "The chatbot replies in cats", body: "Arcee, the guide on this site, answers questions about the work and sends one of his cats to match its mood. Ask it something.", href: "/arcee", link: "Ask Arcee" },
   },
   {
     id: "python",
@@ -149,14 +152,18 @@ const STICKERS: LidSticker[] = [
     story: { title: "Fine-tuning, on purpose", body: "Small models tuned for one job beat big ones guessing at it, as long as there's an eval to prove it." },
   },
   {
-    id: "cat-thinking",
-    label: "A thinking cat",
+    id: "cat-judging",
+    label: "A judging cat",
     at: [22, 60, -10],
     shape: "round",
-    className: "lid-bare size-[clamp(62px,6vw,88px)]",
-    // eslint-disable-next-line @next/next/no-img-element -- a tiny local SVG, nothing to optimise
-    face: <img src="/stickers/thinking.svg" alt="" width={88} height={88} className="size-full" />,
-    story: { title: "Seven moods, seven cats", body: "Arcee picks a cat for how it feels about your question: happy, smug, thinking, shocked, sleepy, love or nope." },
+    className: "size-[clamp(66px,6.4vw,92px)] rounded-[18px]",
+    face: (
+      <picture className="block size-full">
+        <source srcSet="/stickers/cats/judging-still.webp" media="(prefers-reduced-motion: reduce)" />
+        <img src="/stickers/cats/judging.webp" alt="" width={92} height={92} className="size-full object-cover" />
+      </picture>
+    ),
+    story: { title: "Six moods, six cats", body: "Arcee picks a cat for how it feels about your question: hype, judging, shush, crying, sobbing or ready to fight. Ask something nosy and see." },
   },
   {
     id: "nextjs",
@@ -205,13 +212,17 @@ const STICKERS: LidSticker[] = [
     },
   },
   {
-    id: "cat-sleepy",
-    label: "A sleepy cat",
+    id: "cat-shush",
+    label: "A shushing cat",
     at: [53, 91, 8],
     shape: "round",
-    className: "lid-bare size-[clamp(58px,5.4vw,80px)]",
-    // eslint-disable-next-line @next/next/no-img-element -- a tiny local SVG, nothing to optimise
-    face: <img src="/stickers/sleepy.svg" alt="" width={80} height={80} className="size-full" />,
+    className: "size-[clamp(62px,5.8vw,84px)] rounded-[18px]",
+    face: (
+      <picture className="block size-full">
+        <source srcSet="/stickers/cats/shush-still.webp" media="(prefers-reduced-motion: reduce)" />
+        <img src="/stickers/cats/shush.webp" alt="" width={84} height={84} className="size-full object-cover" />
+      </picture>
+    ),
     story: { title: "Awake at 3am?", body: "Open this site between 2 and 5 in the morning and it switches to night by itself, and admits it's awake too." },
   },
   {

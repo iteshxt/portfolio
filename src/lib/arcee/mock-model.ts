@@ -62,14 +62,14 @@ export function createMockArcee() {
           });
         } else if (/leave (a )?message|contact him|reach him/i.test(question)) {
           say("t1", "Sure. What's your name, how can he reach you, and what's the message?");
-          chunks.push({ type: "tool-call", toolCallId: `st-${++callId}`, toolName: "sticker", input: JSON.stringify({ mood: "love" }) });
+          chunks.push({ type: "tool-call", toolCallId: `st-${++callId}`, toolName: "sticker", input: JSON.stringify({ mood: "hype" }) });
         } else if (wantsNav && target) {
           say("t1", "On it, opening that page for you.");
           chunks.push({ type: "tool-call", toolCallId: `nav-${++callId}`, toolName: "navigate", input: JSON.stringify({ path: target }) });
         } else {
           const sentence = best ? best[4].split(/(?<=\.)\s/)[0] : "Itesh hasn't shared that yet.";
           say("t1", `(stand-in model) ${sentence}`);
-          chunks.push({ type: "tool-call", toolCallId: `st-${++callId}`, toolName: "sticker", input: JSON.stringify({ mood: "happy" }) });
+          chunks.push({ type: "tool-call", toolCallId: `st-${++callId}`, toolName: "sticker", input: JSON.stringify({ mood: "hype" }) });
         }
         chunks.push({ type: "finish", finishReason: { unified: "tool-calls", raw: undefined }, usage });
       }
