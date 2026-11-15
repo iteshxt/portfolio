@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { z } from "zod";
 import { limitMessage, visitorKey } from "@/lib/arcee/ratelimit";
+import { messageHtml, messageSubject, messageText } from "@/lib/email/message-email";
 
 /**
  * Leave-a-message endpoint (docs/spec.md §8.5): only called when the visitor
@@ -40,8 +41,9 @@ export async function POST(req: Request) {
     from: process.env.CONTACT_FROM_EMAIL || "Arcee <onboarding@resend.dev>",
     to,
     replyTo: EMAIL.test(contact) ? contact : undefined,
-    subject: via === "postcard" ? `A postcard from ${name}` : `New message via Arcee from ${name}`,
-    text: `${message}\n\n— ${name}\nContact: ${contact}\n\nSent from iteshxt.me ${via === "postcard" ? "on a postcard (contact page)" : "via Arcee"}.`,
+    subject: messageSubject({ name, via }),
+    html: messageHtml({ name, contact, message, via }),
+    text: messageText({ name, contact, message, via }),
   });
 
   if (error) return Response.json({ error: "send-failed" }, { status: 502 });
