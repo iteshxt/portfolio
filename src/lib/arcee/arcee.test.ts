@@ -134,12 +134,13 @@ describe("chat endpoint (stand-in model)", () => {
 });
 
 describe("draftMessage guard", () => {
-  it("refuses invented names and contacts", async () => {
+  it("sends invented names and contacts back as missing", async () => {
     const { arceeTools } = await import("./tools");
-    const schema = arceeTools.draftMessage.inputSchema as unknown as { safeParse: (v: unknown) => { success: boolean } };
-    expect(schema.safeParse({ name: "?", contact: "email", message: "hi" }).success).toBe(false);
-    expect(schema.safeParse({ name: "Bobby", contact: "bobby@example.com", message: "hi" }).success).toBe(false);
-    expect(schema.safeParse({ name: "Bobby", contact: "bobby@gmail.com", message: "hi" }).success).toBe(true);
+    const run = (input: object) => (arceeTools.draftMessage.execute as unknown as (i: object) => Promise<{ missing?: string[] }>)(input);
+    expect((await run({ name: "?", contact: "email", message: "hi" })).missing).toEqual(["their name", "how to reach them"]);
+    expect((await run({ name: "Bobby", contact: "bobby@example.com", message: "hi" })).missing).toEqual(["how to reach them"]);
+    expect((await run({ name: "Bobby" })).missing).toEqual(["how to reach them", "the message"]);
+    expect(await run({ name: "Bobby", contact: "bobby@gmail.com", message: "hi" })).toEqual({ name: "Bobby", contact: "bobby@gmail.com", message: "hi" });
   });
 });
 

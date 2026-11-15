@@ -28,8 +28,15 @@ function Sticker({ mood }: { mood: StickerMood }) {
   );
 }
 
+const STICKER_TEXT = /\(\s*sticker\s*[:=]\s*([a-z]+)\s*\)/i;
+const STICKER_TEXT_ALL = /\s*\(\s*sticker\s*[:=]\s*[a-z]+\s*\)/gi;
+
 /** The model is told to write plain text; this cleans up the markdown it sometimes slips in anyway. */
 function plain(text: string): string {
+  // gpt-oss's built-in refusal is flat and out of character; say it Arcee's way.
+  if (/^\s*I[’']m sorry,?( but)? I can[’']t (help|assist) with that\.?\s*$/i.test(text)) {
+    return "That one's off my map. Ask me about his projects, where he's worked or how to reach him.";
+  }
   return text
     .replace(/\*\*(.+?)\*\*/g, "$1")
     .replace(/__(.+?)__/g, "$1")
@@ -215,10 +222,26 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
   function renderPart(m: UIMessage, part: ToolPart & { text?: string; data?: unknown }, i: number) {
     const key = `${m.id}-${i}`;
     if (part.type === "text" && part.text) {
+      if (m.role !== "assistant") {
+        return (
+          <p key={key} className="whitespace-pre-wrap">
+            {part.text}
+          </p>
+        );
+      }
+      // The model sometimes writes "(sticker:shush)" instead of calling the tool: show the real sticker.
+      const written = part.text.match(STICKER_TEXT);
+      const mood = written?.[1]?.toLowerCase() as StickerMood | undefined;
+      const text = plain(part.text.replace(STICKER_TEXT_ALL, ""));
       return (
-        <p key={key} className="whitespace-pre-wrap">
-          {m.role === "assistant" ? <RichText text={plain(part.text)} allowed={allowed} /> : part.text}
-        </p>
+        <div key={key}>
+          {mood && mood in STICKERS && <Sticker mood={mood} />}
+          {text && (
+            <p className="whitespace-pre-wrap">
+              <RichText text={text} allowed={allowed} />
+            </p>
+          )}
+        </div>
       );
     }
     if (part.type === "tool-sticker" && part.state === "output-available") {
@@ -236,7 +259,10 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
       );
     }
     if (part.type === "tool-draftMessage" && part.state === "output-available") {
-      return <DraftCard key={key} draft={part.output as Draft} />;
+      // Incomplete drafts come back as { missing }: Arcee asks for those instead.
+      const out = part.output as Partial<Draft> & { missing?: string[] };
+      if (out.missing || !out.name || !out.contact || !out.message) return null;
+      return <DraftCard key={key} draft={out as Draft} />;
     }
     return null;
   }
@@ -269,6 +295,11 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
             </div>
           );
         })}
+        {!busy && !error && messages.length > 0 && messages[messages.length - 1].role === "user" && (
+          <div className="self-start rounded-[18px] rounded-bl-md border-[3px] border-white bg-surface px-4 py-2.5 text-fg-muted shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]">
+            My brain blanked on that one. Ask me again?
+          </div>
+        )}
         {status === "submitted" && (
           <div className="flex items-center gap-2 self-start" aria-label="Arcee is thinking">
             <picture className="arcee-thinking block size-14 overflow-hidden rounded-[12px] border-[3px] border-[var(--die)] shadow-[0_6px_12px_-8px_rgb(0_0_0/0.5)]">

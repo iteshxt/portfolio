@@ -39,6 +39,23 @@ function textOf(message: UIMessage | undefined): string {
     .trim();
 }
 
+/** A rough token count (about 4 characters per token, rounded up generously). */
+const tokens = (text: string) => Math.ceil(text.length / 3.6);
+/** Prompt + documents + conversation; the reply (maxOutputTokens) and tool schemas come on top. */
+const INPUT_BUDGET = 5500;
+
+function fitToBudget(instructions: string, messages: UIMessage[]): UIMessage[] {
+  const cost = (m: UIMessage) => tokens(JSON.stringify(m.parts));
+  let total = tokens(instructions) + messages.reduce((n, m) => n + cost(m), 0);
+  let start = 0;
+  // Always keep the latest message.
+  while (total > INPUT_BUDGET && start < messages.length - 1) {
+    total -= cost(messages[start]);
+    start += 1;
+  }
+  return messages.slice(start);
+}
+
 function cannedReply(text: string, mood?: StickerMood) {
   return createUIMessageStreamResponse({
     stream: createUIMessageStream({
@@ -85,10 +102,15 @@ export async function POST(req: Request) {
       .join(" "),
   );
 
+  // Stay well under Groq's 8,000-token limit per request: drop the oldest turns until the prompt,
+  // the documents and the conversation fit the budget, leaving room for the reply.
+  const instructions = buildInstructions(context, parsed.data.shift ?? "day");
+  const fitted = fitToBudget(instructions, messages);
+
   const result = streamText({
     model,
-    instructions: buildInstructions(context, parsed.data.shift ?? "day"),
-    messages: await convertToModelMessages(messages),
+    instructions,
+    messages: await convertToModelMessages(fitted),
     tools: arceeTools,
     stopWhen: isStepCount(3),
     maxOutputTokens: 600,

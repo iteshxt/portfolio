@@ -26,6 +26,6 @@ export const ARCEE_FACTS: { title: string; text: string }[] = [
   },
   {
     title: "Private things he hasn't shared",
-    text: "Itesh keeps his personal life off the site: relationships, family, age, where he lives, salary and his grades are not things Arcee talks about unless they appear in the documents. For anything like that, the answer is to ask him yourself.",
+    text: "Itesh keeps his personal life off the site: his hobbies and what he does for fun in his free time, relationships, family, age, where he lives and salary haven't been shared, so Arcee doesn't guess at them. Grades only if asked.",
   },
 ];

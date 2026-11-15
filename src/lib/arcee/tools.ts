@@ -25,21 +25,23 @@ export const arceeTools = {
     execute: async ({ mood }) => ({ mood }),
   }),
   draftMessage: tool({
-    description: "Prepare a message for Itesh once you know the visitor's name, how to reach them and their message. The visitor confirms and sends it.",
+    description:
+      "Prepare a message for Itesh. Only call it once the visitor has told you their name, how to reach them and their message. The visitor checks the card and presses Send.",
+    // Lenient on purpose: a strict schema makes Groq reject the whole reply when the model jumps the
+    // gun. Missing or invented details come back as `missing`, and the model asks for them instead.
     inputSchema: z.object({
-      name: z
-        .string()
-        .min(1)
-        .max(80)
-        .refine((v) => !PLACEHOLDER_NAME.test(v.trim()), "Ask the visitor for their real name."),
-      contact: z
-        .string()
-        .min(3)
-        .max(120)
-        .refine((v) => !PLACEHOLDER_CONTACT.test(v.trim()), "Ask the visitor how to reach them; don't invent it.")
-        .describe("Email or another way to reach them, exactly as the visitor gave it"),
-      message: z.string().min(1).max(1200),
+      name: z.string().max(80).optional().describe("The visitor's name, as they gave it"),
+      contact: z.string().max(120).optional().describe("Email or another way to reach them, exactly as the visitor gave it"),
+      message: z.string().max(1200).optional().describe("The message, in the visitor's words"),
     }),
-    execute: async (draft) => draft,
+    execute: async ({ name = "", contact = "", message = "" }) => {
+      const missing = [
+        (!name.trim() || PLACEHOLDER_NAME.test(name.trim())) && "their name",
+        (contact.trim().length < 3 || PLACEHOLDER_CONTACT.test(contact.trim())) && "how to reach them",
+        !message.trim() && "the message",
+      ].filter(Boolean) as string[];
+      if (missing.length) return { missing, note: `Don't draft yet. Ask the visitor for ${missing.join(" and ")}.` };
+      return { name: name.trim(), contact: contact.trim(), message: message.trim() };
+    },
   }),
 };
