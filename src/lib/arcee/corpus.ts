@@ -1,7 +1,7 @@
 import { ARCEE_FACTS } from "@/content/arcee-facts";
 import { CASE_STUDIES } from "@/content/case-studies";
 import { DIALABS_SITE, DIALABS_URL, RELEASES, TEAM_NOTE } from "@/content/dialabs";
-import { ACHIEVEMENTS, CERTIFICATES, EDUCATION, EXPERIENCE, SKILLS } from "@/content/profile";
+import { ACHIEVEMENTS, CERTIFICATES, EDUCATION, EXPERIENCE, PRINCIPLES, SKILLS } from "@/content/profile";
 import { ARCHIVE_PROJECTS, STAR_PROJECTS, type Project } from "@/content/projects";
 import { SITE } from "@/content/site";
 
@@ -19,13 +19,33 @@ function links(p: Project): string {
 export function buildCorpus(): Chunk[] {
   const chunks: Chunk[] = [];
 
+  // The core: always sent to the model, whatever the question.
   chunks.push({
     id: "about-itesh",
     title: "Who Itesh is",
     url: "/about",
-    text: `${SITE.name} is an ${SITE.role}. He fine-tunes models, builds agents and ships products. He co-founded DiaLabs, an open-source AI/ML organisation. He studies B.Tech Computer Science at Lovely Professional University (CGPA 8.53). Email: ${SITE.email}.`,
+    text: [
+      `${SITE.name} (people also call him Itesh) is an ${SITE.role}. He fine-tunes models, builds agents and ships the product around them.`,
+      `His three star projects, in order: ${STAR_PROJECTS.map((p) => `${p.name} (${p.day.replace(/\.$/, "")})`).join("; ")}. Arcee is the one he's proudest of: he built it solo.`,
+      `He worked as ${EXPERIENCE.map((e) => `${e.role} at ${e.company} (${e.period})`).join(" and ")}.`,
+      `He co-founded DiaLabs, an open-source AI/ML lab (${DIALABS_SITE}). He's a computer science student at Lovely Professional University.`,
+      `Besides the stars he has shipped ${ARCHIVE_PROJECTS.length} more projects. Email: ${SITE.email}.`,
+    ].join(" "),
   });
 
+  chunks.push({
+    id: "site-map",
+    title: "The site's pages",
+    url: "/",
+    text: "Pages on iteshxt.me: Home (/) with the hero, his star projects as posters, more projects, DiaLabs, experience and contact; Work (/work) with every project, the three case files and a shipping manifest; case studies for Arcee (/work/arcee), PatentIQ (/work/patentiq) and DiaChat (/work/diachat); About (/about), a laptop lid of stickers plus how he works and where he's worked; DiaLabs (/dialabs), the lab notebook; Contact (/contact), a postcard you can send; and this chat (/arcee).",
+  });
+
+  chunks.push({
+    id: "how-he-works",
+    title: "How Itesh works (house rules)",
+    url: "/about",
+    text: PRINCIPLES.map((p) => `${p.line} ${p.proof}`).join(" "),
+  });
   for (const e of EXPERIENCE) {
     chunks.push({
       id: `exp-${e.company.toLowerCase().replace(/\W+/g, "-")}`,
@@ -39,7 +59,7 @@ export function buildCorpus(): Chunk[] {
     id: "education",
     title: "Education",
     url: "/about",
-    text: EDUCATION.map((e) => `${e.detail} at ${e.school}, ${e.place} (${e.period}), ${e.score}.`).join(" "),
+    text: `${EDUCATION.map((e) => `${e.detail} at ${e.school} (${e.period}), ${e.score}.`).join(" ")} He's still studying there, so his CGPA can still change. Only share grades if someone asks for them directly.`,
   });
 
   chunks.push({
@@ -84,6 +104,17 @@ export function buildCorpus(): Chunk[] {
       url,
       text: cs.night.decisions.map((d) => `${d.title}: ${d.body}`).join(" "),
     });
+    if (cs.tested) {
+      chunks.push({ id: `star-${p.slug}-tested`, title: `${p.name}: what it's tested on`, url, text: `${cs.tested.caption} ${cs.tested.items.join(", ")}.` });
+    }
+    if (cs.guards) {
+      chunks.push({
+        id: `star-${p.slug}-guards`,
+        title: `${p.name}: safety rules`,
+        url,
+        text: `${cs.guards.caption} ${cs.guards.rules.map((r) => `${r.title}: ${r.body}`).join(" ")}${cs.guards.refused ? ` Refused outright: ${cs.guards.refused.join(", ")}.` : ""}`,
+      });
+    }
     if (cs.breakdown) {
       chunks.push({
         id: `star-${p.slug}-rubric`,
@@ -108,6 +139,15 @@ export function buildCorpus(): Chunk[] {
       title: p.name,
       url: "/work",
       text: `${p.name} (${p.category}, ${p.year}): ${p.day} How it works: ${p.night} Stack: ${p.stack.join(", ")}. Links: ${links(p)}.`,
+    });
+  }
+
+  for (const r of RELEASES) {
+    chunks.push({
+      id: `dialabs-${r.name.toLowerCase().replace(/\W+/g, "-")}`,
+      title: `DiaLabs release: ${r.name}`,
+      url: "/dialabs",
+      text: `${r.name} (${r.kind}, a DiaLabs release). The question: ${r.question} What it is: ${r.day} Method: ${r.night} Result: ${r.result} Links: ${r.links.map((l) => `${l.label}: ${l.href}`).join("; ")}.`,
     });
   }
 

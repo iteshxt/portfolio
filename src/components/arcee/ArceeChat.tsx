@@ -20,8 +20,23 @@ export const SUGGESTIONS = ["What's his best project?", "What did he do at Sutr?
 function Sticker({ mood }: { mood: StickerMood }) {
   const s = STICKERS[mood];
   if (!s) return null;
-  // eslint-disable-next-line @next/next/no-img-element -- tiny local SVG stickers; next/image adds nothing here
-  return <img src={s.src} alt={s.alt} width={96} height={96} className="sticker-pop float-right -mt-1 mb-1 ml-2 size-16 rotate-6" />;
+  return (
+    <picture className="sticker-pop float-right -mt-1 mb-1 ml-2 block size-20 rotate-6 overflow-hidden rounded-[14px] border-[3px] border-[var(--die)] shadow-[0_8px_14px_-8px_rgb(0_0_0/0.5)]">
+      <source srcSet={s.still} media="(prefers-reduced-motion: reduce)" />
+      <img src={s.src} alt={s.alt} width={80} height={80} className="size-full object-cover" />
+    </picture>
+  );
+}
+
+/** The model is told to write plain text; this cleans up the markdown it sometimes slips in anyway. */
+function plain(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/__(.+?)__/g, "$1")
+    .replace(/^\s*-{3,}\s*$/gm, "")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
 }
 
 function RichText({ text, allowed }: { text: string; allowed: Set<string> }) {
@@ -202,7 +217,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
     if (part.type === "text" && part.text) {
       return (
         <p key={key} className="whitespace-pre-wrap">
-          {m.role === "assistant" ? <RichText text={part.text} allowed={allowed} /> : part.text}
+          {m.role === "assistant" ? <RichText text={plain(part.text)} allowed={allowed} /> : part.text}
         </p>
       );
     }
@@ -236,21 +251,30 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
         aria-live="polite"
       >
         {page ? <Welcome page ask={ask} /> : <PanelWelcome ask={ask} />}
-        {messages.map((m) => (
-          <div
-            key={m.id}
-            className={cn(
-              "max-w-[88%] rounded-[18px] border-[3px] border-white px-4 py-2.5",
-              m.role === "user" ? "self-end rounded-br-md bg-violet text-white" : "self-start rounded-bl-md bg-surface shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]",
-            )}
-          >
-            {m.parts.map((p, i) => renderPart(m, p as ToolPart & { text?: string; data?: unknown }, i))}
-          </div>
-        ))}
+        {messages.map((m, idx) => {
+          // The model occasionally returns nothing; say so instead of showing an empty bubble.
+          const empty =
+            m.role === "assistant" &&
+            !(m.parts as ToolPart[]).some((p) => (p.type === "text" && (p as { text?: string }).text?.trim()) || p.type.startsWith("tool-") || p.type === "data-sticker");
+          if (empty && (busy && idx === messages.length - 1)) return null;
+          return (
+            <div
+              key={m.id}
+              className={cn(
+                "max-w-[88%] rounded-[18px] border-[3px] border-white px-4 py-2.5",
+                m.role === "user" ? "self-end rounded-br-md bg-violet text-white" : "self-start rounded-bl-md bg-surface shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]",
+              )}
+            >
+              {empty ? <p className="text-fg-muted">My brain blanked on that one. Ask me again?</p> : m.parts.map((p, i) => renderPart(m, p as ToolPart & { text?: string; data?: unknown }, i))}
+            </div>
+          );
+        })}
         {status === "submitted" && (
           <div className="flex items-center gap-2 self-start" aria-label="Arcee is thinking">
-            {/* eslint-disable-next-line @next/next/no-img-element -- tiny local SVG sticker */}
-            <img src="/stickers/thinking.svg" alt="" width={56} height={56} className="arcee-thinking size-14" />
+            <picture className="arcee-thinking block size-14 overflow-hidden rounded-[12px] border-[3px] border-[var(--die)] shadow-[0_6px_12px_-8px_rgb(0_0_0/0.5)]">
+              <source srcSet={STICKERS.judging.still} media="(prefers-reduced-motion: reduce)" />
+              <img src={STICKERS.judging.src} alt="" width={56} height={56} className="size-full object-cover" />
+            </picture>
             <span className="font-hand text-[22px] text-fg-muted">thinking…</span>
           </div>
         )}

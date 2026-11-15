@@ -64,19 +64,26 @@ export async function POST(req: Request) {
   const question = textOf(users[users.length - 1]);
 
   const verdict = checkInput(question);
-  if (!verdict.ok) return cannedReply(verdict.reply, verdict.reason === "injection" ? "nope" : undefined);
+  if (!verdict.ok) return cannedReply(verdict.reply, verdict.reason === "injection" ? "judging" : undefined);
 
   const limit = await limitChat(visitorKey(req.headers));
   if (!limit.ok) {
-    return cannedReply("That's a lot of questions. Give me a few minutes, or just email Itesh directly.", "sleepy");
+    return cannedReply("That's a lot of questions. Give me a few minutes, or just email Itesh directly.", "sobbing");
   }
 
   const model = await getArceeModel();
   if (!model) {
-    return cannedReply(`I'm not plugged in yet, so no answers for now. Email Itesh at ${SITE.email} and he'll get back to you.`, "sleepy");
+    return cannedReply(`I'm not plugged in yet, so no answers for now. Email Itesh at ${SITE.email} and he'll get back to you.`, "crying");
   }
 
-  const context = retrieve(`${textOf(users[users.length - 2])} ${question}`.trim());
+  // The latest question gets most slots; the two before it keep follow-ups ("can this increase?") in context.
+  const context = retrieve(
+    question,
+    users
+      .slice(-3, -1)
+      .map((m) => textOf(m))
+      .join(" "),
+  );
 
   const result = streamText({
     model,

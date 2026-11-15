@@ -106,3 +106,12 @@ export const ACHIEVEMENTS: { title: string; detail: string; url?: string }[] = [
   },
   { title: "320+ LeetCode problems", detail: "Consistent practice across DSA and core algorithmic patterns." },
 ];
+
+/** How he works, each backed by something real in the work. */
+export const PRINCIPLES = [
+  { line: "Evals before claims.", proof: "Arcee ships against 44 whole-task evals; at Caudal AI Labs the job was evaluating LLM systems." },
+  { line: "Write the decision down.", proof: "Arcee's design choices live in numbered decision records, each with what was tried and why." },
+  { line: "Small commits, often.", proof: "377 commits in Arcee's first 18 days, every one small enough to read and undo." },
+  { line: "Local when it can be.", proof: "Arcee runs fully on Ollama with --core local; DiaChat answers on the visitor's own GPU." },
+  { line: "Ship the product around the model.", proof: "PatentIQ is a mentor dashboard, reports and billing, not just a prompt." },
+];
