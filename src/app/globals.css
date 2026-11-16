@@ -2160,14 +2160,10 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 /* Easter eggs: scuba cat swim + bubbles, toasts. */
 .scuba-swim {
   animation: scuba-swim var(--dur, 7.6s) linear var(--delay, 0s) both;
+  will-change: transform;
 }
 .scuba-swim-back {
   animation-name: scuba-swim-back;
-}
-/* White die-cut edge around the transparent cat, then a soft shadow off the mat. */
-.scuba-sticker {
-  filter: drop-shadow(3px 0 0 #fff) drop-shadow(-3px 0 0 #fff) drop-shadow(0 3px 0 #fff) drop-shadow(0 -3px 0 #fff)
-    drop-shadow(0 14px 14px rgb(0 0 0 / 0.22));
 }
 .scuba-bob {
   animation: scuba-bob 1.6s ease-in-out infinite;
@@ -2194,7 +2190,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 @keyframes scuba-bob {
   50% {
-    transform: translateY(-18px) rotate(-3deg);
+    transform: translateY(-18px);
   }
 }
 @keyframes scuba-bubble {

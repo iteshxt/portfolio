@@ -218,7 +218,7 @@ No 3D (three.js was removed). Each star project shows its real artwork, all CSS:
 - **Icons:** our own 24 px set, 2 px rounded strokes.
 - **No photo of Itesh** (dropped 2026-11-16).
 - **Logo (2026-11-16):** the two-sticker "i": a lime pill stem and a violet dot, each with a white die-cut border, the stem tilted 6°, and the dot's lower-right edge peeling back (light violet flap). Wordmark = the sticker i + "tesh" in Instrument Serif italic (`ui/LogoMark` → `Wordmark`, top bar; the violet intro uses the white line version). Favicon and Apple icon put the mark on an ink rounded square. **Line version** (`LogoMark variant="line"`, `public/logo-line.svg`, `public/icon-mono.svg`) for one-colour uses: the printed resume and the monochrome manifest icon.
-- **Scuba cat:** his own transparent scuba sticker (`stickers/cats/scuba.webp`, from his scuba.gif; still frame for reduced motion) with a white die-cut edge: a flood of 16 of them (random rows, sizes, tilts, speeds, about a third swimming the other way) for the Konami code, `scuba` and the barcode egg; reduced motion keeps one calm cat.
+- **Scuba cat:** his own transparent scuba sticker (`stickers/cats/scuba.webp`, from his scuba.gif: 178 px, 36 frames, ~122 KB, with the white die-cut edge and shadow baked into the frames so no CSS filters run; still frame for reduced motion), upright, never tilted: a flood of 16 of them (random rows, sizes, speeds, about a third swimming the other way) for the Konami code, `scuba` and the barcode egg; reduced motion keeps one calm cat.
 
 ## 9. Sound
 
