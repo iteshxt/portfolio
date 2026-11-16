@@ -8,6 +8,13 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
+/**
+ * Every code is made up on the fly, so there's nothing to prerender, and the root
+ * layout's transition provider reads the pathname: let this hidden, unindexed page
+ * render at request time instead of failing the build.
+ */
+export const instant = false;
+
 /** Where the manifest barcode leads (docs/design.md §2.17). */
 export default function ScanPage({ params }: PageProps<"/s/[code]">) {
   return (
