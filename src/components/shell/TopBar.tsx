@@ -39,10 +39,9 @@ export function TopBar() {
       <TransitionLink
         href="/"
         transitionLabel="Home"
-        aria-label="itesh, home"
         className="pointer-events-auto"
       >
-        <Wordmark />
+        <Wordmark label="itesh, home" />
       </TransitionLink>
       {/* Leaves room for the peel corner in the top-right. */}
       <div className="-mt-2.5 mr-14">

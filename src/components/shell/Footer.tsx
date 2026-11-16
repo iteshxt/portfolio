@@ -34,10 +34,7 @@ export async function Footer() {
       <div className="mx-auto grid max-w-[1440px] items-center gap-8 md:grid-cols-[auto_1fr_auto] md:gap-12">
         <div className="flex items-center gap-5">
           <p data-animate="slap" className="wordmark-sticker inline-block rounded-[20px] border-[5px] border-white bg-ink px-5 pt-2 pb-3 text-white">
-            <span className="sr-only">itesh</span>
-            <span aria-hidden="true">
-              <Wordmark size="text-[clamp(42px,4.4vw,64px)]" />
-            </span>
+            <Wordmark size="text-[clamp(42px,4.4vw,64px)]" />
           </p>
           <p className="max-w-[16ch] text-[15px] leading-snug text-fg-muted">
             <span className="font-serif text-[18px] italic">{SITE.tagline[0].toUpperCase() + SITE.tagline.slice(1)}.</span>

@@ -31,21 +31,28 @@ export function LogoMark({ variant = "color", className }: { variant?: "color" |
   );
 }
 
-/** The wordmark: the sticker "i" standing in for the first letter of "itesh". `line` on violet (the intro), where the violet dot would vanish. */
+/**
+ * The wordmark: the sticker "i" standing in for the first letter of "itesh". `line` on violet
+ * (the intro), where the violet dot would vanish. Screen readers get `label` ("itesh" by
+ * default) as one word; the drawn "i" + "tesh" are hidden from them so it isn't read as "tesh".
+ */
 export function Wordmark({
   className = "",
   variant = "color",
   size = "text-[28px]",
+  label = "itesh",
 }: {
   className?: string;
   variant?: "color" | "line";
   /** Font-size class; the mark scales with it. */
   size?: string;
+  label?: string;
 }) {
   return (
     <span className={`inline-flex items-end gap-[0.06em] font-serif leading-none italic ${size} ${className}`}>
+      <span className="sr-only">{label}</span>
       <LogoMark variant={variant} className="h-[1.18em] w-auto -translate-y-[0.04em]" />
-      <span>tesh</span>
+      <span aria-hidden="true">tesh</span>
     </span>
   );
 }
