@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Itesh Singh Tomar",
+    name: "Itesh Tomar",
     short_name: "iteshxt",
-    description: "ML engineer & full-stack developer: agents, models and the products around them.",
+    description: "Itesh Tomar ships agents, models and the products around them, mostly on time.",
     start_url: "/",
     display: "browser",
     background_color: "#F5F5F4",

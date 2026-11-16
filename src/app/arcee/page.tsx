@@ -4,7 +4,7 @@ import { ArceePage } from "./ArceePage";
 
 export const metadata: Metadata = pageMetadata({
   title: "Ask Arcee",
-  description: "Chat with Arcee, the site's guide: ask about Itesh Singh Tomar's projects, experience and DiaLabs, or leave him a message.",
+  description: "Chat with Arcee, the site's guide: ask about Itesh Tomar's projects, experience and DiaLabs, or leave him a message.",
   path: "/arcee",
 });
 

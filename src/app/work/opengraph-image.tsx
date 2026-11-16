@@ -1,7 +1,7 @@
 import { ARCHIVE_PROJECTS, STAR_PROJECTS } from "@/content/projects";
 import { OG_CONTENT_TYPE, OG_SIZE, ogCard } from "@/lib/og";
 
-export const alt = "Work by Itesh Singh Tomar";
+export const alt = "Work by Itesh Tomar";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

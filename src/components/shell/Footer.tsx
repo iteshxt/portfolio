@@ -2,6 +2,7 @@ import { cacheLife } from "next/cache";
 import { Suspense, type CSSProperties } from "react";
 import { ArrowUpRight } from "@/components/icons";
 import { Sticker, type StickerTone } from "@/components/ui/Sticker";
+import { Wordmark } from "@/components/ui/LogoMark";
 import { SITE } from "@/content/site";
 import { BackToTop } from "./BackToTop";
 import { NowBuilding } from "./NowBuilding";
@@ -32,10 +33,15 @@ export async function Footer() {
     <footer className="faded-mat px-gutter mt-auto border-t border-line pt-[clamp(32px,4vw,48px)] pb-[88px]">
       <div className="mx-auto grid max-w-[1440px] items-center gap-8 md:grid-cols-[auto_1fr_auto] md:gap-12">
         <div className="flex items-center gap-5">
-          <p data-animate="slap" className="wordmark-sticker inline-block rounded-[20px] border-[5px] border-white bg-violet px-5 pt-1.5 pb-3 font-serif text-[clamp(42px,4.4vw,64px)] leading-none text-white italic">
-            itesh
+          <p data-animate="slap" className="wordmark-sticker inline-block rounded-[20px] border-[5px] border-white bg-ink px-5 pt-2 pb-3 text-white">
+            <span className="sr-only">itesh</span>
+            <span aria-hidden="true">
+              <Wordmark size="text-[clamp(42px,4.4vw,64px)]" />
+            </span>
           </p>
-          <p className="max-w-[16ch] text-[15px] leading-snug text-fg-muted">{SITE.role}.</p>
+          <p className="max-w-[16ch] text-[15px] leading-snug text-fg-muted">
+            {SITE.display}. <span className="font-serif text-[18px] italic">{SITE.tagline[0].toUpperCase() + SITE.tagline.slice(1)}.</span>
+          </p>
         </div>
 
         <nav aria-label="Elsewhere">

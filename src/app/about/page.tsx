@@ -12,7 +12,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: "Itesh Singh Tomar: ML engineer and full-stack developer. How he works, who he's built for, and the stickers on his laptop.",
+  description: "Itesh Tomar: how he works, who he's built for, and the stickers on his laptop.",
   path: "/about",
 });
 

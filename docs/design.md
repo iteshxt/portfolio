@@ -60,7 +60,7 @@ Detail that used to live in the night shift hides under small stickers now: e.g.
 - **DiaLabs:** a violet band that grows from an inset rounded sticker to full width on scroll (`GrowIn`); releases are peelable stickers.
 - **Experience:** rows with a link to the full story.
 - **Contact:** ink block (dark surface at night): "Got something *worth building*?", copy-email button, "Or leave Arcee a message", channel rows with scribble underlines.
-- **Footer:** compact, on a faded mat: the "itesh" wordmark sticker (tilted), link stickers (straight), the latest push as a torn receipt, "© {year} iteshxt" and back to top. No colophon.
+- **Footer:** compact, on a faded mat: the wordmark (sticker "i" + tesh) on a tilted ink sticker, then "Itesh Tomar. *Ships, mostly on time.*", link stickers (straight), the latest push as a torn receipt, "© {year} iteshxt" and back to top. No colophon.
 
 ### 2.8 Arcee
 
@@ -217,6 +217,7 @@ No 3D (three.js was removed). Each star project shows its real artwork, all CSS:
 - **Cat stickers:** Itesh's own animated cats (public/stickers/cats, 160px WebP with a still frame each), nine moods: hype, judging, shush, crying, sobbing, fighting, derp, stressed, sus. Arcee picks one by mood; three sit on the About lid. Send more and add a line to `lib/arcee/stickers.ts`.
 - **Icons:** our own 24 px set, 2 px rounded strokes.
 - **No photo of Itesh** (dropped 2026-11-16).
+- **Name and titles (2026-11-16):** the site says "Itesh Tomar" (`SITE.display`), never the long name and role. Home title and share cards: "Itesh Tomar — ships, mostly on time" (`SITE.tagline`); inner pages: "Work · Itesh Tomar". The full name stays only in the printed resume, structured data and Arcee's knowledge.
 - **Logo (2026-11-16):** the two-sticker "i": a lime pill stem and a violet dot, each with a white die-cut border, the stem tilted 6°, and the dot's lower-right edge peeling back (light violet flap). Wordmark = the sticker i + "tesh" in Instrument Serif italic (`ui/LogoMark` → `Wordmark`, top bar; the violet intro uses the white line version). Favicon and Apple icon put the mark on an ink rounded square. **Line version** (`LogoMark variant="line"`, `public/logo-line.svg`, `public/icon-mono.svg`) for one-colour uses: the printed resume and the monochrome manifest icon.
 - **Scuba cat:** his own transparent scuba sticker (`stickers/cats/scuba.webp`, from his scuba.gif: 178 px, 36 frames, ~122 KB, with the white die-cut edge and shadow baked into the frames so no CSS filters run; still frame for reduced motion), upright, never tilted: a flood of 16 of them (random rows, sizes, speeds, about a third swimming the other way) for the Konami code, `scuba` and the barcode egg; reduced motion keeps one calm cat.
 

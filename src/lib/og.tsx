@@ -83,7 +83,7 @@ export function ogCard({ kicker, parts, sub, size = 104 }: { kicker: string; par
           {sub && <div style={{ display: "flex", fontFamily: "Mona Sans", fontSize: 30, color: "#55555C", marginTop: 22, maxWidth: 940 }}>{sub}</div>}
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "Mona Sans", fontSize: 26, color: "#55555C" }}>
-          <span>ML engineer &amp; full-stack developer</span>
+          <span>Itesh Tomar · ships, mostly on time</span>
           <span>iteshxt.me</span>
         </div>
       </div>

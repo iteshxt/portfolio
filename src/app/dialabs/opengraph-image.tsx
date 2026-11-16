@@ -1,6 +1,6 @@
 import { OG_CONTENT_TYPE, OG_SIZE, ogCard } from "@/lib/og";
 
-export const alt = "DiaLabs, co-founded by Itesh Singh Tomar";
+export const alt = "DiaLabs, co-founded by Itesh Tomar";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

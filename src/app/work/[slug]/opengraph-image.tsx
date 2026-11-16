@@ -3,7 +3,7 @@ import { STAR_SLUGS, type StarSlug } from "@/content/pages";
 import { STAR_PROJECTS } from "@/content/projects";
 import { OG_CONTENT_TYPE, OG_SIZE, ogCard } from "@/lib/og";
 
-export const alt = "A star project by Itesh Singh Tomar";
+export const alt = "A star project by Itesh Tomar";
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 

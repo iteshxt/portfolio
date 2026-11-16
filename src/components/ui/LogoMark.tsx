@@ -32,9 +32,18 @@ export function LogoMark({ variant = "color", className }: { variant?: "color" |
 }
 
 /** The wordmark: the sticker "i" standing in for the first letter of "itesh". `line` on violet (the intro), where the violet dot would vanish. */
-export function Wordmark({ className = "", variant = "color" }: { className?: string; variant?: "color" | "line" }) {
+export function Wordmark({
+  className = "",
+  variant = "color",
+  size = "text-[28px]",
+}: {
+  className?: string;
+  variant?: "color" | "line";
+  /** Font-size class; the mark scales with it. */
+  size?: string;
+}) {
   return (
-    <span className={`inline-flex items-end gap-[0.06em] font-serif text-[28px] leading-none italic ${className}`}>
+    <span className={`inline-flex items-end gap-[0.06em] font-serif leading-none italic ${size} ${className}`}>
       <LogoMark variant={variant} className="h-[1.18em] w-auto -translate-y-[0.04em]" />
       <span>tesh</span>
     </span>

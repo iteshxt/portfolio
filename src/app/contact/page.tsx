@@ -7,7 +7,7 @@ import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: "Get in touch with Itesh Singh Tomar for roles, collaborations or a project that needs both a model and a product around it.",
+  description: "Get in touch with Itesh Tomar for roles, collaborations or a project that needs both a model and a product around it.",
   path: "/contact",
 });
 

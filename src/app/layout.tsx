@@ -53,19 +53,19 @@ const caveat = Caveat({
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://iteshxt.me";
 const DESCRIPTION =
-  "Itesh Singh Tomar builds agents, fine-tunes models and ships real products. By day: what he builds. By night: how it works.";
+  "Itesh Tomar builds agents, fine-tunes models and ships real products. By day: what he builds. By night: how it works.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Itesh Singh Tomar · ML engineer & full-stack developer",
-    template: "%s · Itesh Singh Tomar",
+    default: `${SITE.display} — ${SITE.tagline}`,
+    template: `%s · ${SITE.display}`,
   },
   description: DESCRIPTION,
   applicationName: "iteshxt.me",
   authors: [{ name: SITE.name, url: SITE_URL }],
   creator: SITE.name,
-  keywords: ["Itesh Singh Tomar", "iteshxt", "ML engineer", "full-stack developer", "AI agents", "LLM fine-tuning", "Next.js", "DiaLabs"],
+  keywords: ["Itesh Tomar", "Itesh Singh Tomar", "iteshxt", "ML engineer", "full-stack developer", "AI agents", "LLM fine-tuning", "Next.js", "DiaLabs"],
   openGraph: { type: "website", siteName: "iteshxt.me", locale: "en_IN", description: DESCRIPTION },
   twitter: { card: "summary_large_image", creator: "@iteshxt" },
 };
