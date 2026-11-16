@@ -820,16 +820,6 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
 }
 
-/* Postcards (Arcee): a paper card with a stamp, a dashed divider and a soft shadow. */
-.postcard {
-  border: 4px solid var(--die);
-  border-radius: 18px;
-  background: var(--surface);
-  padding: 1rem 1.15rem;
-  box-shadow:
-    inset 0 0 0 1px var(--line),
-    0 14px 30px -18px rgb(0 0 0 / 0.45);
-}
 /* A postage stamp: white frame, dashed "perforated" outline, a slight tilt. */
 .arcee-stamp:not(.rounded-full) {
   border: 3px solid var(--die);
@@ -838,6 +828,201 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   outline-offset: 1px;
   rotate: 5deg;
   box-shadow: 0 4px 10px -4px rgb(0 0 0 / 0.4);
+}
+
+/* /arcee as a comic strip (docs/design.md §2.13). Ink panels with an offset shadow and a
+   corner of halftone, yellow caption boxes, speech bubbles whose tail points at the cat. */
+.comic-title {
+  text-shadow: 4px 4px 0 var(--lime);
+}
+.comic-burst {
+  rotate: 8deg;
+}
+.comic-issue {
+  rotate: -3deg;
+  background: var(--surface);
+}
+.comic-panel {
+  position: relative;
+  border: 3px solid var(--fg);
+  border-radius: 22px;
+  background: var(--bg);
+  box-shadow: 7px 7px 0 var(--fg);
+  isolation: isolate;
+}
+.comic-panel::before {
+  /* Halftone in the top-right corner, fading out. */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-image: radial-gradient(color-mix(in srgb, var(--fg) 16%, transparent) 1.3px, transparent 1.6px);
+  background-size: 11px 11px;
+  -webkit-mask-image: radial-gradient(ellipse at 100% 0%, #000, transparent 55%);
+  mask-image: radial-gradient(ellipse at 100% 0%, #000, transparent 55%);
+  pointer-events: none;
+}
+.comic-number {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--fg-muted);
+}
+.comic-caption {
+  display: inline-block;
+  max-width: calc(100% - 44px);
+  border: 2.5px solid var(--fg);
+  border-radius: 6px;
+  background: var(--sunflower);
+  color: #1a1400;
+  padding: 8px 14px;
+  font-size: 17px;
+  line-height: 1.35;
+  box-shadow: 3px 3px 0 var(--fg);
+}
+.comic-caption-turn {
+  background: var(--lavender);
+  color: #24124d;
+}
+.comic-character {
+  rotate: -4deg;
+  box-shadow: 0 12px 22px -12px rgb(0 0 0 / 0.55);
+}
+.comic-bubble {
+  position: relative;
+  border: 3px solid var(--fg);
+  border-radius: 26px;
+  background: var(--surface);
+  padding: 16px 20px;
+  font-size: 17px;
+  line-height: 1.5;
+  /* Leaves room on the left for the tail. */
+  margin-left: 6px;
+  min-width: 0;
+}
+.comic-bubble::before,
+.comic-bubble::after {
+  /* The tail, pointing down-left at the character. */
+  content: "";
+  position: absolute;
+  left: -20px;
+  bottom: 18px;
+  border-style: solid;
+}
+.comic-bubble::before {
+  border-width: 12px 22px 12px 0;
+  border-color: transparent var(--fg) transparent transparent;
+}
+.comic-bubble::after {
+  left: -14px;
+  bottom: 21px;
+  border-width: 9px 17px 9px 0;
+  border-color: transparent var(--surface) transparent transparent;
+}
+.comic-bubble-lg {
+  padding: 20px 24px;
+}
+.comic-footnote {
+  border-top: 2px dashed var(--line);
+  padding-top: 14px;
+  font-size: 16px;
+  color: var(--fg-muted);
+}
+.comic-turn {
+  border-style: dashed;
+  box-shadow: none;
+  background: transparent;
+}
+.comic-input {
+  border: 3px solid var(--fg);
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--fg);
+}
+.comic-focus:focus-visible {
+  outline: 3px solid var(--violet);
+  outline-offset: 3px;
+}
+.comic-dots::after {
+  content: "…";
+  display: inline-block;
+  animation: comic-dots 1.2s steps(4, end) infinite;
+  overflow: hidden;
+  vertical-align: bottom;
+  width: 0;
+}
+@keyframes comic-dots {
+  to {
+    width: 1.1em;
+  }
+}
+.comic-caret {
+  display: inline-block;
+  width: 10px;
+  height: 18px;
+  border-radius: 2px;
+  background: var(--violet);
+  animation: comic-caret 0.9s steps(2, start) infinite;
+}
+@keyframes comic-caret {
+  to {
+    visibility: hidden;
+  }
+}
+.comic-pop {
+  animation: comic-pop 0.5s var(--ease-slap) both;
+}
+@keyframes comic-pop {
+  from {
+    translate: 0 18px;
+    scale: 0.97;
+  }
+}
+.comic-jump {
+  animation: comic-pop 0.35s var(--ease-slap) both;
+}
+@media (max-width: 639px) {
+  /* Phones: the cat sits above a full-width bubble whose tail points up at it. */
+  .comic-panel {
+    box-shadow: 5px 5px 0 var(--fg);
+    border-radius: 18px;
+  }
+  .comic-bubble {
+    align-self: stretch;
+    margin-left: 0;
+    padding: 13px 16px;
+    font-size: 16px;
+    border-radius: 20px;
+  }
+  .comic-bubble::before {
+    left: 26px;
+    top: -21px;
+    bottom: auto;
+    border-width: 0 11px 20px 11px;
+    border-color: transparent transparent var(--fg) transparent;
+  }
+  .comic-bubble::after {
+    left: 29px;
+    top: -15px;
+    bottom: auto;
+    border-width: 0 8px 15px 8px;
+    border-color: transparent transparent var(--surface) transparent;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .comic-pop,
+  .comic-jump,
+  .comic-caret,
+  .comic-dots::after {
+    animation: none;
+  }
+  .comic-dots::after {
+    width: auto;
+  }
 }
 
 /* "Peel here" hint on the home hero (components/shell/PeelHint). */
