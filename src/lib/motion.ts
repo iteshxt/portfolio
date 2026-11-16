@@ -14,7 +14,7 @@ export function isTypingTarget(target: EventTarget | null): boolean {
   return target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName);
 }
 
-type Scroller = { scrollTo: (target: HTMLElement | number, options?: { offset?: number; duration?: number }) => void };
+type Scroller = { scrollTo: (target: HTMLElement | number, options?: { offset?: number; duration?: number }) => void; resize?: () => void };
 let scroller: Scroller | null = null;
 
 /** SmoothScroll registers its Lenis instance here so others can scroll through it. */
@@ -34,9 +34,13 @@ export function scrollToTop() {
   else window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? "auto" : "smooth" });
 }
 
-/** Smoothly scrolls to the bottom of the page (a full-page chat following new messages). */
-export function scrollToBottom() {
-  const y = document.documentElement.scrollHeight;
-  if (scroller) scroller.scrollTo(y, { duration: 0.8 });
+
+/** Smoothly scrolls to a page offset (through Lenis when it's running). */
+export function scrollToY(y: number, duration = 0.45) {
+  if (scroller) {
+    // Lenis measures the page lazily; content that just grew (a streaming answer) would clamp the target.
+    scroller.resize?.();
+    scroller.scrollTo(y, { duration });
+  }
   else window.scrollTo({ top: y, behavior: prefersReducedMotion() ? "auto" : "smooth" });
 }

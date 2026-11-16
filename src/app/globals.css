@@ -830,8 +830,9 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   box-shadow: 0 4px 10px -4px rgb(0 0 0 / 0.4);
 }
 
-/* /arcee as a comic strip (docs/design.md §2.13). Ink panels with an offset shadow and a
-   corner of halftone, yellow caption boxes, speech bubbles whose tail points at the cat. */
+/* /arcee as a comic strip (docs/design.md §2.13). Ink panels with an offset shadow and a corner
+   of halftone, narration captions, two-character staging (your bubble from off-panel, Arcee as a
+   cat on a mood-coloured halftone aura with a sound effect), thought clouds while it thinks. */
 .comic-title {
   text-shadow: 4px 4px 0 var(--lime);
 }
@@ -842,6 +843,9 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   rotate: -3deg;
   background: var(--surface);
 }
+.comic-strip {
+  gap: clamp(26px, 3vw, 40px);
+}
 .comic-panel {
   position: relative;
   border: 3px solid var(--fg);
@@ -851,7 +855,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   isolation: isolate;
 }
 .comic-panel::before {
-  /* Halftone in the top-right corner, fading out. */
+  /* Halftone in the top corner (the far side from the cat), fading out. */
   content: "";
   position: absolute;
   inset: 0;
@@ -863,6 +867,10 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   mask-image: radial-gradient(ellipse at 100% 0%, #000, transparent 55%);
   pointer-events: none;
 }
+.comic-panel[data-side="right"]::before {
+  -webkit-mask-image: radial-gradient(ellipse at 0% 0%, #000, transparent 55%);
+  mask-image: radial-gradient(ellipse at 0% 0%, #000, transparent 55%);
+}
 .comic-number {
   position: absolute;
   top: 14px;
@@ -872,76 +880,294 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   letter-spacing: 0.12em;
   color: var(--fg-muted);
 }
+.comic-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
 .comic-caption {
   display: inline-block;
   max-width: calc(100% - 44px);
   border: 2.5px solid var(--fg);
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--sunflower);
   color: #1a1400;
-  padding: 8px 14px;
-  font-size: 17px;
+  padding: 7px 13px;
+  font-size: 16px;
   line-height: 1.35;
   box-shadow: 3px 3px 0 var(--fg);
 }
-.comic-caption-turn {
-  background: var(--lavender);
-  color: #24124d;
+.comic-caption-foot {
+  display: block;
+  max-width: none;
+  background: var(--surface);
+  color: var(--fg);
+  font-size: 16px;
 }
-.comic-character {
-  rotate: -4deg;
-  box-shadow: 0 12px 22px -12px rgb(0 0 0 / 0.55);
+
+/* Staging: who stands where. Wide screens: your bubble across the top, then the cat beside
+   Arcee's bubble, mirrored on alternate panels. Phones: stacked. */
+.comic-stage {
+  display: grid;
+  gap: 18px clamp(16px, 2.4vw, 28px);
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "ask ask" "cat reply";
+  align-items: end;
 }
+.comic-panel[data-side="right"] .comic-stage {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "ask ask" "reply cat";
+}
+.comic-stage:not(:has(.comic-stage-ask)) {
+  grid-template-areas: "cat reply";
+}
+.comic-stage-ask {
+  grid-area: ask;
+  justify-self: end;
+  max-width: min(78%, 560px);
+}
+.comic-panel[data-side="right"] .comic-stage-ask {
+  justify-self: start;
+}
+.comic-stage-cat {
+  grid-area: cat;
+}
+.comic-stage-reply {
+  grid-area: reply;
+  min-width: 0;
+}
+
+/* Speech bubbles: slightly uneven corners, an ink outline, a tail at the speaker. */
 .comic-bubble {
   position: relative;
   border: 3px solid var(--fg);
-  border-radius: 26px;
-  background: var(--surface);
-  padding: 16px 20px;
+  border-radius: 28px 32px 30px 26px / 26px 30px 32px 28px;
+  padding: 18px 22px;
   font-size: 17px;
   line-height: 1.5;
-  /* Leaves room on the left for the tail. */
-  margin-left: 6px;
-  min-width: 0;
 }
 .comic-bubble::before,
 .comic-bubble::after {
-  /* The tail, pointing down-left at the character. */
   content: "";
   position: absolute;
-  left: -20px;
-  bottom: 18px;
   border-style: solid;
 }
-.comic-bubble::before {
+.comic-reply {
+  background: var(--surface);
+  color: var(--fg);
+}
+/* Arcee's tail points sideways at the cat (left or right). */
+.comic-reply::before {
+  left: -22px;
+  bottom: 20px;
   border-width: 12px 22px 12px 0;
   border-color: transparent var(--fg) transparent transparent;
 }
-.comic-bubble::after {
-  left: -14px;
-  bottom: 21px;
+.comic-reply::after {
+  left: -16px;
+  bottom: 23px;
   border-width: 9px 17px 9px 0;
   border-color: transparent var(--surface) transparent transparent;
 }
+.comic-panel[data-side="right"] .comic-reply::before {
+  left: auto;
+  right: -22px;
+  border-width: 12px 0 12px 22px;
+  border-color: transparent transparent transparent var(--fg);
+}
+.comic-panel[data-side="right"] .comic-reply::after {
+  left: auto;
+  right: -16px;
+  border-width: 9px 0 9px 17px;
+  border-color: transparent transparent transparent var(--surface);
+}
 .comic-bubble-lg {
-  padding: 20px 24px;
+  padding: 22px 26px;
 }
-.comic-footnote {
-  border-top: 2px dashed var(--line);
-  padding-top: 14px;
-  font-size: 16px;
-  color: var(--fg-muted);
+/* Your line: lavender, its tail pointing down to you, just off the panel. */
+.comic-ask {
+  background: var(--lavender);
+  color: #24124d;
 }
+.comic-ask::before {
+  right: 38px;
+  bottom: -22px;
+  border-width: 22px 4px 0 18px;
+  border-color: var(--fg) transparent transparent transparent;
+}
+.comic-ask::after {
+  right: 42px;
+  bottom: -15px;
+  border-width: 16px 3px 0 13px;
+  border-color: var(--lavender) transparent transparent transparent;
+}
+.comic-panel[data-side="right"] .comic-ask::before {
+  right: auto;
+  left: 38px;
+  border-width: 22px 18px 0 4px;
+}
+.comic-panel[data-side="right"] .comic-ask::after {
+  right: auto;
+  left: 42px;
+  border-width: 16px 13px 0 3px;
+}
+.comic-ask-input {
+  padding: 14px 18px 12px;
+}
+.comic-ask-input:focus-within {
+  outline: 3px solid var(--violet);
+  outline-offset: 4px;
+}
+.comic-input::placeholder {
+  color: #4b3b78;
+  font-weight: 500;
+}
+/* Who's talking: a small name tag on the bubble's top edge. */
+.comic-speaker {
+  position: absolute;
+  top: -12px;
+  right: 22px;
+  border: 2px solid var(--fg);
+  border-radius: 6px;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 1px 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.comic-speaker-arcee {
+  right: auto;
+  left: 22px;
+}
+.comic-panel[data-side="right"] .comic-speaker-arcee {
+  left: auto;
+  right: 22px;
+}
+.comic-panel[data-side="right"] .comic-stage-ask .comic-speaker {
+  right: auto;
+  left: 22px;
+}
+
+/* The thought cloud while Arcee thinks: a puffy bubble trailing circles back to the cat. */
+.comic-thought {
+  position: relative;
+  justify-self: start;
+  border: 3px solid var(--fg);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 16px 30px 18px;
+}
+.comic-thought::before,
+.comic-thought::after {
+  content: "";
+  position: absolute;
+  border: 3px solid var(--fg);
+  border-radius: 50%;
+  background: var(--surface);
+}
+.comic-thought::before {
+  width: 18px;
+  height: 18px;
+  left: -24px;
+  bottom: 6px;
+}
+.comic-thought::after {
+  width: 10px;
+  height: 10px;
+  left: -40px;
+  bottom: -4px;
+}
+.comic-panel[data-side="right"] .comic-thought {
+  justify-self: end;
+}
+.comic-panel[data-side="right"] .comic-thought::before {
+  left: auto;
+  right: -24px;
+}
+.comic-panel[data-side="right"] .comic-thought::after {
+  left: auto;
+  right: -40px;
+}
+
+/* The cast: the cat on a halftone aura in its mood's colour, a sound effect in comic lettering. */
+.comic-cast {
+  --tone: var(--sunflower);
+}
+.comic-aura {
+  position: absolute;
+  inset: -22%;
+  border-radius: 50%;
+  background-image: radial-gradient(var(--tone) 34%, transparent 37%);
+  background-size: 9px 9px;
+  -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+}
+.comic-cat {
+  rotate: -4deg;
+  box-shadow: 0 12px 22px -12px rgb(0 0 0 / 0.55);
+}
+.comic-panel[data-side="right"] .comic-cat {
+  rotate: 4deg;
+}
+.comic-sfx {
+  position: absolute;
+  top: -18px;
+  right: -26px;
+  rotate: 12deg;
+  font-size: clamp(22px, 2.6vw, 32px);
+  font-weight: 900;
+  font-variation-settings: "wdth" 75;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--tone);
+  -webkit-text-stroke: 2.5px var(--fg);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--fg);
+  white-space: nowrap;
+}
+.comic-panel[data-side="right"] .comic-sfx {
+  right: auto;
+  left: -26px;
+  rotate: -12deg;
+}
+
+/* Lines to try on the cover: little lavender speech bubbles you can tap. */
+.comic-line {
+  position: relative;
+  border: 2.5px solid var(--fg);
+  border-radius: 18px 20px 18px 16px;
+  background: var(--lavender);
+  color: #24124d;
+  padding: 8px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+  transition:
+    translate 0.25s var(--ease-expo-out),
+    box-shadow 0.25s var(--ease-expo-out);
+}
+.comic-line::after {
+  content: "";
+  position: absolute;
+  right: 18px;
+  bottom: -11px;
+  border-style: solid;
+  border-width: 11px 3px 0 10px;
+  border-color: var(--fg) transparent transparent transparent;
+}
+.comic-line:hover:not(:disabled) {
+  translate: -2px -2px;
+  box-shadow: 3px 3px 0 var(--fg);
+}
+
 .comic-turn {
   border-style: dashed;
   box-shadow: none;
   background: transparent;
-}
-.comic-input {
-  border: 3px solid var(--fg);
-  border-radius: 18px;
-  background: var(--surface);
-  color: var(--fg);
 }
 .comic-focus:focus-visible {
   outline: 3px solid var(--violet);
@@ -986,31 +1212,97 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   animation: comic-pop 0.35s var(--ease-slap) both;
 }
 @media (max-width: 639px) {
-  /* Phones: the cat sits above a full-width bubble whose tail points up at it. */
   .comic-panel {
     box-shadow: 5px 5px 0 var(--fg);
     border-radius: 18px;
   }
-  .comic-bubble {
-    align-self: stretch;
-    margin-left: 0;
-    padding: 13px 16px;
-    font-size: 16px;
-    border-radius: 20px;
+  /* Phones: stacked; the cat stands on its side, Arcee's tail points up at it. */
+  .comic-stage,
+  .comic-panel[data-side="right"] .comic-stage,
+  .comic-stage:not(:has(.comic-stage-ask)) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "ask" "cat" "reply";
+    row-gap: 22px;
   }
-  .comic-bubble::before {
-    left: 26px;
-    top: -21px;
+  .comic-stage:not(:has(.comic-stage-ask)) {
+    grid-template-areas: "cat" "reply";
+  }
+  .comic-stage-ask {
+    max-width: 92%;
+  }
+  .comic-stage-cat {
+    justify-self: start;
+    margin-left: 10px;
+  }
+  .comic-panel[data-side="right"] .comic-stage-cat {
+    justify-self: end;
+    margin-right: 10px;
+  }
+  .comic-bubble {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+  .comic-reply::before,
+  .comic-panel[data-side="right"] .comic-reply::before {
+    left: 30px;
+    right: auto;
+    top: -22px;
     bottom: auto;
-    border-width: 0 11px 20px 11px;
+    border-width: 0 11px 21px 11px;
     border-color: transparent transparent var(--fg) transparent;
   }
-  .comic-bubble::after {
-    left: 29px;
+  .comic-reply::after,
+  .comic-panel[data-side="right"] .comic-reply::after {
+    left: 33px;
+    right: auto;
     top: -15px;
     bottom: auto;
-    border-width: 0 8px 15px 8px;
+    border-width: 0 8px 16px 8px;
     border-color: transparent transparent var(--surface) transparent;
+  }
+  .comic-panel[data-side="right"] .comic-reply::before {
+    left: auto;
+    right: 30px;
+  }
+  .comic-panel[data-side="right"] .comic-reply::after {
+    left: auto;
+    right: 33px;
+  }
+  /* The tail sits on top near the cat, so Arcee's name tag moves to the other end. */
+  .comic-speaker-arcee {
+    left: auto;
+    right: 22px;
+  }
+  .comic-panel[data-side="right"] .comic-speaker-arcee {
+    right: auto;
+    left: 22px;
+  }
+  .comic-thought,
+  .comic-panel[data-side="right"] .comic-thought {
+    justify-self: stretch;
+    text-align: center;
+  }
+  .comic-thought::before,
+  .comic-panel[data-side="right"] .comic-thought::before {
+    left: 40px;
+    right: auto;
+    top: -26px;
+    bottom: auto;
+  }
+  .comic-thought::after,
+  .comic-panel[data-side="right"] .comic-thought::after {
+    left: 30px;
+    right: auto;
+    top: -42px;
+    bottom: auto;
+  }
+  .comic-panel[data-side="right"] .comic-thought::before {
+    left: auto;
+    right: 40px;
+  }
+  .comic-panel[data-side="right"] .comic-thought::after {
+    left: auto;
+    right: 30px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1022,6 +1314,9 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   }
   .comic-dots::after {
     width: auto;
+  }
+  .comic-line {
+    transition: none;
   }
 }
 
