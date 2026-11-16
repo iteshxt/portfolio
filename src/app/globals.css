@@ -980,9 +980,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 .manifest-scanned {
   color: #c23a1f;
   border-color: currentColor;
-  background: rgb(255 255 255 / 0.85);
-  translate: -50% -50%;
-  rotate: -8deg;
+  rotate: -6deg;
   animation: stamp-in 0.45s var(--ease-slap) 0.35s backwards;
 }
 /* The customs form on the phone, and its stamp. */
@@ -2246,6 +2244,16 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   font-size: 9.6pt;
   line-height: 1.38;
   color: #0e0e10;
+}
+.print-resume .pr-header {
+  position: relative;
+}
+.print-resume .pr-logo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 40pt;
+  width: auto;
 }
 .print-resume h1 {
   font-family: var(--font-sans);

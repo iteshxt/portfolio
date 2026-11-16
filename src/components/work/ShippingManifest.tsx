@@ -171,15 +171,15 @@ export function ShippingManifest({ projects, stars }: { projects: Project[]; sta
             <span>{stars}</span>
           </p>
         </div>
-        <div ref={barcodeRef} className="relative mx-auto mt-5 w-[86%]">
+        <div ref={barcodeRef} className="mx-auto mt-5 w-[86%]">
           {code ? <Barcode text={scanUrl(code)} /> : <div aria-hidden="true" className="manifest-barcode h-12 w-full" />}
-          {scanned && (
-            <span aria-hidden="true" className="manifest-scanned absolute top-1/2 left-1/2 rounded-[6px] border-[3px] px-2.5 py-0.5 text-[15px] font-bold tracking-[0.2em]">
-              SCANNED
-            </span>
-          )}
         </div>
         <p className="mt-1.5 text-center text-[11px] tracking-[0.12em] text-fg-muted">{code ? scanUrl(code) : "\u00a0"}</p>
+        {scanned && (
+          <p aria-hidden="true" className="mt-3 flex justify-center">
+            <span className="manifest-scanned rounded-[6px] border-[3px] px-2.5 py-0.5 text-[15px] font-bold tracking-[0.2em]">SCANNED</span>
+          </p>
+        )}
         <p className="mt-1 text-center text-[11px] text-fg-muted">thanks for scrolling</p>
       </div>
     </div>
