@@ -57,7 +57,7 @@ export function ArceePanel() {
           <Close />
         </button>
       </header>
-      <ArceeChat variant="panel" active={open} />
+      <ArceeChat active={open} />
     </div>
   );
 }

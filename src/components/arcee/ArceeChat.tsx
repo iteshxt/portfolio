@@ -1,19 +1,14 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
 import type { UIMessage } from "ai";
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
-import { useTransitionGo } from "@/components/transition/TransitionProvider";
-import { arceeChat } from "@/lib/arcee/chat-client";
 import { allowedUrls } from "@/lib/arcee/corpus";
-import { splitLinks } from "@/lib/arcee/guard";
 import { STICKERS, type StickerMood } from "@/lib/arcee/stickers";
 import { cn } from "@/lib/cn";
-import { scrollToBottom } from "@/lib/motion";
-import { play } from "@/lib/sound";
 import { useUI } from "@/store/ui";
 import { DraftCard, type Draft } from "./DraftCard";
+import { isEmptyReply, plain, RichText, STICKER_TEXT, STICKER_TEXT_ALL, useArceeConversation, type ToolPart } from "./reply";
 
 export const SUGGESTIONS = ["What's his best project?", "What did he do at Sutr?", "How does PatentIQ work?", "I want to leave a message"];
 
@@ -28,44 +23,7 @@ function Sticker({ mood }: { mood: StickerMood }) {
   );
 }
 
-const STICKER_TEXT = /\(\s*sticker\s*[:=]\s*([a-z]+)\s*\)/i;
-const STICKER_TEXT_ALL = /\s*\(\s*sticker\s*[:=]\s*[a-z]+\s*\)/gi;
-
-/** The model is told to write plain text; this cleans up the markdown it sometimes slips in anyway. */
-function plain(text: string): string {
-  // gpt-oss's built-in refusal is flat and out of character; say it Arcee's way.
-  if (/^\s*I[’']m sorry,?( but)? I can[’']t (help|assist) with that\.?\s*$/i.test(text)) {
-    return "That one's off my map. Ask me about his projects, where he's worked or how to reach him.";
-  }
-  return text
-    .replace(/\*\*(.+?)\*\*/g, "$1")
-    .replace(/__(.+?)__/g, "$1")
-    .replace(/^\s*-{3,}\s*$/gm, "")
-    .replace(/^#{1,6}\s+/gm, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
-function RichText({ text, allowed }: { text: string; allowed: Set<string> }) {
-  return (
-    <>
-      {splitLinks(text, allowed).map((part, i) =>
-        part.href ? (
-          <a key={i} href={part.href} target="_blank" rel="noreferrer" className="underline decoration-violet underline-offset-2">
-            {part.text}
-          </a>
-        ) : (
-          <span key={i}>{part.text}</span>
-        ),
-      )}
-    </>
-  );
-}
-
-const MORE_SUGGESTIONS = ["What's DiaLabs?", "Which project uses WebGPU?"];
-const KNOWS = ["The three star projects and how they work", "Everything else he has shipped", "Where he has worked and what he did", "DiaLabs and its releases", "How to reach him, or take a message"];
-
-const CHIP_TONES = ["bg-lime text-[#2B3600]", "bg-lavender text-violet-ink", "bg-sunflower text-[#4A3A00]", "bg-surface text-fg"];
+export const CHIP_TONES = ["bg-lime text-[#2B3600]", "bg-lavender text-violet-ink", "bg-sunflower text-[#4A3A00]", "bg-surface text-fg"];
 
 /** The pop-up's opening: a short greeting and questions to try, as stickers. */
 function PanelWelcome({ ask }: { ask: (q: string) => void }) {
@@ -91,55 +49,6 @@ function PanelWelcome({ ask }: { ask: (q: string) => void }) {
   );
 }
 
-/** Arcee's opening message, a postcard. On the full page it also lists what Arcee knows and what to try. */
-function Welcome({ page, ask }: { page: boolean; ask: (q: string) => void }) {
-  const chips = (list: string[]): ReactNode => (
-    <div className="flex flex-wrap gap-2">
-      {list.map((s) => (
-        <button key={s} type="button" onClick={() => ask(s)} className="filter-chip text-[13px]">
-          {s}
-        </button>
-      ))}
-    </div>
-  );
-  return (
-    <div className={cn("postcard self-start", page ? "w-full p-6" : "max-w-[92%]")}>
-      <div className="flex items-start gap-4">
-        <p className={cn("flex-1", page && "text-[clamp(18px,1.6vw,22px)] leading-snug")}>
-          Hey, I&apos;m Arcee. Ask me anything about Itesh: projects, experience, or how to reach him.
-        </p>
-        <ArceeStamp className={page ? "size-16" : "size-11"} />
-      </div>
-      {page && (
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
-          <div>
-            <p className="font-mono text-[12px] tracking-wide text-fg-muted uppercase">What I know</p>
-            <ul className="mt-2 flex flex-col gap-1.5 text-[15px]">
-              {KNOWS.map((k) => (
-                <li key={k} className="flex gap-2">
-                  <span aria-hidden="true" className="mt-[7px] size-1.5 shrink-0 rounded-full bg-violet" />
-                  {k}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="mb-2 font-mono text-[12px] tracking-wide text-fg-muted uppercase">Try asking</p>
-            {chips([...SUGGESTIONS, ...MORE_SUGGESTIONS])}
-          </div>
-        </div>
-      )}
-      <p className="mt-5 border-t border-dashed border-line pt-3 text-[14px] text-fg-muted">
-        <span className="font-serif text-[16px] text-fg italic">P.S.</span> Want to leave Itesh a message? Tell me what to say. I&apos;ll draft it and show
-        you first; nothing is sent until you press send.
-      </p>
-      {!page && <div className="mt-4">{chips(SUGGESTIONS)}</div>}
-    </div>
-  );
-}
-
-type ToolPart = { type: string; state?: string; toolCallId?: string; output?: unknown };
-
 /** Arcee's animated ring as an icon or a little postage stamp. */
 export function ArceeStamp({ className }: { className?: string }) {
   return (
@@ -151,67 +60,24 @@ export function ArceeStamp({ className }: { className?: string }) {
 }
 
 /**
- * The conversation with Arcee (docs/prd.md §6.4), shared by the floating panel
- * and the /arcee page (`variant`). Replies stream from /api/arcee; tool results
- * become actions: navigate runs the page transition, sticker shows a cat,
- * draftMessage shows a card the visitor must confirm before anything is sent.
+ * The pop-up conversation with Arcee (docs/prd.md §6.4). The /arcee page tells the same
+ * conversation as a comic (ArceeComic); both share `useArceeConversation`. Replies stream
+ * from /api/arcee; tool results become actions: navigate runs the page transition, sticker
+ * shows a cat, draftMessage shows a card the visitor must confirm before anything is sent.
  * While `active`, a question handed over from elsewhere (nav bar, buttons) is asked.
  */
-export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" | "page"; active: boolean; ask?: (fn: (q: string) => void) => void }) {
-  const go = useTransitionGo();
+export function ArceeChat({ active }: { active: boolean }) {
   const allowed = useMemo(() => allowedUrls(), []);
   const [input, setInput] = useState("");
-  const handled = useRef(new Set<string>());
   const listRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const arceeOpen = useUI((s) => s.arceeOpen);
+  const { messages, status, error, stop, busy, ask } = useArceeConversation({ active, inputRef });
 
-  const { messages, sendMessage, status, error, stop, clearError } = useChat({ chat: arceeChat });
-  const busy = status === "submitted" || status === "streaming";
-
-  function ask(text: string) {
-    const t = text.trim();
-    if (!t || busy) return;
-    clearError();
-    play("key");
-    void sendMessage({ text: t });
-  }
-  askRef?.(ask);
-
-  // A question handed over (nav bar, "Ask Arcee" buttons) is asked once this view is active.
+  // Follow new messages inside the panel's list.
   useEffect(() => {
-    if (!active) return;
-    const seed = useUI.getState().takeArceeSeed();
-    if (seed) ask(seed);
-    const raf = requestAnimationFrame(() => inputRef.current?.focus({ preventScroll: true }));
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- run when the view becomes active or a new hand-over arrives
-  }, [active, arceeOpen]);
-
-  // Act on navigate tool results once.
-  useEffect(() => {
-    for (const m of messages) {
-      for (const part of m.parts as ToolPart[]) {
-        if (part.type !== "tool-navigate" || part.state !== "output-available" || !part.toolCallId) continue;
-        if (handled.current.has(part.toolCallId)) continue;
-        handled.current.add(part.toolCallId);
-        const out = part.output as { path: string; label: string };
-        window.setTimeout(() => go(out.path, { label: out.label }), 500);
-      }
-    }
-  }, [messages, go]);
-
-  // Follow new messages: inside the panel's list, or down the page on /arcee (not on first load).
-  const seen = useRef(messages.length);
-  useEffect(() => {
-    if (variant === "page") {
-      if (messages.length !== seen.current || status === "submitted") scrollToBottom();
-      seen.current = messages.length;
-      return;
-    }
     const el = listRef.current;
     if (el) el.scrollTop = el.scrollHeight;
-  }, [messages, status, variant]);
+  }, [messages, status]);
 
   function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -219,7 +85,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
     setInput("");
   }
 
-  function renderPart(m: UIMessage, part: ToolPart & { text?: string; data?: unknown }, i: number) {
+  function renderPart(m: UIMessage, part: ToolPart, i: number) {
     const key = `${m.id}-${i}`;
     if (part.type === "text" && part.text) {
       if (m.role !== "assistant") {
@@ -267,21 +133,18 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
     return null;
   }
 
-  const page = variant === "page";
   return (
     <>
       <div
         ref={listRef}
-        data-lenis-prevent={page ? undefined : ""}
-        className={cn("flex flex-col gap-3 leading-snug", page ? "pb-6 text-[16px]" : "cutting-mat flex-1 overflow-y-auto px-4 py-4 text-[15px]")}
+        data-lenis-prevent=""
+        className="cutting-mat flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4 text-[15px] leading-snug"
         aria-live="polite"
       >
-        {page ? <Welcome page ask={ask} /> : <PanelWelcome ask={ask} />}
+        <PanelWelcome ask={ask} />
         {messages.map((m, idx) => {
           // The model occasionally returns nothing; say so instead of showing an empty bubble.
-          const empty =
-            m.role === "assistant" &&
-            !(m.parts as ToolPart[]).some((p) => (p.type === "text" && (p as { text?: string }).text?.trim()) || p.type.startsWith("tool-") || p.type === "data-sticker");
+          const empty = isEmptyReply(m);
           if (empty && (busy && idx === messages.length - 1)) return null;
           return (
             <div
@@ -291,7 +154,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
                 m.role === "user" ? "self-end rounded-br-md bg-violet text-white" : "self-start rounded-bl-md bg-surface shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]",
               )}
             >
-              {empty ? <p className="text-fg-muted">My brain blanked on that one. Ask me again?</p> : m.parts.map((p, i) => renderPart(m, p as ToolPart & { text?: string; data?: unknown }, i))}
+              {empty ? <p className="text-fg-muted">My brain blanked on that one. Ask me again?</p> : m.parts.map((p, i) => renderPart(m, p as ToolPart, i))}
             </div>
           );
         })}
@@ -316,8 +179,7 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
         )}
       </div>
 
-      {!page && (
-        <form onSubmit={onSubmit} className="border-t-2 border-dashed border-line bg-surface p-3">
+      <form onSubmit={onSubmit} className="border-t-2 border-dashed border-line bg-surface p-3">
           <div className="flex items-end gap-2 rounded-[26px] border-[3px] border-[var(--die)] bg-fg py-1.5 pr-1.5 pl-4 text-bg shadow-[0_12px_24px_-14px_rgb(0_0_0/0.6)]">
             <textarea
               ref={inputRef}
@@ -349,43 +211,6 @@ export function ArceeChat({ variant, active, ask: askRef }: { variant: "panel" |
             )}
           </div>
         </form>
-      )}
-
-      {page && (
-      <form
-        onSubmit={onSubmit}
-        className="sticky bottom-[88px] z-30 flex items-end gap-2 rounded-[26px] border-[4px] border-white bg-surface p-2.5 shadow-[0_18px_40px_-20px_rgb(0_0_0/0.5)]"
-      >
-        <textarea
-          ref={inputRef}
-          rows={1}
-          value={input}
-          maxLength={500}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              ask(input);
-              setInput("");
-            } else if (e.key === "Escape" && !page) {
-              useUI.getState().closeArcee();
-            }
-          }}
-          placeholder="Ask about Itesh…"
-          aria-label="Message Arcee"
-          className="max-h-28 min-h-11 flex-1 resize-none rounded-[20px] border-[3px] border-white bg-bg px-4 py-2 text-[15px] shadow-[inset_0_0_0_1.5px_var(--line)] outline-none placeholder:text-fg-muted"
-        />
-        {busy ? (
-          <button type="button" onClick={() => stop()} className="btn btn-paper">
-            Stop
-          </button>
-        ) : (
-          <button type="submit" disabled={!input.trim()} className="btn btn-violet disabled:pointer-events-none disabled:opacity-40">
-            Send
-          </button>
-        )}
-      </form>
-      )}
     </>
   );
 }
