@@ -3,8 +3,8 @@
 import { useEffect, useMemo, type CSSProperties } from "react";
 import { play } from "@/lib/sound";
 
-/** How many cats in the flood, and the longest any of them takes (delay + swim). */
-const CATS = 16;
+/** How many cats in the flood (randomly a bit bigger than one sticker), and the longest any of them takes (delay + swim). */
+const CATS = 8;
 const SWIM_MS = 9800;
 
 type Swimmer = { top: number; size: number; delay: number; dur: number; back: boolean; bob: number };
@@ -14,14 +14,14 @@ function school(seed: number): Swimmer[] {
   let s = (seed * 2654435761) % 2 ** 32 || 1;
   const rnd = () => (s = (s * 1664525 + 1013904223) % 2 ** 32) / 2 ** 32;
   // The lead cat swims the middle at full size; it's the one reduced motion keeps.
-  const lead: Swimmer = { top: 38, size: 1, delay: 0.1, dur: 6.2, back: false, bob: 1.6 };
+  const lead: Swimmer = { top: 36, size: 1.2, delay: 0.1, dur: 6.2, back: false, bob: 1.6 };
   return Array.from({ length: CATS }, (_, i) =>
     i === 0
       ? lead
       : {
           // Spread the rows down the screen, then jitter them so it doesn't look like a grid.
-          top: Math.min(86, Math.max(-4, (i / CATS) * 92 - 4 + (rnd() - 0.5) * 10)),
-          size: 0.45 + rnd() * 0.55,
+          top: Math.min(80, Math.max(-6, (i / CATS) * 90 - 6 + (rnd() - 0.5) * 12)),
+          size: 0.75 + rnd() * 0.6,
           delay: rnd() * 3.2,
           dur: 4.8 + rnd() * 1.8,
           back: rnd() < 0.3,
@@ -32,14 +32,14 @@ function school(seed: number): Swimmer[] {
 
 /**
  * His scuba-cat sticker: a transparent cut-out whose white die-cut edge and shadow are baked
- * into the WebP (no CSS filters, so sixteen of them stay cheap). Upright, mirrored when
+ * into the WebP (no CSS filters, so a school of them stays cheap). Upright, mirrored when
  * swimming right to left. The still frame stands in under reduced motion.
  */
 function CatDiver({ flip, size }: { flip: boolean; size: number }) {
   return (
     <picture className="block" style={{ width: `calc(clamp(150px, 17vw, 220px) * ${size})`, scale: flip ? "-1 1" : undefined }}>
       <source srcSet="/stickers/cats/scuba-still.webp" media="(prefers-reduced-motion: reduce)" />
-      <img src="/stickers/cats/scuba.webp" alt="" width={178} height={184} decoding="async" className="block h-auto w-full" />
+      <img src="/stickers/cats/scuba.webp" alt="" width={210} height={216} decoding="async" className="block h-auto w-full" />
     </picture>
   );
 }
@@ -84,7 +84,7 @@ export function ScubaCat({ run, onDone }: { run: number; onDone: () => void }) {
         >
           <div className="scuba-bob relative" style={{ animationDuration: `${c.bob}s` }}>
             <CatDiver flip={c.back} size={c.size} />
-            {i % 4 === 0 && <Bubbles />}
+            {i % 3 === 0 && <Bubbles />}
           </div>
         </div>
       ))}
