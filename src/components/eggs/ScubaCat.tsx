@@ -5,15 +5,13 @@ import { play } from "@/lib/sound";
 
 const SWIM_MS = 7600;
 
-/** His scuba-cat sticker, die-cut like the rest; the still frame stands in under reduced motion. */
+/** His scuba-cat sticker (a transparent cut-out), die-cut with a white outline; the still frame stands in under reduced motion. */
 function CatDiver() {
   return (
-    <span className="scuba-sticker block -rotate-6 size-[clamp(140px,16vw,210px)] overflow-hidden rounded-[28%] border-[6px] border-white bg-white shadow-[0_14px_24px_rgb(0_0_0/0.22)]">
-      <picture className="block size-full">
-        <source srcSet="/stickers/cats/scuba-still.webp" media="(prefers-reduced-motion: reduce)" />
-        <img src="/stickers/cats/scuba.webp" alt="" width={210} height={210} className="size-full object-cover" />
-      </picture>
-    </span>
+    <picture className="scuba-sticker block size-[clamp(150px,17vw,220px)] -rotate-6">
+      <source srcSet="/stickers/cats/scuba-still.webp" media="(prefers-reduced-motion: reduce)" />
+      <img src="/stickers/cats/scuba.webp" alt="" width={200} height={200} className="size-full object-contain" />
+    </picture>
   );
 }
 

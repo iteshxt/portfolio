@@ -31,11 +31,11 @@ export function LogoMark({ variant = "color", className }: { variant?: "color" |
   );
 }
 
-/** The wordmark: the sticker "i" standing in for the first letter of "itesh". */
-export function Wordmark({ className = "" }: { className?: string }) {
+/** The wordmark: the sticker "i" standing in for the first letter of "itesh". `line` on violet (the intro), where the violet dot would vanish. */
+export function Wordmark({ className = "", variant = "color" }: { className?: string; variant?: "color" | "line" }) {
   return (
     <span className={`inline-flex items-end gap-[0.06em] font-serif text-[28px] leading-none italic ${className}`}>
-      <LogoMark className="h-[1.18em] w-auto -translate-y-[0.04em]" />
+      <LogoMark variant={variant} className="h-[1.18em] w-auto -translate-y-[0.04em]" />
       <span>tesh</span>
     </span>
   );

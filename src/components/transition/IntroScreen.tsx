@@ -60,7 +60,7 @@ function Rotator({ words }: { words: string[] }) {
 export function IntroScreen() {
   return (
     <div className="intro-ui px-gutter absolute inset-0 flex flex-col justify-between pt-5 pb-[max(20px,env(safe-area-inset-bottom))] text-white">
-      <Wordmark className="self-start" />
+      <Wordmark variant="line" className="self-start" />
 
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         {SHAPES.map((shape, i) => (

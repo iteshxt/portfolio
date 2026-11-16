@@ -217,8 +217,8 @@ No 3D (three.js was removed). Each star project shows its real artwork, all CSS:
 - **Cat stickers:** Itesh's own animated cats (public/stickers/cats, 160px WebP with a still frame each), nine moods: hype, judging, shush, crying, sobbing, fighting, derp, stressed, sus. Arcee picks one by mood; three sit on the About lid. Send more and add a line to `lib/arcee/stickers.ts`.
 - **Icons:** our own 24 px set, 2 px rounded strokes.
 - **No photo of Itesh** (dropped 2026-11-16).
-- **Logo (2026-11-16):** the two-sticker "i": a lime pill stem and a violet dot, each with a white die-cut border, the stem tilted 6°, and the dot's lower-right edge peeling back (light violet flap). Wordmark = the sticker i + "tesh" in Instrument Serif italic (`ui/LogoMark` → `Wordmark`, top bar and intro). Favicon and Apple icon put the mark on an ink rounded square. **Line version** (`LogoMark variant="line"`, `public/logo-line.svg`, `public/icon-mono.svg`) for one-colour uses: the printed resume and the monochrome manifest icon.
-- **Scuba cat:** his own scuba sticker (`stickers/cats/scuba.webp`, still frame for reduced motion) in a die-cut frame swims across for the Konami code, `scuba` and the barcode egg.
+- **Logo (2026-11-16):** the two-sticker "i": a lime pill stem and a violet dot, each with a white die-cut border, the stem tilted 6°, and the dot's lower-right edge peeling back (light violet flap). Wordmark = the sticker i + "tesh" in Instrument Serif italic (`ui/LogoMark` → `Wordmark`, top bar; the violet intro uses the white line version). Favicon and Apple icon put the mark on an ink rounded square. **Line version** (`LogoMark variant="line"`, `public/logo-line.svg`, `public/icon-mono.svg`) for one-colour uses: the printed resume and the monochrome manifest icon.
+- **Scuba cat:** his own transparent scuba sticker (`stickers/cats/scuba.webp`, from his scuba.gif; still frame for reduced motion) with a white die-cut edge swims across for the Konami code, `scuba` and the barcode egg.
 
 ## 9. Sound
 
