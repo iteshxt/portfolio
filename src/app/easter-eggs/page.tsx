@@ -32,7 +32,7 @@ export default function EasterEggsPage() {
             .
           </h1>
           <p data-animate="rise" style={{ "--d": "160ms" } as CSSProperties} className="mt-5 max-w-[46ch] text-[clamp(16px,1.3vw,19px)] leading-[1.55] text-fg-muted">
-            Eight things hidden around this site. Couldn&rsquo;t find them all? Crack one open and try it right here.
+            Nine things hidden around this site. Couldn&rsquo;t find them all? Crack one open and try it right here.
           </p>
         </div>
         <EggCarton

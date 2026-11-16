@@ -967,6 +967,41 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   background: repeating-linear-gradient(90deg, var(--fg) 0 2px, transparent 2px 4px, var(--fg) 4px 5px, transparent 5px 8px, var(--fg) 8px 11px, transparent 11px 13px);
   opacity: 0.85;
 }
+/* The barcode egg: you arrive on the manifest, the barcode gets stamped. */
+.manifest-you {
+  background: var(--lime);
+  color: #2b3600;
+  animation: slap-in 0.6s var(--ease-slap) both;
+}
+.manifest-total-pop {
+  display: inline-block;
+  animation: slap-in 0.6s var(--ease-slap) 0.2s both;
+}
+.manifest-scanned {
+  color: #c23a1f;
+  border-color: currentColor;
+  background: rgb(255 255 255 / 0.85);
+  translate: -50% -50%;
+  rotate: -8deg;
+  animation: stamp-in 0.45s var(--ease-slap) 0.35s backwards;
+}
+/* The customs form on the phone, and its stamp. */
+.customs-form {
+  border: 4px solid var(--die);
+  box-shadow: 0 30px 60px -36px rgb(0 0 0 / 0.5);
+  rotate: -1deg;
+}
+.customs-stamp {
+  color: #c23a1f;
+  border-color: currentColor;
+  rotate: -12deg;
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  animation: stamp-in 0.5s var(--ease-slap) 0.6s backwards;
+}
+[data-shift="night"] .customs-stamp,
+[data-shift="night"] .manifest-scanned {
+  color: #ff8f7a;
+}
 /* Case files: the tab sits on the folder's top edge, left or right as the files alternate. */
 .case-file-tab {
   left: clamp(18px, 3vw, 44px);

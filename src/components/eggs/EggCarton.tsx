@@ -25,6 +25,7 @@ const EGGS: Egg[] = [
   { id: "owl", name: "3am mode", find: <>Visit between 2 and 5 in the morning. The site goes night by itself, and admits it&rsquo;s awake too.</>, shell: { fill: "#15121D", pattern: "stars", ink: "#CBB8FF" } },
   { id: "print", name: "Print to resume", find: <>Print any page (<Kbd>Ctrl</Kbd> + <Kbd>P</Kbd>). You get a one-page resume, not a screenshot.</>, shell: { fill: "#F5F5F4", pattern: "stripes", ink: "#7A2CFF" } },
   { id: "404", name: "The hallucinated page", find: <>Visit any address that doesn&rsquo;t exist.</>, shell: { fill: "#7A2CFF", pattern: "zigzag", ink: "#FFFFFF" } },
+  { id: "barcode", name: "You, shipped", find: <>Scan the barcode at the bottom of the shipping manifest on the Work page with your phone (Google Lens or any barcode app), or type the address printed under it. Watch the other screen.</>, shell: { fill: "#0E0E10", pattern: "stripes", ink: "#FFFFFF" } },
   { id: "now", name: "Currently building", find: <>The latest push to GitHub, live, in the home hero, the footer and the terminal&rsquo;s <Kbd>now</Kbd>.</>, shell: { fill: "#CCFF33", pattern: "stars", ink: "#0E0E10" } },
 ];
 
@@ -171,9 +172,9 @@ export function EggCarton({ nowSlot }: { nowSlot: ReactNode }) {
       {/* The carton */}
       <div className="carton relative mx-auto w-full max-w-[860px] rounded-[30px] border-[5px] border-[var(--die)] p-[clamp(16px,2.4vw,32px)]">
         <p aria-hidden="true" className="carton-label absolute -top-5 right-6 rounded-[8px] border-[3px] border-[var(--die)] bg-surface px-3 py-1 font-mono text-[11px] font-semibold tracking-[0.18em] uppercase shadow-[0_8px_14px_-8px_rgb(0_0_0/0.5)] md:right-10">
-          Grade A · 8 eggs · hand-hidden
+          Grade A · 9 eggs · hand-hidden
         </p>
-        <ul className="grid grid-cols-2 gap-[clamp(10px,1.6vw,22px)] sm:grid-cols-4">
+        <ul className="grid grid-cols-3 gap-[clamp(10px,1.6vw,22px)]">
           {EGGS.map((e, i) => (
             <li key={e.id} className="carton-cup grid place-items-center rounded-[50%] px-[18%] pt-[8%] pb-[12%]">
               <button
@@ -184,7 +185,7 @@ export function EggCarton({ nowSlot }: { nowSlot: ReactNode }) {
                 data-cursor={open === e.id ? "Close it" : "Crack it"}
                 data-animate="slap"
                 data-cracked={open === e.id || undefined}
-                style={{ "--d": `${i * 70}ms`, "--tilt": `${[-4, 3, -2, 5, -5, 2, -3, 4][i]}deg` } as CSSProperties}
+                style={{ "--d": `${i * 70}ms`, "--tilt": `${[-4, 3, -2, 5, -5, 2, -3, 4, -1][i]}deg` } as CSSProperties}
                 className="egg relative w-full"
               >
                 <Shell egg={e} i={i} />
@@ -202,7 +203,7 @@ export function EggCarton({ nowSlot }: { nowSlot: ReactNode }) {
         {egg ? (
           <div key={egg.id} className="egg-slip relative rounded-[6px] bg-surface px-[clamp(20px,3vw,40px)] py-[clamp(20px,2.6vw,32px)]">
             <p className="font-mono text-[12px] tracking-[0.2em] text-fg-muted uppercase">
-              Egg {String(EGGS.indexOf(egg) + 1).padStart(2, "0")} of 08 {found.includes(egg.id) && "· you found this one yourself"}
+              Egg {String(EGGS.indexOf(egg) + 1).padStart(2, "0")} of {String(EGGS.length).padStart(2, "0")} {found.includes(egg.id) && "· you found this one yourself"}
             </p>
             <h2 className="mt-2 text-[clamp(30px,3.6vw,50px)] leading-none font-semibold tracking-[-0.045em] [font-variation-settings:'wdth'_80]">{egg.name}</h2>
             <p className="mt-4 text-[clamp(16px,1.3vw,18px)] leading-relaxed">
@@ -213,6 +214,11 @@ export function EggCarton({ nowSlot }: { nowSlot: ReactNode }) {
               {egg.id === "404" ? (
                 <TransitionLink href="/this-page-is-a-hallucination" transitionLabel="Nowhere" className="btn btn-ink">
                   Take me nowhere
+                  <ArrowRight />
+                </TransitionLink>
+              ) : egg.id === "barcode" ? (
+                <TransitionLink href="/work" transitionLabel="Work" className="btn btn-ink">
+                  Go to the manifest
                   <ArrowRight />
                 </TransitionLink>
               ) : egg.id === "now" ? (
@@ -232,7 +238,7 @@ export function EggCarton({ nowSlot }: { nowSlot: ReactNode }) {
       </div>
 
       <p className="text-center font-mono text-[13px] tracking-wider text-fg-muted">
-        Found on your own: {found.filter((f) => EGGS.some((e) => e.id === f)).length} of 8
+        Found on your own: {found.filter((f) => EGGS.some((e) => e.id === f)).length} of {EGGS.length}
       </p>
     </div>
   );

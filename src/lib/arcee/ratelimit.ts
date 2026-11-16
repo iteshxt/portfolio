@@ -67,3 +67,8 @@ export async function limitChat(visitor: string): Promise<Limit> {
 export async function limitMessage(visitor: string): Promise<Limit> {
   return check({ name: "message", key: visitor, limit: 3, windowSec: 86_400 });
 }
+
+/** The manifest barcode: generous, it's only there to stop someone hammering it. */
+export async function limitScan(visitor: string): Promise<Limit> {
+  return check({ name: "scan", key: visitor, limit: 30, windowSec: 600 });
+}

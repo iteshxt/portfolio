@@ -125,6 +125,10 @@ Not in the navigator, the sitemap or search (noindex). The only way in is a whis
 - **The carton:** a cardboard egg carton (a die-cut tray with eight cups and a "GRADE A · 8 EGGS · HAND-HIDDEN" label) holding eight dyed, sticker-patterned eggs (zigzags, dots, stripes, stars), each a die-cut SVG egg that wobbles on hover. Cracking one pops its cap off along a zigzag crack (a yolk-yellow inside shows) and a torn, lined slip slides out below (scrolled into view): "Egg 03 of 08", the name, "How to find it" with keycaps, and "Try it", which really triggers it: opens the terminal, sends the scuba cat, flips the tab title, switches to 3am night with its toast, opens print, goes to a hallucinated address, or shows the live latest push.
 - **Found stamps:** eggs found on your own (kept in this browser; `markEgg` in lib/eggs) wear a green "FOUND" stamp, live, with "Found on your own: N of 8" below.
 
+### 2.17 The manifest barcode (2026-11-16): you, shipped
+
+The barcode at the bottom of the Work page's shipping manifest is a real Code 128 barcode (black on white in both themes), with its address printed under it like a real one: `iteshxt.me/s/<code>`, a 4-character code made once per tab. Scanning it with a phone (Google Lens, Android cameras, barcode apps; iPhone's built-in camera only reads QR codes) opens a customs declaration: "1 curious human", "shipped with 22 other things", "declared value: priceless", parcel no. 23 of 22, and a red CLEARED stamp thumps on. At the same moment, the desktop's manifest (polling every 2.5 s while the barcode is on screen, for up to 15 minutes) prints "23 · You ★ · just now" in lime, TOTAL SHIPPED ticks to 23, the barcode gets a SCANNED stamp, the scuba cat swims past and the egg toast appears. The two meet through `/api/scan` and Upstash Redis (in-memory locally). It's egg 9 in the carton.
+
 ## 3. Colour
 
 ### 3.1 Palette
