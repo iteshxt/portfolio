@@ -24,11 +24,11 @@ export default function Home() {
   return (
     <main className="flex-1">
       {/* Hero */}
-      <section data-section="Hello" data-curl="" className="hero-peel px-gutter relative isolate flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
+      <section data-section="Hello" data-curl="" suppressHydrationWarning className="hero-peel px-gutter relative isolate flex min-h-[100svh] flex-col items-center justify-center pt-24 pb-40 text-center md:pt-28 md:pb-32">
         <HeroBackdrop />
         <PeelHint />
 
-        <div data-parallax="0.28" data-parallax-fade="" className="flex flex-col items-center">
+        <div data-parallax="0.28" data-parallax-fade="" suppressHydrationWarning className="flex flex-col items-center">
         <p className="font-serif text-[clamp(20px,1.9vw,28px)] text-fg-muted italic">Hi, I&rsquo;m Itesh.</p>
         {/* One readable statement instead of a giant cycling headline; the key words are flickable stickers. */}
         {/* Letters swell towards the cursor; each sticker is kept with its punctuation. */}
