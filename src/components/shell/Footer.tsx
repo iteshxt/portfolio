@@ -40,7 +40,7 @@ export async function Footer() {
             </span>
           </p>
           <p className="max-w-[16ch] text-[15px] leading-snug text-fg-muted">
-            {SITE.display}. <span className="font-serif text-[18px] italic">{SITE.tagline[0].toUpperCase() + SITE.tagline.slice(1)}.</span>
+            <span className="font-serif text-[18px] italic">{SITE.tagline[0].toUpperCase() + SITE.tagline.slice(1)}.</span>
           </p>
         </div>
 

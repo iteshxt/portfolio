@@ -60,7 +60,7 @@ Detail that used to live in the night shift hides under small stickers now: e.g.
 - **DiaLabs:** a violet band that grows from an inset rounded sticker to full width on scroll (`GrowIn`); releases are peelable stickers.
 - **Experience:** rows with a link to the full story.
 - **Contact:** ink block (dark surface at night): "Got something *worth building*?", copy-email button, "Or leave Arcee a message", channel rows with scribble underlines.
-- **Footer:** compact, on a faded mat: the wordmark (sticker "i" + tesh) on a tilted ink sticker, then "Itesh Tomar. *Ships, mostly on time.*", link stickers (straight), the latest push as a torn receipt, "© {year} iteshxt" and back to top. No colophon.
+- **Footer:** compact, on a faded mat: the wordmark (sticker "i" + tesh) on a tilted ink sticker, then "*Ships, mostly on time.*" (no name: the badge already says it), link stickers (straight), the latest push as a torn receipt, "© {year} iteshxt" and back to top. No colophon.
 
 ### 2.8 Arcee
 
