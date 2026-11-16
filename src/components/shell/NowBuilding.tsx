@@ -1,10 +1,22 @@
 import { getNowBuilding } from "@/lib/github";
+import { SITE } from "@/content/site";
 import { TimeAgo } from "./TimeAgo";
 
-/** Latest public push, e.g. "cineflex-app · fix: why does this work · 3 hours ago". Renders nothing on failure. */
+/** Latest public push, e.g. "cineflex-app · fix: why does this work · 3 hours ago". On failure the compact one renders nothing and the receipt links to GitHub. */
 export async function NowBuilding({ compact = false }: { compact?: boolean }) {
   const now = await getNowBuilding();
-  if (!now) return null;
+  if (!now && compact) return null;
+  // GitHub said no (rate limit, outage): the receipt still points somewhere real.
+  if (!now) {
+    return (
+      <a href={SITE.socials.github} target="_blank" rel="noreferrer" className="group flex flex-col gap-2">
+        <span className="text-[13px] text-fg-muted">Currently building</span>
+        <span className="font-mono text-[14px] text-fg group-hover:underline group-hover:decoration-violet group-hover:underline-offset-4">
+          Something. The commits are on GitHub ↗
+        </span>
+      </a>
+    );
+  }
 
   if (compact) {
     return (

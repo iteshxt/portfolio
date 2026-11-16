@@ -267,7 +267,7 @@ ArceePanel (useChat, AI SDK)
 | 3am mode | The bootstrap script sets `data-owl` and forces dark; `QuietEggs` shows the "Why are you awake?" toast |
 | Print to resume | `PrintResume` lives in the root layout as `hidden print:block`; the rest of the app is `print:hidden`. One A4 page, ink on white, from the `content/` data |
 | 404 | `app/not-found.tsx` with its own headline pair and a link home |
-| Currently building | `lib/github.ts` fetches `GET /users/iteshxt/events/public` inside a `'use cache'` function with `cacheLife({ revalidate: 600 })` (Cache Components; optional `GITHUB_TOKEN`), takes the latest `PushEvent`, and returns `{ repo, message, url, at }`. The commit message is trimmed to its first line and limited to 80 characters. Rendered by the `NowBuilding` server component; it shows nothing if the call fails |
+| Currently building | `lib/github.ts`, inside a `'use cache'` function with `cacheLife({ revalidate: 600 })`: finds the most recently pushed public repo (`GET /users/iteshxt/repos?sort=pushed`), takes the newest push from its activity feed (`GET /repos/{repo}/activity?activity_type=push`, real time), then fetches that commit's message (first line, max 80 characters). If that fails it falls back to `GET /users/iteshxt/events/public` (which can lag by days, and isn't strictly newest-first, so the newest `PushEvent` is picked by time). A rejected `GITHUB_TOKEN` (401/403) is retried without it. Rendered by `NowBuilding`; on failure the footer receipt links to GitHub and the compact one renders nothing |
 
 ## 10. Sound (`lib/sound.ts`)
 
@@ -306,7 +306,7 @@ Techniques: Server Components by default (only interactive pieces are client com
 | `ARCEE_MODEL` | Arcee (default `openai/gpt-oss-20b`) | no |
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN` from Vercel's Marketplace integration) | rate limits | yes for Arcee in prod |
 | `RESEND_API_KEY`, `CONTACT_TO_EMAIL` | leave-a-message | yes for messages |
-| `GITHUB_TOKEN` | currently building (higher rate limit) | no |
+| `GITHUB_TOKEN` | currently building: without a valid token GitHub allows 60 requests an hour per IP, which shared Vercel IPs run out of. A fine-grained token with no permissions (public data only) is enough | strongly recommended |
 
 Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 
