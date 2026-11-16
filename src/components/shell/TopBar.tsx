@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { TransitionLink } from "@/components/transition/TransitionLink";
+import { Wordmark } from "@/components/ui/LogoMark";
 import { SoundToggle } from "./SoundToggle";
 
 /**
- * Minimal top bar: the wordmark placeholder (the logo comes after the site,
- * see docs/prd.md §4). It slides away while scrolling down so it never sits
+ * Minimal top bar: the wordmark (sticker "i" + tesh, see ui/LogoMark). It slides away while scrolling down so it never sits
  * on top of content, and comes back on the way up.
  */
 export function TopBar() {
@@ -40,9 +40,9 @@ export function TopBar() {
         href="/"
         transitionLabel="Home"
         aria-label="itesh, home"
-        className="pointer-events-auto font-serif text-[28px] italic leading-none"
+        className="pointer-events-auto"
       >
-        itesh
+        <Wordmark />
       </TransitionLink>
       {/* Leaves room for the peel corner in the top-right. */}
       <div className="-mt-2.5 mr-14">

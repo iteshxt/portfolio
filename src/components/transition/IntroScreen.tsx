@@ -1,3 +1,4 @@
+import { Wordmark } from "@/components/ui/LogoMark";
 import { Shape, type ShapeName } from "@/components/ui/Shape";
 
 /**
@@ -59,7 +60,7 @@ function Rotator({ words }: { words: string[] }) {
 export function IntroScreen() {
   return (
     <div className="intro-ui px-gutter absolute inset-0 flex flex-col justify-between pt-5 pb-[max(20px,env(safe-area-inset-bottom))] text-white">
-      <span className="font-serif text-[28px] italic leading-none">itesh</span>
+      <Wordmark className="self-start" />
 
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         {SHAPES.map((shape, i) => (

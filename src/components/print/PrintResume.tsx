@@ -1,6 +1,7 @@
 import { ACHIEVEMENTS, CERTIFICATES, EDUCATION, EXPERIENCE, SKILLS } from "@/content/profile";
 import { ARCHIVE_PROJECTS, STAR_PROJECTS } from "@/content/projects";
 import { SITE } from "@/content/site";
+import { LogoMark } from "@/components/ui/LogoMark";
 
 const SELECTED = ["sutr", "bloom", "cadence", "stryde", "investwise", "dia-moderator"];
 
@@ -13,6 +14,7 @@ export function PrintResume() {
   return (
     <div data-print-resume="" className="print-resume hidden">
       <header className="pr-header">
+        <LogoMark variant="line" className="pr-logo" />
         <h1>{SITE.name}</h1>
         <p className="pr-role">{SITE.role}</p>
         <p className="pr-contact">

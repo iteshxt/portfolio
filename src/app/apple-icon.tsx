@@ -1,16 +1,22 @@
 import { ImageResponse } from "next/og";
+import { LOGO_DOT, LOGO_PEEL, LOGO_STEM, LOGO_VIEWBOX } from "@/components/ui/LogoMark";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
-/** Apple touch icon: the violet sticker with its peeled corner (logo comes later). */
+/** Apple touch icon: the sticker "i" (lime stem, peeling violet dot) on ink. */
 export default function AppleIcon() {
   return new ImageResponse(
     (
-      <div style={{ width: "100%", height: "100%", display: "flex", background: "#7A2CFF", position: "relative" }}>
-        <svg width="66" height="66" viewBox="0 0 66 66" style={{ position: "absolute", top: 0, right: 0 }}>
-          <polygon points="0,0 66,0 66,66" fill="#F5F5F4" />
-          <polygon points="0,0 66,66 0,66" fill="#CBB8FF" />
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#0E0E10" }}>
+        <svg width="59" height="140" viewBox={LOGO_VIEWBOX}>
+          <g fill="#FFFFFF" stroke="#FFFFFF" strokeWidth="8" strokeLinejoin="round">
+            <rect {...LOGO_STEM} />
+            <path d={LOGO_DOT} />
+          </g>
+          <rect {...LOGO_STEM} fill="#CCFF33" />
+          <path d={LOGO_DOT} fill="#7A2CFF" />
+          <path d={LOGO_PEEL} fill="#CBB8FF" />
         </svg>
       </div>
     ),

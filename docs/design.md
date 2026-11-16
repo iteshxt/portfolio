@@ -127,7 +127,7 @@ Not in the navigator, the sitemap or search (noindex). The only way in is a whis
 
 ### 2.17 The manifest barcode (2026-11-16): you, shipped
 
-The barcode at the bottom of the Work page's shipping manifest is a real Code 128 barcode (black on white in both themes), with its address printed under it like a real one: `iteshxt.me/s/<code>`, a 4-character code made once per tab. Scanning it with a phone (Google Lens, Android cameras, barcode apps; iPhone's built-in camera only reads QR codes) opens a customs declaration: "1 curious human", "shipped with 22 other things", "declared value: priceless", parcel no. 23 of 22, and a red CLEARED stamp thumps on. At the same moment, the desktop's manifest (polling every 2.5 s while the barcode is on screen, for up to 15 minutes) prints "23 · You ★ · just now" in lime, TOTAL SHIPPED ticks to 23, the barcode gets a SCANNED stamp, the scuba cat swims past and the egg toast appears. The two meet through `/api/scan` and Upstash Redis (in-memory locally). It's egg 9 in the carton.
+The barcode at the bottom of the Work page's shipping manifest is a real Code 128 barcode (black on white in both themes), with its address printed under it like a real one: `iteshxt.me/s/<code>`, a 4-character code made once per tab. Scanning it with a phone (Google Lens, Android cameras, barcode apps; iPhone's built-in camera only reads QR codes) opens a customs declaration: "1 curious human", "shipped with 22 other things", "declared value: priceless", parcel no. 23 of 22, and a red CLEARED stamp thumps on. At the same moment, the desktop's manifest (polling every 2.5 s while the barcode is on screen, for up to 15 minutes) prints "23 · You ★ · just now" in lime, TOTAL SHIPPED ticks to 23, a red SCANNED stamp thumps on under the printed address (never over the bars, so it still scans), the scuba cat swims past and the egg toast appears. The two meet through `/api/scan`, kept in memory (Upstash Redis is used if configured, but isn't required: it's fine if a scan on another server instance goes unheard, the phone still earns the egg). It's egg 9 in the carton.
 
 ## 3. Colour
 
@@ -217,7 +217,8 @@ No 3D (three.js was removed). Each star project shows its real artwork, all CSS:
 - **Cat stickers:** Itesh's own animated cats (public/stickers/cats, 160px WebP with a still frame each), nine moods: hype, judging, shush, crying, sobbing, fighting, derp, stressed, sus. Arcee picks one by mood; three sit on the About lid. Send more and add a line to `lib/arcee/stickers.ts`.
 - **Icons:** our own 24 px set, 2 px rounded strokes.
 - **No photo of Itesh** (dropped 2026-11-16).
-- **Logo:** being explored (2026-11-16); "itesh" in Instrument Serif italic meanwhile.
+- **Logo (2026-11-16):** the two-sticker "i": a lime pill stem and a violet dot, each with a white die-cut border, the stem tilted 6°, and the dot's lower-right edge peeling back (light violet flap). Wordmark = the sticker i + "tesh" in Instrument Serif italic (`ui/LogoMark` → `Wordmark`, top bar and intro). Favicon and Apple icon put the mark on an ink rounded square. **Line version** (`LogoMark variant="line"`, `public/logo-line.svg`, `public/icon-mono.svg`) for one-colour uses: the printed resume and the monochrome manifest icon.
+- **Scuba cat:** his own scuba sticker (`stickers/cats/scuba.webp`, still frame for reduced motion) in a die-cut frame swims across for the Konami code, `scuba` and the barcode egg.
 
 ## 9. Sound
 
