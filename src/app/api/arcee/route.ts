@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   const question = textOf(users[users.length - 1]);
 
   const verdict = checkInput(question);
-  if (!verdict.ok) return cannedReply(verdict.reply, verdict.reason === "injection" ? "judging" : undefined);
+  if (!verdict.ok) return cannedReply(verdict.reply, verdict.reason === "injection" ? "sus" : undefined);
 
   const limit = await limitChat(visitorKey(req.headers));
   if (!limit.ok) {

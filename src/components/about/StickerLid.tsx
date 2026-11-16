@@ -163,7 +163,7 @@ const STICKERS: LidSticker[] = [
         <img src="/stickers/cats/judging.webp" alt="" width={92} height={92} className="size-full object-cover" />
       </picture>
     ),
-    story: { title: "Six moods, six cats", body: "Arcee picks a cat for how it feels about your question: hype, judging, shush, crying, sobbing or ready to fight. Ask something nosy and see." },
+    story: { title: "Nine moods, nine cats", body: "Arcee picks one of his cats for how it feels about your question: hype, judging, shush, sus, derp, stressed, crying, sobbing or ready to fight. Ask something nosy and see." },
   },
   {
     id: "nextjs",
