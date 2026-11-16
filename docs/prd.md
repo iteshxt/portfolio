@@ -8,6 +8,14 @@
 | Last updated | 2026-11-11 |
 | Companion docs | [design.md](./design.md) (how it looks, moves and sounds), [spec.md](./spec.md) (how it's built) |
 
+> **Where things stand (2026-11-16).** The site as built differs from this original brief in a few big ways; [design.md](./design.md) §2 is the source of truth for how each page works now:
+> - **No more two shifts.** Light and dark are a plain theme switched by peeling the corner; every page shows the same content in both. Technical detail lives on the page (case files, the DiaLabs notebook) instead of on the night side.
+> - **Navigation** is the "Where to?" pill: page stickers fan out on two semicircles and the pill becomes a field that also asks Arcee anything.
+> - **No 3D.** Each star project shows its real artwork (Arcee's ring, PatentIQ's mark, DiaChat's loader).
+> - **Every page is its own concept** in one shared sticker language: Work is a shipping manifest, case studies are opened case files, About is a laptop lid of stickers, DiaLabs is a lab notebook whose pages turn on scroll, Contact is a postcard you can send, the 404 is a peeled sticker, and a hidden `/easter-eggs` page holds an egg carton.
+> - **No photo of Itesh** (dropped 2026-11-16).
+> - **Arcee** runs on Groq's gpt-oss-120b with retrieval over the site's content (see `npm run arcee:corpus`), replies with Itesh's own cat stickers, and drafts messages that the visitor sends; messages and contact-page postcards arrive by email through Resend.
+
 ## 1. Vision
 
 A portfolio that feels like a one-of-a-kind experience, not a template. Visitors should leave knowing three things: what Itesh builds, how he thinks, and that he's fun to work with.
@@ -72,7 +80,6 @@ Anyone can land here. The site must work for all of them without a separate mode
 
 - Logo and a matching favicon/OG system
 - Real cat sticker set replacing placeholders (supplied by Itesh)
-- Stylised photo of Itesh (supplied later)
 - Sticker collection (visitors collect stickers by finding easter eggs)
 - A "now playing" widget
 
@@ -132,12 +139,16 @@ Priority: **P0** = must ship in v1, **P1** = should ship in v1, **P2** = nice to
 
 ### 6.1 Two shifts: day/night (P0)
 
+*Superseded 2026-11-13: light/dark is a plain theme, switched by the peel; the same content in both. The clock, saved choice, `?shift=` and 3am rules below still decide which theme loads first.*
+
 - Day = light theme focused on *what*; night = dark theme focused on *how*. Every page has content for both shifts; star projects must be fully readable in either.
 - First visit: the shift follows the **visitor's local clock** (day 07:00–18:59, night 19:00–06:59). After that, the visitor's choice is remembered.
 - Switching shifts = **peeling** the top-right corner of the page (drag or click). It must also be operable by keyboard and announced to screen readers.
 - The URL doesn't change between shifts. A `?shift=night` query param can deep-link a shift.
 
 ### 6.2 "Show me ___" navigation bar (P0)
+
+*Superseded: the "Where to?" navigator (design.md §2.5).*
 
 - One persistent pill reading "Show me ___" (bottom centre on all screen sizes).
 - Opening it shows completions the visitor picks from, each mapping to a page, e.g. "Show me **the desktop agent**" → Arcee, "Show me **how to say hi**" → Contact. The prompt is shown once; options don't repeat it.
@@ -182,6 +193,8 @@ The name only; it's a separate thing from the Arcee agent project.
 
 ### 6.7 Projects as objects (P1)
 
+*Dropped 2026-11-13: the 3D objects were replaced by each project's real artwork.*
+
 - Each star project has its own 3D object (e.g. Arcee's woven-ring orb, PatentIQ's rubber stamp, DiaChat's squishy speech bubble) that reacts to hover and becomes the hero of its case study.
 - Archive projects appear as die-cut stickers/cards with lighter interactions.
 
@@ -207,7 +220,7 @@ What DiaLabs is, Itesh's role as co-founder, the projects, models and datasets i
 
 ### 7.5 About (`/about`)
 
-Who Itesh is, experience timeline, education, achievements, certificates, how he works (night side), and the stylised photo when supplied.
+Who Itesh is, where he's worked, how he works, and a little background. *As built:* the laptop lid of true stickers, house rules, "Who I've worked for" badges on lanyards, and the fine print (degree, certificates). No photo.
 
 ### 7.6 Contact (`/contact`)
 

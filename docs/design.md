@@ -206,14 +206,14 @@ Reduced motion: no smooth scroll, parallax, curl or flicks; reveals show at once
 
 No 3D (three.js was removed). Each star project shows its real artwork, all CSS: Arcee the particle-ring animation from the Arcee app (animated WebP, still frame for reduced motion); PatentIQ its document-and-brain mark with a lime scan and circuit nodes lighting in turn; DiaChat its preloader on a loop (bubble, heart, beat). Case-study stages use the same artwork.
 
-## 8. Stickers, icons, photo
+## 8. Stickers, icons, logo
 
 - **Die-cut stickers:** white (`--die`) border, flat colour, soft shadow, optional slight tilt when an accent. Word stickers: `Sticker size="word"`; chips: `Sticker`.
 - **Wordless shapes** (`ui/Shape`): burst, blob, squiggle, arch, sparkle, zigzag, capsule. For loaders and transitions only; don't scatter them as decoration on content.
-- **Cat stickers** in Arcee's replies, chosen by mood.
+- **Cat stickers:** Itesh's own animated cats (public/stickers/cats, 160px WebP with a still frame each), nine moods: hype, judging, shush, crying, sobbing, fighting, derp, stressed, sus. Arcee picks one by mood; three sit on the About lid. Send more and add a line to `lib/arcee/stickers.ts`.
 - **Icons:** our own 24 px set, 2 px rounded strokes.
-- **Photo of Itesh** (later): a die-cut sticker, placed like a polaroid.
-- **Logo:** postponed; "itesh" in Instrument Serif italic meanwhile.
+- **No photo of Itesh** (dropped 2026-11-16).
+- **Logo:** being explored (2026-11-16); "itesh" in Instrument Serif italic meanwhile.
 
 ## 9. Sound
 

@@ -2,6 +2,8 @@
 
 How the site is built. What to build is in [prd.md](./prd.md); how it should look and feel is in [design.md](./design.md).
 
+> **Note (2026-11-16):** "shift" in the code (`data-shift`, `lib/shift.ts`, `setShift`) now just means the light/dark theme. The day/night content split, the 3D stage and the old two-line headlines are gone; sections below are marked where they changed.
+
 ## 1. Stack
 
 | Area | Choice | Version (Nov 2026) |
@@ -13,7 +15,7 @@ How the site is built. What to build is in [prd.md](./prd.md); how it should loo
 | Styling | Tailwind CSS v4 + CSS variables for tokens | 4.3 |
 | Animation | GSAP (all plugins are free: ScrollTrigger, SplitText, DrawSVG, CustomEase, Inertia) + `@gsap/react` | 3.15 / 2.1 |
 | Smooth scroll | Lenis | 1.3 |
-| 3D | three.js + React Three Fiber + drei | 0.187 / 9.8 / 10.7 |
+| 3D | *(removed 2026-11-13: the projects show their real artwork instead)* | — |
 | UI state | Zustand | 5.1 |
 | Content | MDX via `@next/mdx` + typed TS data | 16.4 |
 | Chatbot | Vercel AI SDK + `@ai-sdk/groq` (Groq API) | 7 / 4 |
@@ -110,7 +112,7 @@ It also sets `data-owl="true"` between 02:00 and 04:59 (3am mode forces night). 
 
 ### 3.3 Shift-specific content
 
-`<Day>` / `<Night>` components (usable in MDX) render wrappers with `day-only` / `night-only` classes. Headlines take `day` and `night` props.
+*Retired:* every page shows the same content in both themes; there are no `day-only` / `night-only` wrappers left. Night styling uses the `night:` variant only.
 
 ## 4. Fonts
 
@@ -199,7 +201,7 @@ type Project = {
 };
 ```
 
-Case studies are typed TypeScript content in `content/case-studies.ts` (changed from MDX: all three share one structure — summary, stats, a day story of points, a night story of pipeline steps and decisions, plus an optional rubric breakdown or gated-phase list — so a typed object is simpler than MDX and needs no extra build step). `components/case/CaseStudyView` renders them; both stories are always present and CSS `order` puts the current shift's story first. Static params come from `STAR_SLUGS`.
+Case studies are typed TypeScript content in `content/case-studies.ts`: summary, what it does, how it works (pipeline and decisions), and optional blocks (what it's tested on, safety rules, a rubric or gated phases). `components/case/CaseStudyView` renders them as the opened case file (design.md §2.11). Stats stay in the data for Arcee the chatbot but aren't shown. Static params come from `STAR_SLUGS` (`content/pages.ts`).
 
 ## 7. 3D
 
@@ -260,9 +262,9 @@ ArceePanel (useChat, AI SDK)
 | Egg | Implementation |
 |---|---|
 | Scuba cat | `ScubaCat` listens for the Konami sequence on `keydown`, then plays an SVG/Lottie-free GSAP animation across the viewport and unmounts |
-| Terminal | `Terminal` overlay toggled with `` ` `` / `~` (ignored inside inputs). A command registry in `lib/terminal.ts` (`help`, `whoami`, `ls projects`, `open <slug>`, `cat resume`, `shift day|night`, `sound on|off`, `sudo hire itesh`, `rm -rf /`, `now`, `clear`, `exit`), with history (↑/↓) and tab completion |
+| Terminal | `Terminal` overlay toggled with `` ` `` / `~` (ignored inside inputs). A command registry in `lib/terminal.ts` (`help`, `whoami`, `ls projects`, `open <slug>`, `cat resume`, `theme light|dark` (`shift` still works), `sound on|off`, `sudo hire itesh`, `rm -rf /`, `now`, `clear`, `exit`), with history (↑/↓) and tab completion |
 | Tab title | `TabTitle` swaps `document.title` on `visibilitychange` and restores it on return |
-| 3am mode | The bootstrap script sets `data-owl`; `NightOwl` forces the night shift for the session and shows the note |
+| 3am mode | The bootstrap script sets `data-owl` and forces dark; `QuietEggs` shows the "Why are you awake?" toast |
 | Print to resume | `PrintResume` lives in the root layout as `hidden print:block`; the rest of the app is `print:hidden`. One A4 page, ink on white, from the `content/` data |
 | 404 | `app/not-found.tsx` with its own headline pair and a link home |
 | Currently building | `lib/github.ts` fetches `GET /users/iteshxt/events/public` inside a `'use cache'` function with `cacheLife({ revalidate: 600 })` (Cache Components; optional `GITHUB_TOKEN`), takes the latest `PushEvent`, and returns `{ repo, message, url, at }`. The commit message is trimmed to its first line and limited to 80 characters. Rendered by the `NowBuilding` server component; it shows nothing if the call fails |
@@ -291,9 +293,9 @@ ArceePanel (useChat, AI SDK)
 | Lighthouse performance (mobile) | ≥ 90 |
 | Fonts | 3 families, subset latin, preload the display fonts only (plus Caveat for one hint, never preloaded) |
 
-*Measured 2026-11-12, after the milestone 7 pass and the extras:* 199 KB gzipped on the home page (197 KB before the extras; the scribbles, flickable stickers and card flight add 2.3 KB), of which ~160 KB is the React/Next runtime and the rest our code. (2026-11-13: the hard 200 KB cap is lifted; speed still matters, but motion and graphics come first. Heavy pieces stay lazy.) The chat (AI SDK + corpus), terminal and scuba cat load on first use; GSAP loads after first paint for the line reveals; three.js loads only on case studies. (Before the pass it was ~345 KB once Arcee landed.) *Re-measured 2026-11-13:* the intro loader and the fuller home hero bring it to 199.7 KB (+0.8 KB: the intro counter logic and the Delhi clock). The loader markup is a Server Component passed into `TransitionProvider` as `intro`, so it ships no JS. *After merging that into v7 (2026-11-13):* 200.2 KB, so Lenis now loads on demand right after hydration (the intro covers the screen meanwhile): home 194.9 KB, work 197.9 KB, about 195.5 KB, contact 195.7 KB. On Vercel, Web Analytics and Speed Insights add their small loaders on top.
+*Measured 2026-11-12, after the milestone 7 pass and the extras:* 199 KB gzipped on the home page (197 KB before the extras; the scribbles, flickable stickers and card flight add 2.3 KB), of which ~160 KB is the React/Next runtime and the rest our code. (2026-11-13: the hard 200 KB cap is lifted; speed still matters, but motion and graphics come first. Heavy pieces stay lazy.) The chat (AI SDK + corpus), terminal and scuba cat load on first use; GSAP loads after first paint for the line reveals. (Before the pass it was ~345 KB once Arcee landed.) *Re-measured 2026-11-13:* the intro loader and the fuller home hero bring it to 199.7 KB (+0.8 KB: the intro counter logic and the Delhi clock). The loader markup is a Server Component passed into `TransitionProvider` as `intro`, so it ships no JS. *After merging that into v7 (2026-11-13):* 200.2 KB, so Lenis now loads on demand right after hydration (the intro covers the screen meanwhile): home 194.9 KB, work 197.9 KB, about 195.5 KB, contact 195.7 KB. On Vercel, Web Analytics and Speed Insights add their small loaders on top.
 
-Techniques: Server Components by default (only interactive pieces are client components), GSAP plugins registered lazily per feature, 3D lazy-loaded with tiering, `next/image` with AVIF, and no layout-shifting typing (§5.4).
+Techniques: Server Components by default (only interactive pieces are client components), GSAP plugins registered lazily per feature, `next/image` with AVIF, and no layout-shifting typing (§5.4).
 
 ## 13. Environment variables
 
@@ -312,7 +314,7 @@ Local values go in `.env.local` (git-ignored). `.env.example` documents them.
 
 - **Unit (Vitest):** peel geometry, fit, shift selection (clock / storage / query / 3am), terminal commands, nav filtering, retrieval, guard rules, GitHub event parsing.
 - **E2E (Playwright):** nav bar keyboard flow, page transition reaches the right route, peel toggles the shift and persists it, print emulation shows the resume, 404, and Arcee with a mocked API (navigate + message confirm).
-- **Accessibility:** axe checks in Playwright on every page, in both shifts.
+- **Accessibility:** axe checks in Playwright on every page, in both themes (67 passing as of 2026-11-14).
 - **CI (GitHub Actions):** lint, typecheck (`next typegen` first, so route types like `PageProps` exist on a fresh checkout), unit, e2e, build, on every PR and every push to `main` or a `v*` branch.
 - **Git:** `main` is always deployable; feature branches `feat/<area>-<thing>`; Conventional Commits.
 
