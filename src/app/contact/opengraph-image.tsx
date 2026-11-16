@@ -5,5 +5,5 @@ export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
-  return ogCard({ kicker: "Contact", sans: "Say", serif: "hello" });
+  return ogCard({ kicker: "Contact", parts: ["Write me a ", { sticker: "postcard", tone: "tomato" }, "."] });
 }

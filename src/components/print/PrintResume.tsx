@@ -92,7 +92,7 @@ export function PrintResume() {
         </section>
       </div>
 
-      <p className="pr-foot">Printed from iteshxt.me, where there&apos;s a night shift too.</p>
+      <p className="pr-foot">Printed from iteshxt.me. The website has more stickers.</p>
     </div>
   );
 }

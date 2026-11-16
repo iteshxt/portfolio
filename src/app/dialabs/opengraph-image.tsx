@@ -5,5 +5,5 @@ export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
-  return ogCard({ kicker: "Co-founded", sans: "DiaLabs,", serif: "an open lab" });
+  return ogCard({ kicker: "DiaLabs · co-founded", parts: ["A lab that works in the ", { sticker: "open", tone: "lime" }, "."] });
 }

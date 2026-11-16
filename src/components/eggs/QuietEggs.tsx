@@ -36,7 +36,7 @@ export function QuietEggs() {
   useEffect(() => {
     if (document.documentElement.dataset.owl !== "true") return;
     const timer = window.setTimeout(
-      () => foundEgg("owl", "Why are you awake?", "Same. The night shift is on: this is where the details live."),
+      () => foundEgg("owl", "Why are you awake?", "Same. The site went dark to keep you company."),
       2600,
     );
     return () => window.clearTimeout(timer);

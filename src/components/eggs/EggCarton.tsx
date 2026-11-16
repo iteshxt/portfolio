@@ -157,7 +157,7 @@ export function EggCarton({ nowSlot }: { nowSlot: ReactNode }) {
         window.setTimeout(() => root.classList.remove("shift-fade"), 260);
         markEgg("owl");
         play("found");
-        ui.pushToast("Why are you awake?", "Same. The night shift is on: this is where the details live.");
+        ui.pushToast("Why are you awake?", "Same. The site went dark to keep you company.");
         break;
       }
       case "print":

@@ -47,7 +47,7 @@ const LINKS: Record<string, string> = {
 };
 
 export const OPEN_TARGETS = [...Object.keys(PAGES), ...Object.keys(LINKS)];
-export const COMMANDS = ["help", "whoami", "ls", "open", "cat", "print", "now", "shift", "sound", "date", "echo", "clear", "exit"];
+export const COMMANDS = ["help", "whoami", "ls", "open", "cat", "print", "now", "theme", "sound", "date", "echo", "clear", "exit"];
 
 const line = (text: string, tone?: TermLine["tone"]): TermLine => ({ text, tone });
 
@@ -60,7 +60,7 @@ function help(): TermLine[] {
     line("  cat resume        the short version"),
     line("  print             the printable version"),
     line("  now               what he's pushing right now"),
-    line("  shift day|night   switch shifts (peeling is more fun)"),
+    line("  theme light|dark  switch the theme (peeling is more fun)"),
     line("  sound on|off      ui sounds"),
     line("  date              what time is it, really"),
     line("  clear · exit"),
@@ -141,10 +141,14 @@ export function runCommand(raw: string, ctx: TermContext): TermResult {
           : [line("nothing pushed lately. suspicious.", "muted")],
       };
 
+    case "theme":
     case "shift": {
-      if (arg !== "day" && arg !== "night") return { lines: [line("usage: shift day|night", "muted")] };
-      if (arg === ctx.shift) return { lines: [line(`already on the ${arg} shift.`, "muted")] };
-      return { lines: [line(`clocking into the ${arg} shift…`, "success")], action: { type: "shift", value: arg } };
+      // light/dark, or the old day/night (the "shift" command still works).
+      const want = arg === "light" || arg === "day" ? "day" : arg === "dark" || arg === "night" ? "night" : null;
+      if (!want) return { lines: [line("usage: theme light|dark", "muted")] };
+      const label = want === "day" ? "light" : "dark";
+      if (want === ctx.shift) return { lines: [line(`already ${label}.`, "muted")] };
+      return { lines: [line(`going ${label}…`, "success")], action: { type: "shift", value: want } };
     }
 
     case "sound":
@@ -158,7 +162,7 @@ export function runCommand(raw: string, ctx: TermContext): TermResult {
       return {
         lines: [
           line(`${ctx.date.toDateString()} ${hh}:${mm}`),
-          line(h >= 2 && h < 5 ? "it's 3am-ish. why are you awake? same." : `you're on the ${ctx.shift} shift.`, "muted"),
+          line(h >= 2 && h < 5 ? "it's 3am-ish. why are you awake? same." : `the site's in ${ctx.shift === "day" ? "light" : "dark"} mode.`, "muted"),
         ],
       };
     }
@@ -210,7 +214,7 @@ export function complete(raw: string): string | null {
     return match.length === 1 ? `${match[0]} ` : null;
   }
   const [cmd, arg = ""] = parts;
-  const pool = cmd === "open" ? OPEN_TARGETS : cmd === "ls" ? ["projects", "secrets"] : cmd === "cat" ? ["resume"] : cmd === "shift" ? ["day", "night"] : cmd === "sound" ? ["on", "off"] : [];
+  const pool = cmd === "open" ? OPEN_TARGETS : cmd === "ls" ? ["projects", "secrets"] : cmd === "cat" ? ["resume"] : cmd === "theme" || cmd === "shift" ? ["light", "dark"] : cmd === "sound" ? ["on", "off"] : [];
   const match = pool.filter((t) => t.startsWith(arg.toLowerCase()));
   return match.length === 1 ? `${cmd} ${match[0]}` : null;
 }

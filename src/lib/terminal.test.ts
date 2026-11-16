@@ -26,7 +26,8 @@ describe("runCommand", () => {
     expect(r.delay).toBeGreaterThan(0);
   });
 
-  it("switches shift, but not to the current one", () => {
+  it("switches the theme, but not to the current one", () => {
+    expect(runCommand("theme dark", ctx).action).toEqual({ type: "shift", value: "night" });
     expect(runCommand("shift night", ctx).action).toEqual({ type: "shift", value: "night" });
     expect(runCommand("shift day", ctx).action).toBeUndefined();
   });
@@ -51,8 +52,9 @@ describe("complete", () => {
   it("completes commands and arguments", () => {
     expect(complete("who")).toBe("whoami ");
     expect(complete("open pat")).toBe("open patentiq");
-    expect(complete("shift n")).toBe("shift night");
-    expect(complete("s")).toBeNull();
+    expect(complete("theme d")).toBe("theme dark");
+    expect(complete("th")).toBe("theme ");
+    expect(complete("e")).toBeNull();
   });
 });
 

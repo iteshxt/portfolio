@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Itesh Singh Tomar",
     short_name: "iteshxt",
-    description: "ML engineer & full-stack developer. By day: what he builds. By night: how it works.",
+    description: "ML engineer & full-stack developer: agents, models and the products around them.",
     start_url: "/",
     display: "browser",
     background_color: "#F5F5F4",
