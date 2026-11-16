@@ -297,6 +297,8 @@ ArceePanel (useChat, AI SDK)
 
 Techniques: Server Components by default (only interactive pieces are client components), GSAP plugins registered lazily per feature, `next/image` with AVIF, and no layout-shifting typing (§5.4).
 
+- **Scroll effects share one loop (2026-11-16):** `lib/scroll-frame.ts`. Parallax, the hero curl, the pinned track, grow-ins, the DiaLabs notebook, the progress ring and the top bar register a `read` and a `write`; per frame all reads run, then all writes, inside Lenis's own scroll event when it drives (no frame of lag) or straight from the native scroll event on touch. Writes are skipped when the value hasn't changed. The hero's `--curl`/`--c` are registered, non-inherited properties set only on the section, sheet and flap, so the curl doesn't restyle the whole hero. Measured on a production build (GTX 1650; phones at 4× CPU slowdown): home desktop 42 → 53–55 fps (janky frames 19% → 5–8%, style work 1.35 s → 0.4 s per fling), DiaLabs layouts 381 → 120. Screenshots before/after are pixel-identical apart from animated frames.
+
 ## 13. Environment variables
 
 | Name | Used by | Required |

@@ -5,6 +5,7 @@ import { ArrowUpRight } from "@/components/icons";
 import { Scribble } from "@/components/motion/Scribble";
 import type { Release } from "@/content/dialabs";
 import { cn } from "@/lib/cn";
+import { onScrollFrame } from "@/lib/scroll-frame";
 import { KIND_TONE } from "./LabNotebook";
 
 /** Scroll distance per page turn, in viewport heights. */
@@ -69,36 +70,44 @@ export function FlipNotebook({ releases, title, fallback }: { releases: Release[
   useEffect(() => {
     const el = wrap.current;
     if (!el) return;
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const r = el.getBoundingClientRect();
-      const span = el.offsetHeight - window.innerHeight;
-      const p = span > 0 ? Math.min(turns, Math.max(0, (-r.top / span) * turns)) : 0;
+    let top = 0;
+    let span = 0;
+    // What was last written per leaf, so unchanged leaves aren't touched (z-index and
+    // data-turning changes restyle and re-layer the 3D pages).
+    const lastT: string[] = [];
+    const lastZ: string[] = [];
+    const lastTurning: boolean[] = [];
+    let lastCount = "";
+    // Shared scroll loop (lib/scroll-frame): measure, then write.
+    const read = () => {
+      top = el.getBoundingClientRect().top;
+      span = el.offsetHeight - window.innerHeight;
+    };
+    const write = () => {
+      const p = span > 0 ? Math.min(turns, Math.max(0, (-top / span) * turns)) : 0;
       leaves.current.forEach((leaf, k) => {
         if (!leaf) return;
         const t = Math.min(1, Math.max(0, p - k));
         // Ease each turn so the page lifts slowly, swings, then settles.
         const e = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-        leaf.style.transform = `rotateY(${(-180 * e).toFixed(2)}deg)`;
+        const transform = `rotateY(${(-180 * e).toFixed(2)}deg)`;
+        if (transform !== lastT[k]) leaf.style.transform = lastT[k] = transform;
         // Turned leaves stack on the left, the latest on top; unturned ones on the right, the next on top.
-        leaf.style.zIndex = String(t >= 0.5 ? 100 + k : 100 - k);
-        if (t > 0 && t < 1) leaf.dataset.turning = "";
-        else delete leaf.dataset.turning;
+        const z = String(t >= 0.5 ? 100 + k : 100 - k);
+        if (z !== lastZ[k]) leaf.style.zIndex = lastZ[k] = z;
+        const turning = t > 0 && t < 1;
+        if (turning !== lastTurning[k]) {
+          lastTurning[k] = turning;
+          if (turning) leaf.dataset.turning = "";
+          else delete leaf.dataset.turning;
+        }
       });
-      if (counter.current) counter.current.textContent = `${String(Math.min(releases.length, Math.round(p) + 1)).padStart(2, "0")} / ${String(releases.length).padStart(2, "0")}`;
+      const count = `${String(Math.min(releases.length, Math.round(p) + 1)).padStart(2, "0")} / ${String(releases.length).padStart(2, "0")}`;
+      if (counter.current && count !== lastCount) counter.current.textContent = lastCount = count;
     };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
+    read();
+    write();
+    return onScrollFrame({ read, write });
   }, [turns, releases.length]);
 
   return (

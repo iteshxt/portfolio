@@ -4,18 +4,18 @@
  * violet glow. The hero section itself is clipped along the same fold
  * (.hero-peel), so its content peels away with the sheet, and the folded
  * corner (the flap) lies on top of that content. The curl grows as you scroll
- * (--curl, set by MotionLayer on [data-curl]). CSS only.
+ * (--curl, set by MotionLayer on [data-curl] and its [data-curl-part]s). CSS only.
  */
 export function HeroBackdrop() {
   return (
     <>
       <div aria-hidden="true" className="hero-backdrop pointer-events-none absolute inset-x-3 top-3 bottom-3 -z-10 sm:inset-x-6 sm:top-[76px] sm:bottom-6">
-        <div className="hero-sheet absolute inset-0">
+        <div data-curl-part="" suppressHydrationWarning className="hero-sheet absolute inset-0">
           <div className="hero-mat absolute inset-0" />
           <div className="hero-glow absolute top-1/2 left-1/2" />
         </div>
       </div>
-      <div aria-hidden="true" className="hero-flap pointer-events-none absolute z-10" />
+      <div aria-hidden="true" data-curl-part="" suppressHydrationWarning className="hero-flap pointer-events-none absolute z-10" />
     </>
   );
 }

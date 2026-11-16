@@ -736,10 +736,23 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 
 /* Hero backdrop: a lifted sheet on the page (components/home/HeroBackdrop). */
 /* The whole hero is cut along the sheet's fold, so its content peels away with the sheet. */
+/* The curl changes every scroll frame: registered and non-inherited, so only the three
+   elements that draw the fold (section, sheet, flap; MotionLayer sets --curl on each)
+   restyle, not everything inside the hero. --corner and --inset stay inherited. */
+@property --curl {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+@property --c {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
 .hero-peel {
   --inset: 12px;
   --corner: clamp(64px, 7vw, 112px);
-  --c: calc(var(--corner) * var(--curl, 1));
+  --c: calc(var(--corner) * var(--curl));
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2 * var(--inset) - var(--c)), calc(100% - 2 * var(--inset) - var(--c)) 100%, 0 100%);
 }
 @media (min-width: 640px) {
@@ -751,6 +764,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   filter: drop-shadow(0 24px 40px rgb(0 0 0 / 0.08));
 }
 .hero-sheet {
+  --c: calc(var(--corner) * var(--curl));
   border-radius: 32px;
   background: var(--surface);
   box-shadow: inset 0 0 0 1px var(--line);
@@ -791,6 +805,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
 }
 /* The corner, folded up over the sheet: lavender underside, shaded at the fold. */
 .hero-flap {
+  --c: calc(var(--corner) * var(--curl));
   right: var(--inset);
   bottom: var(--inset);
   width: var(--c);
@@ -2172,9 +2187,10 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
   animation: scuba-bubble 2.4s ease-out infinite;
   opacity: 0;
 }
+/* Starts and ends a full cat-width off screen, whatever the cat's size. */
 @keyframes scuba-swim {
   from {
-    transform: translateX(-35vw);
+    transform: translateX(calc(-100% - 24px));
   }
   to {
     transform: translateX(115vw);
@@ -2185,7 +2201,7 @@ html[data-custom-cursor] :is(input, textarea, [contenteditable="true"]) {
     transform: translateX(115vw);
   }
   to {
-    transform: translateX(-35vw);
+    transform: translateX(calc(-100% - 24px));
   }
 }
 @keyframes scuba-bob {

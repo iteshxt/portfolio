@@ -4,6 +4,7 @@ import type Lenis from "lenis";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion, setScroller } from "@/lib/motion";
+import { runScrollFrame } from "@/lib/scroll-frame";
 import { useUI } from "@/store/ui";
 
 const frozen = (phase: string) => phase === "covering" || phase === "covered";
@@ -25,6 +26,8 @@ export function SmoothScroll() {
     import("lenis").then(({ default: LenisClass }) => {
       if (cancelled) return;
       const lenis = new LenisClass({ lerp: 0.12, autoRaf: true });
+      // Scroll effects run inside Lenis's frame, so they move with the page, not a frame behind.
+      lenis.on("scroll", runScrollFrame);
       // It may arrive while a transition covers the screen.
       if (frozen(useUI.getState().transitionPhase)) lenis.stop();
       lenisRef.current = lenis;

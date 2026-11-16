@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
+import { onScrollFrame } from "@/lib/scroll-frame";
 
 /**
  * Pins its area while the page scroll drives a horizontal track of children
@@ -9,7 +10,6 @@ import { prefersReducedMotion } from "@/lib/motion";
  * needs, the inner box sticks to the viewport and the track slides left. From
  * tablet width up; phones get a swipeable snap carousel instead, and reduced
  * motion a plain row.
- * Exposes progress as --track-progress (0–1) for counters and bars.
  */
 export function PinnedTrack({ header, children }: { header?: ReactNode; children: ReactNode }) {
   const outer = useRef<HTMLDivElement>(null);
@@ -20,8 +20,9 @@ export function PinnedTrack({ header, children }: { header?: ReactNode; children
     const t = track.current;
     if (!o || !t || prefersReducedMotion()) return;
     const wide = window.matchMedia("(min-width: 768px)");
-    let raf = 0;
     let distance = 0;
+    let top = 0;
+    let last = "";
 
     const measure = () => {
       if (!wide.matches) {
@@ -32,29 +33,29 @@ export function PinnedTrack({ header, children }: { header?: ReactNode; children
       }
       distance = Math.max(0, t.scrollWidth - window.innerWidth);
       o.style.height = `${distance + window.innerHeight}px`;
-      update();
+      read();
+      write();
     };
-    const update = () => {
+    // Shared scroll loop (lib/scroll-frame): measure in the read phase, move in the write phase.
+    const read = () => {
+      if (distance) top = o.getBoundingClientRect().top;
+    };
+    const write = () => {
       if (!distance) return;
-      const p = Math.min(1, Math.max(0, -o.getBoundingClientRect().top / distance));
-      t.style.transform = `translate3d(${(-p * distance).toFixed(1)}px, 0, 0)`;
-      o.style.setProperty("--track-progress", p.toFixed(4));
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
+      const p = Math.min(1, Math.max(0, -top / distance));
+      const next = `translate3d(${(-p * distance).toFixed(1)}px, 0, 0)`;
+      if (next !== last) t.style.transform = last = next;
     };
 
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(t);
-    window.addEventListener("scroll", onScroll, { passive: true });
+    const off = onScrollFrame({ read, write });
     window.addEventListener("resize", measure);
     wide.addEventListener("change", measure);
     return () => {
-      cancelAnimationFrame(raf);
+      off();
       ro.disconnect();
-      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", measure);
       wide.removeEventListener("change", measure);
       o.style.height = "";

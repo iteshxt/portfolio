@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { Wordmark } from "@/components/ui/LogoMark";
+import { onScrollFrame } from "@/lib/scroll-frame";
 import { SoundToggle } from "./SoundToggle";
 
 /**
@@ -14,21 +15,17 @@ export function TopBar() {
 
   useEffect(() => {
     let last = window.scrollY;
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const y = window.scrollY;
+    let y = last;
+    return onScrollFrame({
+      read: () => {
+        y = window.scrollY;
+      },
+      write: () => {
         if (Math.abs(y - last) < 6) return;
         setHidden(y > last && y > 120);
         last = y;
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
-    };
+      },
+    });
   }, []);
 
   return (

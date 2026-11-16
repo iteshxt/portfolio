@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { prefersReducedMotion } from "@/lib/motion";
+import { onScrollFrame } from "@/lib/scroll-frame";
 
 /**
  * Site-wide motion (docs/design.md §6):
@@ -55,38 +56,74 @@ export function MotionLayer() {
     };
   }, [pathname]);
 
-  // Parallax.
+  // Parallax and the hero curl, on the shared scroll loop (lib/scroll-frame): all
+  // measuring first, then writing, and only when a value actually changes.
   useEffect(() => {
     if (prefersReducedMotion()) return;
-    let raf = 0;
-    const update = () => {
-      // The hero sheet's corner curls further as you scroll away from it.
-      document.querySelectorAll<HTMLElement>("[data-curl]").forEach((el) => {
-        // By the time the hero leaves, most of the sheet has peeled away diagonally.
-        const p = Math.min(1, window.scrollY / (window.innerHeight * 0.95));
-        const reach = Math.max(el.offsetWidth, el.offsetHeight) * 1.1;
-        const corner = Math.min(112, Math.max(64, window.innerWidth * 0.07)); // matches --corner in CSS
-        el.style.setProperty("--curl", `${(1 + (reach / corner - 1) * p ** 1.4).toFixed(3)}`);
+    type Curl = { targets: HTMLElement[]; reach: number; corner: number; vw: number; vh: number; last: string };
+    type Drift = { f: number; fade: boolean; lastT: string; lastO: string };
+    // Elements are looked up each frame (pages stream in), their state kept per element.
+    const curlState = new WeakMap<HTMLElement, Curl>();
+    const driftState = new WeakMap<HTMLElement, Drift>();
+    let curls: [HTMLElement, Curl][] = [];
+    let drifts: [HTMLElement, Drift][] = [];
+    let y = 0;
+    let vh = 0;
+    const read = () => {
+      y = window.scrollY;
+      vh = window.innerHeight;
+      const vw = window.innerWidth;
+      curls = [...document.querySelectorAll<HTMLElement>("[data-curl]")].map((el) => {
+        let c = curlState.get(el);
+        if (!c) {
+          // --curl is a registered, non-inherited property (globals.css): it's set on each
+          // element that draws the fold (the section, the sheet and the flap), so changing it
+          // doesn't restyle everything inside the hero.
+          c = { targets: [el, ...el.querySelectorAll<HTMLElement>("[data-curl-part]")], reach: 0, corner: 0, vw: 0, vh: 0, last: "" };
+          curlState.set(el, c);
+        }
+        if (c.vw !== vw || c.vh !== vh) {
+          c.reach = Math.max(el.offsetWidth, el.offsetHeight) * 1.1;
+          c.corner = Math.min(112, Math.max(64, vw * 0.07)); // matches --corner in CSS
+          c.vw = vw;
+          c.vh = vh;
+        }
+        return [el, c];
       });
-      document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
-        const f = Number(el.dataset.parallax) || 0.2;
-        const y = window.scrollY;
-        if (y > window.innerHeight * 1.5) return;
-        el.style.translate = `0 ${(y * f).toFixed(1)}px`;
-        if (el.dataset.parallaxFade !== undefined) el.style.opacity = String(Math.max(0, 1 - y / (window.innerHeight * 0.8)));
+      drifts = [...document.querySelectorAll<HTMLElement>("[data-parallax]")].map((el) => {
+        let d = driftState.get(el);
+        if (!d) {
+          d = { f: Number(el.dataset.parallax) || 0.2, fade: el.dataset.parallaxFade !== undefined, lastT: "", lastO: "" };
+          driftState.set(el, d);
+        }
+        return [el, d];
       });
     };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
+    const write = () => {
+      // By the time the hero leaves, most of the sheet has peeled away diagonally.
+      const p = Math.min(1, y / (vh * 0.95));
+      for (const [, c] of curls) {
+        const v = (1 + (c.reach / c.corner - 1) * p ** 1.4).toFixed(3);
+        if (v === c.last) continue;
+        c.last = v;
+        for (const t of c.targets) t.style.setProperty("--curl", v);
+      }
+      if (y > vh * 1.5) return;
+      for (const [el, d] of drifts) {
+        const t = `0 ${(y * d.f).toFixed(1)}px`;
+        if (t !== d.lastT) el.style.translate = d.lastT = t;
+        if (d.fade) {
+          const o = String(Math.max(0, 1 - y / (vh * 0.8)));
+          if (o !== d.lastO) el.style.opacity = d.lastO = o;
+        }
+      }
     };
     // Only once scrolling starts: setting styles before hydration finishes would mismatch.
-    if (window.scrollY > 0) onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-    };
+    if (window.scrollY > 0) {
+      read();
+      write();
+    }
+    return onScrollFrame({ read, write });
   }, [pathname]);
 
   // Magnetic buttons and the custom cursor, which replaces the system one (fine pointers only).

@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { scrollToElement } from "@/lib/motion";
+import { onScrollFrame } from "@/lib/scroll-frame";
 
 /**
  * Top-centre sticker pill (docs/design.md §2.7): a ring around the section number
@@ -20,21 +21,27 @@ export function ScrollStatus() {
 
   // The current section is the last one whose top has passed the middle of the screen.
   useEffect(() => {
-    let raf = 0;
-    const update = () => {
+    let p = 0;
+    let idx = 0;
+    let lastRing = "";
+    // Shared scroll loop (lib/scroll-frame): measure everything, then write.
+    const read = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
-      ringRef.current?.style.setProperty("stroke-dashoffset", String(100 - p * 100));
+      p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
       const mid = window.innerHeight / 2;
-      let idx = 0;
+      idx = 0;
       els.current.forEach((el, k) => {
         if (el.getBoundingClientRect().top <= mid) idx = k;
       });
+    };
+    const write = () => {
+      const ring = (100 - p * 100).toFixed(2);
+      if (ring !== lastRing) ringRef.current?.style.setProperty("stroke-dashoffset", (lastRing = ring));
       setCurrent(idx);
     };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
+    const update = () => {
+      read();
+      write();
     };
     // Wait a frame so the new page's sections are in the DOM.
     const start = requestAnimationFrame(() => {
@@ -42,13 +49,10 @@ export function ScrollStatus() {
       setSections(els.current.map((el) => el.dataset.section ?? ""));
       update();
     });
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    const off = onScrollFrame({ read, write });
     return () => {
       cancelAnimationFrame(start);
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      off();
     };
   }, [pathname]);
 
