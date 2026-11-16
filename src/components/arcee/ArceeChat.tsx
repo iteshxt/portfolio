@@ -8,7 +8,7 @@ import { STICKERS, type StickerMood } from "@/lib/arcee/stickers";
 import { cn } from "@/lib/cn";
 import { useUI } from "@/store/ui";
 import { DraftCard, type Draft } from "./DraftCard";
-import { isEmptyReply, plain, RichText, STICKER_TEXT, STICKER_TEXT_ALL, useArceeConversation, type ToolPart } from "./reply";
+import { isEmptyReply, plain, repeatedParts, RichText, STICKER_TEXT, STICKER_TEXT_ALL, useArceeConversation, type ToolPart } from "./reply";
 
 export const SUGGESTIONS = ["What's his best project?", "What did he do at Sutr?", "How does PatentIQ work?", "I want to leave a message"];
 
@@ -85,9 +85,10 @@ export function ArceeChat({ active }: { active: boolean }) {
     setInput("");
   }
 
-  function renderPart(m: UIMessage, part: ToolPart, i: number) {
+  function renderPart(m: UIMessage, part: ToolPart, i: number, skip: Set<number>) {
     const key = `${m.id}-${i}`;
     if (part.type === "text" && part.text) {
+      if (skip.has(i)) return null;
       if (m.role !== "assistant") {
         return (
           <p key={key} className="whitespace-pre-wrap">
@@ -145,6 +146,7 @@ export function ArceeChat({ active }: { active: boolean }) {
         {messages.map((m, idx) => {
           // The model occasionally returns nothing; say so instead of showing an empty bubble.
           const empty = isEmptyReply(m);
+          const skip = m.role === "assistant" ? repeatedParts(m) : new Set<number>();
           if (empty && (busy && idx === messages.length - 1)) return null;
           return (
             <div
@@ -154,7 +156,7 @@ export function ArceeChat({ active }: { active: boolean }) {
                 m.role === "user" ? "self-end rounded-br-md bg-violet text-white" : "self-start rounded-bl-md bg-surface shadow-[0_6px_14px_-10px_rgb(0_0_0/0.4)]",
               )}
             >
-              {empty ? <p className="text-fg-muted">My brain blanked on that one. Ask me again?</p> : m.parts.map((p, i) => renderPart(m, p as ToolPart, i))}
+              {empty ? <p className="text-fg-muted">My brain blanked on that one. Ask me again?</p> : m.parts.map((p, i) => renderPart(m, p as ToolPart, i, skip))}
             </div>
           );
         })}

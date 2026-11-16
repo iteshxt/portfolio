@@ -7,6 +7,7 @@ import { useTransitionGo } from "@/components/transition/TransitionProvider";
 import { arceeChat } from "@/lib/arcee/chat-client";
 import { splitLinks } from "@/lib/arcee/guard";
 import { STICKERS, type StickerMood } from "@/lib/arcee/stickers";
+import { repeatedTexts, toneMood } from "@/lib/arcee/tone";
 import { play } from "@/lib/sound";
 import { useUI } from "@/store/ui";
 
@@ -70,11 +71,25 @@ export function isEmptyReply(m: UIMessage): boolean {
   );
 }
 
-/** A reply's text, without written sticker markers or markdown. */
+/** Indexes of a reply's text parts that repeat an earlier part (the model re-answering after a tool call). */
+export function repeatedParts(m: UIMessage): Set<number> {
+  const parts = m.parts as ToolPart[];
+  const idx: number[] = [];
+  const texts: string[] = [];
+  parts.forEach((p, i) => {
+    if (p.type === "text" && p.text) {
+      idx.push(i);
+      texts.push(plain(p.text.replace(STICKER_TEXT_ALL, "")));
+    }
+  });
+  return new Set([...repeatedTexts(texts)].map((k) => idx[k]));
+}
+
+/** A reply's text, without written sticker markers, markdown or a repeated answer. */
 export function replyText(m: UIMessage): string {
+  const skip = repeatedParts(m);
   return (m.parts as ToolPart[])
-    .filter((p) => p.type === "text" && p.text)
-    .map((p) => plain((p.text ?? "").replace(STICKER_TEXT_ALL, "")))
+    .map((p, i) => (p.type === "text" && p.text && !skip.has(i) ? plain(p.text.replace(STICKER_TEXT_ALL, "")) : ""))
     .filter(Boolean)
     .join("\n\n");
 }
@@ -124,4 +139,14 @@ export function useArceeConversation({ active, inputRef }: { active: boolean; in
   }, [messages, go]);
 
   return { ...chat, busy, ask };
+}
+
+/** The reply's cat: the one the model picked, else one read from the tone. */
+export function moodFor(question: string, m: UIMessage): StickerMood {
+  const picked = replyMood(m);
+  if (picked) return picked;
+  const parts = m.parts as ToolPart[];
+  const drafted = parts.some((p) => p.type === "tool-draftMessage" && p.state === "output-available" && !(p.output as { missing?: unknown })?.missing);
+  const navigating = parts.some((p) => p.type === "tool-navigate" && p.state === "output-available");
+  return toneMood(question, replyText(m), { drafted, navigating });
 }
