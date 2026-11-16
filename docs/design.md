@@ -43,7 +43,7 @@ Hero copy: "Hi, I'm Itesh." (serif) → "I build *agents*, train *models* and sh
 - Closed: an ink pill bottom-centre in the `.btn` style (white die-cut edge, sans "Where to?", a tiny three-sticker stack that fans on hover).
 - Open: the pages fan out of the pill on two semicircles as word stickers like the hero's: star projects (Arcee, PatentIQ, DiaChat) on the inner ring in their own app colours, the other pages (Work, DiaLabs, About, Chat, Contact, Home) on the outer ring in the hero tones. Each carries a small → so it reads as a link; each tilts only slightly with its angle; the chosen one slides further out along its angle. A handwritten "pick a page" note with an arrow sits beside the fan. Hovering a sticker shows a one-line hint by the cursor ("the human", "the lab"…).
 - The page behind fades a little and blurs slightly (no halo shape).
-- The pill itself becomes the field: "Where to? Or ask me anything…", with the Arcee stamp at its end. Typing filters; Enter goes; anything that isn't a page goes to Arcee ("terminal" opens the terminal). "/" or ⌘K toggles, Esc closes.
+- The pill itself becomes the field: "Where to? Or ask me anything…", with the Arcee stamp at its end. Typing filters; Enter goes; anything that isn't a page goes to Arcee ("terminal" opens the terminal). "/" or ⌘K toggles, Esc closes. On touch screens opening it doesn't focus the field (no surprise keyboard): focus goes to its close button and the keyboard comes up when the field is tapped; with a fine pointer, or when opened by shortcut, the field is focused.
 - Phones: the same stickers in a wrapped cloud above the field.
 - Tried and dropped: playing cards, a full-screen sheet, tilted coloured nav stickers, a separate search box.
 

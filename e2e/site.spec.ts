@@ -32,7 +32,14 @@ test("the nav bar finishes the sentence and navigates", async ({ page }) => {
   await open(page, "/");
   await page.getByRole("button", { name: /open navigation/i }).click();
   const input = page.getByRole("combobox");
-  await expect(input).toBeFocused();
+  if (test.info().project.name === "mobile") {
+    // Opening doesn't pop the on-screen keyboard: focus waits on the close button until the field is tapped.
+    await expect(input).not.toBeFocused();
+    await expect(page.getByRole("button", { name: "Close navigation" })).toBeFocused();
+    await input.tap();
+  } else {
+    await expect(input).toBeFocused();
+  }
   await input.fill("patent");
   await input.press("Enter");
   await page.waitForURL("**/work/patentiq");

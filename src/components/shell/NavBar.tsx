@@ -54,6 +54,9 @@ export function NavBar() {
   const [active, setActive] = useState(0);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  // Opened with "/" or ⌘K: there's a keyboard, so the field can take focus even on a tablet.
+  const viaShortcut = useRef(false);
   const pillRef = useRef<HTMLButtonElement>(null);
   const shellRef = useRef<HTMLDivElement>(null);
   const listId = useId();
@@ -90,7 +93,10 @@ export function NavBar() {
       if ((e.key === "/" && !isTypingTarget(e.target)) || (mod && e.key.toLowerCase() === "k")) {
         e.preventDefault();
         if (isOpen) closeNav(true);
-        else openNav();
+        else {
+          viaShortcut.current = true;
+          openNav();
+        }
       } else if (e.key === "Escape" && isOpen) {
         closeNav(true);
       }
@@ -101,7 +107,11 @@ export function NavBar() {
 
   useEffect(() => {
     if (!open) return;
-    const raf = requestAnimationFrame(() => inputRef.current?.focus());
+    // Phones and tablets: don't pop the on-screen keyboard just for opening the navigator;
+    // focus moves into it (the close button) and the keyboard comes up when the field is tapped.
+    const typing = viaShortcut.current || window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    viaShortcut.current = false;
+    const raf = requestAnimationFrame(() => (typing ? inputRef.current : closeRef.current)?.focus({ preventScroll: true }));
     const onDown = (e: PointerEvent) => {
       if (!shellRef.current?.contains(e.target as Node)) closeNav();
     };
@@ -225,7 +235,7 @@ export function NavBar() {
           data-open={open}
           className="nav-pill nav-field pointer-events-auto flex min-h-12 w-[min(440px,100%)] items-center gap-2.5 rounded-full border-[3px] border-[var(--die)] bg-fg py-1 pr-1 pl-3 text-bg shadow-[0_12px_26px_-12px_rgb(0_0_0/0.55)]"
         >
-          <button type="button" onClick={() => closeNav(true)} aria-label="Close navigation" className="flex items-center">
+          <button ref={closeRef} type="button" onClick={() => closeNav(true)} aria-label="Close navigation" className="flex items-center">
             {miniStack}
           </button>
           <input
