@@ -28,6 +28,21 @@ test.describe("every page", () => {
   }
 });
 
+test("scanning the manifest lets you sign the visitors' passport", async ({ page }, testInfo) => {
+  // One stamp per visitor per day, and every test shares one address: sign once, on desktop.
+  test.skip(testInfo.project.name !== "desktop", "signs once per run");
+  await open(page, "/s/e2e1");
+  await page.getByLabel("Name").fill("Playwright");
+  await page.getByLabel(/Reason for visit/).fill("making sure the stamps work");
+  await page.locator(".arrival-cat").first().click();
+  await page.getByRole("button", { name: "Stamp my passport" }).click();
+  await expect(page.getByRole("heading", { name: "Stamped. Welcome in." })).toBeFocused();
+  await page.getByRole("link", { name: /See your stamp in the passport/ }).click();
+  await page.waitForURL("**/visitors?you=*");
+  await settled(page);
+  await expect(page.locator("[data-stamp]").getByText("Playwright", { exact: true }).first()).toBeVisible();
+});
+
 test("the nav bar finishes the sentence and navigates", async ({ page }) => {
   await open(page, "/");
   await page.getByRole("button", { name: /open navigation/i }).click();

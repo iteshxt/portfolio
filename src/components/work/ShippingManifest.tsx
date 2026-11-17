@@ -4,12 +4,15 @@ import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties }
 import { Star } from "@/components/icons";
 import { TransitionLink } from "@/components/transition/TransitionLink";
 import { CATEGORY_LABELS, type Project } from "@/content/projects";
+import { cn } from "@/lib/cn";
 import { foundEgg } from "@/lib/eggs";
-import { code128Widths } from "@/lib/code128";
+import { qrMatrix } from "@/lib/qr";
 import { jumpToProject } from "./jump";
 
-/** The scan address printed in the barcode (and in plain text under it, like a real barcode). */
-const scanUrl = (code: string) => `iteshxt.me/s/${code}`;
+/** Where the QR code leads (the full address, so phone cameras open it), and how it's printed under it. */
+const SITE = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://iteshxt.me").replace(/\/+$/, "");
+const scanUrl = (code: string) => `${SITE}/s/${code}`;
+const printedUrl = (code: string) => `${SITE.replace(/^https?:\/\//, "")}/s/${code}`;
 const CODE_KEY = "manifest-code";
 const ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789";
 
@@ -28,38 +31,51 @@ function readCode(): string {
 }
 const noSubscribe = () => () => {};
 
-/** A real Code 128 barcode, black on white whatever the theme, so phones can read it. */
-function Barcode({ text }: { text: string }) {
-  const widths = code128Widths(text);
-  const quiet = 10;
-  const total = widths.reduce((a, b) => a + b, 0) + quiet * 2;
-  let x = quiet;
-  const bars: { x: number; w: number }[] = [];
-  widths.forEach((w, i) => {
-    if (i % 2 === 0) bars.push({ x, w });
-    x += w;
-  });
+/** A real QR code, black on white whatever the theme (with its quiet zone), so phone cameras read it. */
+function QrCode({ text }: { text: string }) {
+  const m = qrMatrix(text);
+  const quiet = 4;
+  const size = m.length + quiet * 2;
+  // One path for all the dark modules keeps the DOM small.
+  let d = "";
+  m.forEach((row, y) => row.forEach((dark, x) => dark && (d += `M${x + quiet} ${y + quiet}h1v1h-1z`)));
   return (
-    <svg viewBox={`0 0 ${total} 40`} preserveAspectRatio="none" className="block h-12 w-full" role="img" aria-label={`Barcode: ${text}`}>
-      <rect width={total} height="40" fill="#FFFFFF" />
-      {bars.map((b, i) => (
-        <rect key={i} x={b.x} width={b.w} height="40" fill="#0E0E10" />
-      ))}
+    <svg viewBox={`0 0 ${size} ${size}`} shapeRendering="crispEdges" className="block size-full" role="img" aria-label={`QR code to ${text}`}>
+      <rect width={size} height={size} fill="#FFFFFF" />
+      <path d={d} fill="#0E0E10" />
     </svg>
   );
 }
 
+/** Handwritten "scan me" with a curly arrow pointing at the code (it writes itself in once the code is on screen). */
+function ScanMe() {
+  return (
+    <div aria-hidden="true" className="scan-me pointer-events-none absolute top-[6px] right-[calc(100%+6px)] flex flex-col items-end text-accent-text">
+      <span className="-rotate-[9deg] font-hand text-[22px] leading-none whitespace-nowrap">scan me</span>
+      <svg viewBox="0 0 70 48" className="scan-me-arrow mt-1 mr-[-4px] w-[54px] overflow-visible">
+        <path className="scan-me-stroke" pathLength={1} d="M6 4 C 4 18, 14 28, 26 22 C 36 17, 30 8, 24 14 C 17 21, 30 38, 62 40" />
+        <path className="scan-me-stroke scan-me-head" pathLength={1} d="M52 33 L 63 40 L 52 46" />
+      </svg>
+    </div>
+  );
+}
+
 /**
- * The barcode egg (docs/design.md §2.17): while the barcode is on screen, ask now
- * and then whether a phone has scanned it. Stops after 15 minutes.
+ * The scan egg (docs/design.md §2.17): while the QR code is on screen, ask now and then
+ * whether a phone has scanned it, then (more slowly) whether they signed the visitors'
+ * passport, to print their name. Gives up after 15 minutes.
  */
 function useScanned(code: string, target: React.RefObject<HTMLElement | null>) {
-  const [scanned, setScanned] = useState(false);
+  const [state, setState] = useState<{ scanned: boolean; name?: string }>({ scanned: false });
+  const done = state.scanned && !!state.name;
   useEffect(() => {
     const el = target.current;
-    if (!code || !el || scanned) return;
+    if (!code || !el || done) return;
     let visible = false;
     let timer = 0;
+    let cancelled = false;
+    const abort = new AbortController();
+    let scannedYet = state.scanned;
     const started = Date.now();
     const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
     io.observe(el);
@@ -67,27 +83,35 @@ function useScanned(code: string, target: React.RefObject<HTMLElement | null>) {
       if (Date.now() - started > 15 * 60_000) return;
       if (visible && document.visibilityState === "visible") {
         try {
-          const res = await fetch(`/api/scan?code=${code}`, { cache: "no-store" });
-          const data = (await res.json()) as { scanned?: boolean };
-          if (data.scanned) {
-            setScanned(true);
+          const res = await fetch(`/api/scan?code=${code}`, { cache: "no-store", signal: abort.signal });
+          const data = (await res.json()) as { scanned?: boolean; name?: string };
+          if (cancelled) return;
+          if (data.scanned && !scannedYet) {
+            scannedYet = true;
             window.dispatchEvent(new Event("egg:scuba"));
             foundEgg("barcode", "Easter egg found: you've been shipped", "You're item 23 on the manifest.");
-            return;
+          }
+          if (data.scanned) {
+            setState((s) => (s.scanned && s.name === data.name ? s : { scanned: true, name: data.name }));
+            if (data.name) return;
           }
         } catch {
-          // Offline or a hiccup: try again next tick.
+          // Offline, a hiccup or the page going away: try again next tick (unless it went away).
         }
       }
-      timer = window.setTimeout(tick, 2500);
+      if (cancelled) return;
+      timer = window.setTimeout(tick, scannedYet ? 4000 : 2500);
     };
     timer = window.setTimeout(tick, 2500);
     return () => {
+      cancelled = true;
+      abort.abort();
       io.disconnect();
       window.clearTimeout(timer);
     };
-  }, [code, target, scanned]);
-  return scanned;
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- restart only when the code, target or "finished" changes
+  }, [code, target, done]);
+  return state;
 }
 
 function Rows({ projects, copy = false }: { projects: Project[]; copy?: boolean }) {
@@ -128,13 +152,13 @@ function Rows({ projects, copy = false }: { projects: Project[]; copy?: boolean 
  * The work page's hero piece (docs/design.md §2.10): a printed shipping manifest
  * of everything shipped. It prints in, then rolls slowly upwards like a till
  * roll (paused while you point at it). Star rows open their case study; the rest
- * glide down to their tile on the shelf. The barcode is real: scan it with a phone
- * and you're shipped too (item 23), live, on this screen.
+ * glide down to their tile on the shelf. The QR code is real: scan it with a phone,
+ * sign the visitors' passport, and you're shipped too (item 23, by name), live, on this screen.
  */
 export function ShippingManifest({ projects, stars }: { projects: Project[]; stars: number }) {
   const code = useSyncExternalStore(noSubscribe, readCode, () => "");
-  const barcodeRef = useRef<HTMLDivElement>(null);
-  const scanned = useScanned(code, barcodeRef);
+  const qrRef = useRef<HTMLDivElement>(null);
+  const { scanned, name } = useScanned(code, qrRef);
   return (
     <div className="manifest w-full max-w-[420px] drop-shadow-[0_24px_30px_rgb(0_0_0/0.16)]">
       <div className="receipt bg-surface px-5 pt-6 pb-9 font-mono text-[13px] text-fg">
@@ -147,8 +171,8 @@ export function ShippingManifest({ projects, stars }: { projects: Project[]; sta
         {scanned && (
           <p className="manifest-you mt-1 flex items-center gap-2.5 rounded-[6px] px-1 py-[7px] font-semibold">
             <span className="w-7 shrink-0">{String(projects.length + 1).padStart(2, "0")}</span>
-            <span className="flex flex-1 items-center gap-1.5">
-              You <Star className="text-[12px]" />
+            <span key={name ?? "you"} className={cn("flex min-w-0 flex-1 items-center gap-1.5", name && "manifest-you-name")}>
+              <span className="truncate">{name ?? "You"}</span> <Star className="shrink-0 text-[12px]" />
             </span>
             <span className="shrink-0">just now</span>
           </p>
@@ -171,16 +195,30 @@ export function ShippingManifest({ projects, stars }: { projects: Project[]; sta
             <span>{stars}</span>
           </p>
         </div>
-        <div ref={barcodeRef} className="mx-auto mt-5 w-[86%]">
-          {code ? <Barcode text={scanUrl(code)} /> : <div aria-hidden="true" className="manifest-barcode h-12 w-full" />}
+        <div ref={qrRef} className="relative mx-auto mt-5 size-[112px]">
+          {code ? <QrCode text={scanUrl(code)} /> : <div aria-hidden="true" className="manifest-barcode size-full" />}
+          {code && <ScanMe />}
         </div>
-        <p className="mt-1.5 text-center text-[11px] tracking-[0.12em] text-fg-muted">{code ? scanUrl(code) : "\u00a0"}</p>
+        <p className="mt-1.5 text-center text-[11px] tracking-[0.12em] text-fg-muted">
+          {code ? (
+            <a href={`/s/${code}`} className="underline decoration-dotted underline-offset-2 hover:text-fg">
+              {printedUrl(code)}
+            </a>
+          ) : (
+            "\u00a0"
+          )}
+        </p>
         {scanned && (
           <p aria-hidden="true" className="mt-3 flex justify-center">
             <span className="manifest-scanned rounded-[6px] border-[3px] px-2.5 py-0.5 text-[15px] font-bold tracking-[0.2em]">SCANNED</span>
           </p>
         )}
-        <p className="mt-1 text-center text-[11px] text-fg-muted">thanks for scrolling</p>
+        <p className="mt-1 text-center text-[11px] text-fg-muted">
+          thanks for scrolling ·{" "}
+          <TransitionLink href="/visitors" transitionLabel="Visitors" className="underline decoration-dotted underline-offset-2 hover:text-fg">
+            the visitors&apos; passport
+          </TransitionLink>
+        </p>
       </div>
     </div>
   );

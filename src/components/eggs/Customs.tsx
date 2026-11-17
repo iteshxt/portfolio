@@ -1,23 +1,101 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type FormEvent } from "react";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowRight, Spark } from "@/components/icons";
 import { TransitionLink } from "@/components/transition/TransitionLink";
+import { PassportStamp, visitorNo } from "@/components/visitors/PassportStamp";
+import { STICKER_MOODS, STICKERS, type StickerMood } from "@/lib/arcee/stickers";
+import { cn } from "@/lib/cn";
 import { markEgg } from "@/lib/eggs";
 import { play } from "@/lib/sound";
+import { LINE_MAX, NAME_MAX, type SignResponse, type VisitorEntry } from "@/lib/visitors/types";
 
 const VALID = /^[a-z0-9]{4,8}$/;
+const SIGNED_KEY = "visitor-stamp";
+const REASONS = ["came for the cats", "hiring, maybe", "just looking around", "a friend sent me", "here for Arcee"];
+
+/** Is a stored value really a stamp? (Old shapes, hand edits or junk would crash the card.) */
+function isEntry(v: unknown): v is VisitorEntry {
+  if (!v || typeof v !== "object") return false;
+  const e = v as Record<string, unknown>;
+  return (
+    typeof e.id === "string" &&
+    /^[A-Za-z0-9_-]{8,64}$/.test(e.id) &&
+    Number.isInteger(e.n) &&
+    (e.n as number) > 0 &&
+    typeof e.name === "string" &&
+    e.name.length > 0 &&
+    typeof e.line === "string" &&
+    (STICKER_MOODS as readonly string[]).includes(e.cat as string)
+  );
+}
+
+/** This phone's stamp, if it already signed the passport (kept in this browser only). */
+function readSigned(): VisitorEntry | null {
+  try {
+    const raw = localStorage.getItem(SIGNED_KEY);
+    if (!raw) return null;
+    const value: unknown = JSON.parse(raw);
+    if (isEntry(value)) return value;
+    localStorage.removeItem(SIGNED_KEY);
+    return null;
+  } catch {
+    return null;
+  }
+}
+const subscribeSigned = (cb: () => void) => {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+};
+let signedCache: { raw: string | null; entry: VisitorEntry | null } = { raw: null, entry: null };
+function signedSnapshot(): VisitorEntry | null {
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(SIGNED_KEY);
+  } catch {
+    // no storage
+  }
+  if (raw !== signedCache.raw) signedCache = { raw, entry: readSigned() };
+  return signedCache.entry;
+}
 
 /**
- * The phone side of the barcode egg (docs/design.md §2.17): a customs
- * declaration for the visitor, who has just been "shipped". It tells the scan
- * API, then a CLEARED stamp thumps on; the desktop's manifest prints them as
- * item 23 at the same time.
+ * The phone side of the scan egg (docs/design.md §2.17, §2.18): an arrival card at customs.
+ * The scan is logged straight away (the screen that showed the code reacts); then the
+ * visitor can sign the visitors' passport: a name, a reason for visit, and the cat that
+ * looks most like them as their passport photo. Submitting stamps them in, numbered,
+ * and their name prints on the desktop's manifest. One stamp per phone.
  */
 export function Customs({ code }: { code: string }) {
   const valid = VALID.test(code);
-  const [state, setState] = useState<"checking" | "cleared" | "offline">(valid ? "checking" : "offline");
+  const [scan, setScan] = useState<"checking" | "cleared" | "offline">(valid ? "checking" : "offline");
+  const saved = useSyncExternalStore(subscribeSigned, signedSnapshot, () => null);
+  const [stamped, setStamped] = useState<VisitorEntry | null>(null);
+  const [skipped, setSkipped] = useState(false);
+  const [name, setName] = useState("");
+  const [line, setLine] = useState("");
+  const [cat, setCat] = useState<StickerMood | null>(null);
+  const [trap, setTrap] = useState("");
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
+  /** Which field the error is about (the API's errors are about the whole card). */
+  const [errorField, setErrorField] = useState<"name" | "cat" | "card" | null>(null);
+  const stampedRef = useRef<HTMLHeadingElement>(null);
+  const ids = { name: useId(), line: useId(), note: useId(), err: useId() };
+  const formRef = useRef<HTMLFormElement>(null);
+  const fail = (field: "name" | "cat" | "card", message: string) => {
+    setErrorField(field);
+    setError(message);
+    // Take the visitor to what needs fixing (the error is announced through aria-describedby).
+    if (field === "name") document.getElementById(ids.name)?.focus();
+    if (field === "cat") formRef.current?.querySelector<HTMLInputElement>('input[name="cat"]')?.focus();
+  };
+  const clearError = () => {
+    setError("");
+    setErrorField(null);
+  };
+  const placeholder = REASONS[code.charCodeAt(0) % REASONS.length] ?? REASONS[0];
 
   useEffect(() => {
     if (!valid) return;
@@ -27,30 +105,68 @@ export function Customs({ code }: { code: string }) {
       .then((r) => {
         if (cancelled) return;
         play("found");
-        setState(r.ok ? "cleared" : "offline");
+        setScan(r.ok ? "cleared" : "offline");
       })
-      .catch(() => !cancelled && setState("offline"));
+      .catch(() => !cancelled && setScan("offline"));
     return () => {
       cancelled = true;
     };
   }, [code, valid]);
 
+  async function sign(e: FormEvent) {
+    e.preventDefault();
+    if (sending) return;
+    if (!name.trim()) return fail("name", "Your name goes on the stamp. Add one first.");
+    if (!cat) return fail("cat", "Pick a cat for your passport photo first.");
+    setSending(true);
+    clearError();
+    try {
+      const res = await fetch("/api/visitors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, name, line, cat, website: trap }),
+      });
+      const body = (await res.json().catch(() => null)) as SignResponse | null;
+      if (body && body.ok) {
+        try {
+          localStorage.setItem(SIGNED_KEY, JSON.stringify(body.entry));
+        } catch {
+          // Without storage, they can still see their stamp now.
+        }
+        setStamped(body.entry);
+        play("found");
+      } else {
+        fail("card", body?.message ?? "The stamp didn't take. Try again in a moment.");
+      }
+    } catch {
+      fail("card", "Couldn't reach the passport office. Check your connection and try again.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  // The form is gone once stamped: take focus to the stamp's heading so it isn't lost on <body>.
+  useEffect(() => {
+    if (stamped) stampedRef.current?.focus();
+  }, [stamped]);
+
+  const mine = stamped ?? saved;
   const rows: [string, string][] = [
     ["Item", "1 curious human"],
     ["Shipped with", "22 other things"],
     ["Declared value", "priceless"],
-    ["Handling", "fragile · keep away from bugs"],
     ["Parcel", `no. 23 of 22 · ${valid ? code.toUpperCase() : "UNKNOWN"}`],
   ];
 
   return (
     <main className="faded-mat px-gutter flex flex-1 flex-col items-center pt-28 pb-36">
-      <p data-animate="rise" className="font-hand text-[clamp(24px,5vw,32px)] text-accent-text">
+      <h1 data-animate="rise" className="font-hand text-[clamp(24px,5vw,32px)] text-accent-text">
         beep. you scanned the manifest.
-      </p>
+      </h1>
+
       <div className="customs-form relative mt-6 w-full max-w-[520px] overflow-hidden rounded-[10px] bg-surface font-mono text-[14px]">
         <div className="flex items-center justify-between bg-ink px-5 py-3 text-[12px] tracking-[0.2em] text-paper uppercase">
-          <span>Customs declaration</span>
+          <span>{mine ? "Arrival · cleared" : "Arrival card"}</span>
           <span>iteshxt.me</span>
         </div>
         <dl className="divide-y divide-dashed divide-line px-5">
@@ -61,31 +177,155 @@ export function Customs({ code }: { code: string }) {
             </div>
           ))}
         </dl>
-        <p className="border-t-2 border-dashed border-line px-5 py-4 text-[12px] leading-relaxed text-fg-muted">
-          {state === "offline"
-            ? "The post office is closed right now, so the other screen won't notice. You still count."
-            : "Look at the screen you scanned from: you've just been added to the manifest."}
-        </p>
-        {state === "cleared" && (
-          <span aria-hidden="true" className="customs-stamp absolute top-[34%] right-[8%] rounded-[8px] border-[4px] px-3 py-1 text-[26px] font-bold tracking-[0.18em]">
-            CLEARED
-          </span>
+
+        {mine ? (
+          // Signed: their stamp, thumped onto the card.
+          <div className="relative border-t-2 border-dashed border-line px-5 pt-5 pb-6">
+            {/* The heading and CLEARED share a row, so the stamp never lands on the card's rows or the heading. */}
+            <div className="flex items-center justify-between gap-3">
+              <h2 ref={stampedRef} tabIndex={-1} className="text-[12px] tracking-[0.16em] text-fg-muted uppercase outline-none">
+                {stamped ? "Stamped. Welcome in." : "Welcome back"}
+              </h2>
+              <span aria-hidden="true" className="customs-stamp shrink-0 rounded-[8px] border-[3px] px-2.5 py-0.5 text-[17px] font-bold tracking-[0.16em] sm:text-[20px]">
+                CLEARED
+              </span>
+            </div>
+            <div className="passport-paper mt-4 flex justify-center rounded-[8px] px-3 py-6">
+              <PassportStamp entry={mine} className={stamped ? "visa-stamp-thump" : undefined} />
+            </div>
+            <p className="mt-4 font-sans text-[15px] leading-relaxed">
+              You&apos;re visitor <strong>{visitorNo(mine.n)}</strong> in the visitors&apos; passport
+              {stamped ? ", and your name just printed on the screen you scanned from." : "."}
+            </p>
+          </div>
+        ) : skipped || scan === "offline" ? (
+          <div className="flex items-center justify-between gap-4 border-t-2 border-dashed border-line px-5 py-4">
+            <p className="text-[12px] leading-relaxed text-fg-muted">
+              {scan === "offline"
+                ? "The post office is closed right now, so the other screen won't notice and the passport can't take new stamps. You still count."
+                : "Cleared. Look at the screen you scanned from: you're on the manifest."}
+            </p>
+            {/* Beside the message, clear of the card's rows. */}
+            {scan === "cleared" && (
+              <span aria-hidden="true" className="customs-stamp my-2 shrink-0 rounded-[8px] border-[3px] px-2.5 py-0.5 text-[17px] font-bold tracking-[0.16em] sm:text-[20px]">
+                CLEARED
+              </span>
+            )}
+          </div>
+        ) : (
+          // The arrival card: sign the passport.
+          <form ref={formRef} onSubmit={sign} noValidate className="border-t-2 border-dashed border-line px-5 pt-5 pb-6 font-sans">
+            <p className="font-mono text-[12px] tracking-[0.16em] text-fg-muted uppercase">Sign the visitors&apos; passport</p>
+            <div className="mt-4 flex flex-col gap-4">
+              <div>
+                <label htmlFor={ids.name} className="arrival-label">
+                  Name
+                </label>
+                <input
+                  id={ids.name}
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    if (errorField === "name") clearError();
+                  }}
+                  maxLength={NAME_MAX}
+                  autoComplete="nickname"
+                  required
+                  aria-invalid={errorField === "name" || undefined}
+                  aria-describedby={errorField === "name" ? ids.err : undefined}
+                  className="arrival-input"
+                  placeholder="what should the stamp say?"
+                />
+              </div>
+              <div>
+                <label htmlFor={ids.line} className="arrival-label">
+                  Reason for visit <span className="text-fg-muted">(optional)</span>
+                </label>
+                <input
+                  id={ids.line}
+                  value={line}
+                  onChange={(e) => setLine(e.target.value)}
+                  maxLength={LINE_MAX}
+                  autoComplete="off"
+                  className="arrival-input"
+                  placeholder={placeholder}
+                />
+              </div>
+              <fieldset aria-describedby={errorField === "cat" ? ids.err : undefined}>
+                <legend className="arrival-label">Passport photo: the cat that looks most like you</legend>
+                <div className="mt-2 grid grid-cols-5 gap-2 sm:grid-cols-9">
+                  {STICKER_MOODS.map((m) => (
+                    <label key={m} className={cn("arrival-cat", cat === m && "arrival-cat-on")}>
+                      <input
+                        type="radio"
+                        name="cat"
+                        value={m}
+                        checked={cat === m}
+                        onChange={() => {
+                          setCat(m);
+                          if (errorField === "cat") clearError();
+                        }}
+                        className="sr-only"
+                      />
+                      <picture className="contents">
+                        <img src={STICKERS[m].still} alt={STICKERS[m].alt} width={56} height={56} className="size-full object-cover" />
+                      </picture>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              {/* Bots fill every field; people never see this one. */}
+              <div className="arrival-trap" aria-hidden="true">
+                <label>
+                  Website
+                  <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} />
+                </label>
+              </div>
+            </div>
+            {error && (
+              <p id={ids.err} role="alert" className="mt-4 text-[14px] text-danger">
+                {error}
+              </p>
+            )}
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <button type="submit" disabled={sending || scan === "checking"} aria-describedby={ids.note} className="btn btn-violet disabled:opacity-60">
+                {sending ? "Stamping…" : "Stamp my passport"}
+              </button>
+              <button type="button" onClick={() => setSkipped(true)} className="font-hand text-[20px] text-fg-muted underline-offset-4 hover:underline">
+                just passing through
+              </button>
+            </div>
+            <p id={ids.note} className="mt-3 text-[13px] leading-relaxed text-fg-muted">
+              Your name, line and cat go in the public visitors&apos; passport, with no time or place. A scrambled network address is kept for a day to stop
+              spam.
+            </p>
+          </form>
         )}
+
       </div>
       <p className="sr-only" aria-live="polite">
-        {state === "cleared" ? "Cleared by customs." : ""}
+        {stamped ? `Stamped. You're visitor ${visitorNo(stamped.n)}.` : scan === "cleared" ? "Cleared by customs." : ""}
       </p>
+
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <TransitionLink href="/contact" transitionLabel="Contact" className="btn btn-ink">
-          Say hi
-          <ArrowRight />
-        </TransitionLink>
+        {mine && (
+          // A full page load, not a client-side hop: the router may hold a copy of the passport from before this stamp.
+          <a href={`/visitors?you=${encodeURIComponent(mine.id)}`} className="btn btn-ink">
+            See your stamp in the passport
+            <ArrowRight />
+          </a>
+        )}
+        {!mine && (
+          <TransitionLink href="/visitors" transitionLabel="Visitors" className="btn btn-paper">
+            See the passport
+          </TransitionLink>
+        )}
         <OpenArceeButton seed="I just scanned the manifest. What should I look at?" className="btn btn-lime">
           <Spark />
           Ask Arcee
         </OpenArceeButton>
         <TransitionLink href="/work" transitionLabel="Work" className="btn btn-paper">
-          See the rest of the shipment
+          The rest of the shipment
         </TransitionLink>
       </div>
     </main>

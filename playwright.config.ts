@@ -27,6 +27,7 @@ export default defineConfig({
     url: `http://localhost:${PORT}`,
     reuseExistingServer: true,
     timeout: 60_000,
-    env: { ARCEE_MOCK: "1" },
+    // The stand-in model, and no real email even when .env.local has Resend keys (signing the passport emails Itesh).
+    env: { ARCEE_MOCK: "1", RESEND_API_KEY: "", CONTACT_TO_EMAIL: "" },
   },
 });
