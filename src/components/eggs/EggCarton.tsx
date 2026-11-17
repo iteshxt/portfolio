@@ -25,7 +25,7 @@ const EGGS: Egg[] = [
   { id: "owl", name: "3am mode", find: <>Visit between 2 and 5 in the morning. The site goes night by itself, and admits it&rsquo;s awake too.</>, shell: { fill: "#15121D", pattern: "stars", ink: "#CBB8FF" } },
   { id: "print", name: "Print to resume", find: <>Print any page (<Kbd>Ctrl</Kbd> + <Kbd>P</Kbd>). You get a one-page resume, not a screenshot.</>, shell: { fill: "#F5F5F4", pattern: "stripes", ink: "#7A2CFF" } },
   { id: "404", name: "The hallucinated page", find: <>Visit any address that doesn&rsquo;t exist.</>, shell: { fill: "#7A2CFF", pattern: "zigzag", ink: "#FFFFFF" } },
-  { id: "barcode", name: "You, shipped", find: <>Scan the QR code at the bottom of the shipping manifest on the Work page with your phone, sign the arrival card, and watch your name print on the other screen. Your stamp goes in the visitors&apos; passport.</>, shell: { fill: "#0E0E10", pattern: "stripes", ink: "#FFFFFF" } },
+  { id: "barcode", name: "You, shipped", find: <>Scan the barcode at the bottom of the shipping manifest on the Work page with your phone (Google Lens or any barcode app reads it), sign the arrival card, and watch your name print on the other screen. Your stamp goes in the visitors&apos; passport.</>, shell: { fill: "#0E0E10", pattern: "stripes", ink: "#FFFFFF" } },
   { id: "now", name: "Currently building", find: <>The latest push to GitHub, live, in the home hero, the footer and the terminal&rsquo;s <Kbd>now</Kbd>.</>, shell: { fill: "#CCFF33", pattern: "stars", ink: "#0E0E10" } },
 ];
 

@@ -14,7 +14,7 @@ export const ARCEE_FACTS: { title: string; text: string }[] = [
   },
   {
     title: "Easter eggs on the site",
-    text: "There are a few easter eggs: a hidden terminal (press the backtick or tilde key, or type terminal into Where to?) with some commands it doesn't list, a scuba-diving cat behind the Konami code, a tab title that begs you to come back, a 3am mode, printing any page gives a one-page resume, a 404 page where the model hallucinated, and the QR code on the Work page's shipping manifest is real: scan it with a phone, sign the arrival card, and you get a numbered stamp in the visitors' passport (/visitors) while your name prints on the screen you scanned from. People who can't find them can look for a whisper in the footer. Arcee hints rather than spelling every one out.",
+    text: "There are a few easter eggs: a hidden terminal (press the backtick or tilde key, or type terminal into Where to?) with some commands it doesn't list, a scuba-diving cat behind the Konami code, a tab title that begs you to come back, a 3am mode, printing any page gives a one-page resume, a 404 page where the model hallucinated, and the barcode on the Work page's shipping manifest is real: scan it with a phone (Google Lens or a barcode app; the address printed under it is a link too), sign the arrival card, and you get a numbered stamp in the visitors' passport (/visitors) while your name prints on the screen you scanned from. People who can't find them can look for a whisper in the footer. Arcee hints rather than spelling every one out.",
   },
   {
     title: "Small tools with personality",
