@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { OpenArceeButton } from "@/components/arcee/OpenArceeButton";
 import { ArrowRight, Spark } from "@/components/icons";
 import { TransitionLink } from "@/components/transition/TransitionLink";
-import { PassportStamp, visitorNo } from "@/components/visitors/PassportStamp";
+import { formatVisitDate, PassportStamp, visitorNo } from "@/components/visitors/PassportStamp";
 import { STICKER_MOODS, STICKERS, type StickerMood } from "@/lib/arcee/stickers";
 import { cn } from "@/lib/cn";
 import { markEgg } from "@/lib/eggs";
@@ -27,8 +27,30 @@ function isEntry(v: unknown): v is VisitorEntry {
     typeof e.name === "string" &&
     e.name.length > 0 &&
     typeof e.line === "string" &&
-    (STICKER_MOODS as readonly string[]).includes(e.cat as string)
+    (STICKER_MOODS as readonly string[]).includes(e.cat as string) &&
+    (e.d === undefined || (typeof e.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(e.d))) &&
+    (e.tm === undefined || (typeof e.tm === "string" && /^\d{2}:\d{2}$/.test(e.tm)))
   );
+}
+
+/** Today on the visitor's own calendar, "YYYY-MM-DD" (the server keeps it if it's within a day of its own). */
+function localDate(): string {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, "0")}-${String(t.getDate()).padStart(2, "0")}`;
+}
+const noSubscribe = () => () => {};
+const pad2 = (n: number) => String(n).padStart(2, "0");
+/** The visitor's clock, "HH:MM". */
+function localTime(): string {
+  const t = new Date();
+  return `${pad2(t.getHours())}:${pad2(t.getMinutes())}`;
+}
+/** This moment on the visitor's own clock, with its offset ("2026-11-17T22:14:05+05:30"): the server keeps their date and time from it. */
+function localMoment(): string {
+  const t = new Date();
+  const off = -t.getTimezoneOffset();
+  const a = Math.abs(off);
+  return `${localDate()}T${localTime()}:${pad2(t.getSeconds())}${off >= 0 ? "+" : "-"}${pad2(Math.floor(a / 60))}:${pad2(a % 60)}`;
 }
 
 /** This phone's stamp, if it already signed the passport (kept in this browser only). */
@@ -62,15 +84,28 @@ function signedSnapshot(): VisitorEntry | null {
 
 /**
  * The phone side of the scan egg (docs/design.md §2.17, §2.18): an arrival card at customs.
- * The scan is logged straight away (the screen that showed the code reacts); then the
- * visitor can sign the visitors' passport: a name, a reason for visit, and the cat that
- * looks most like them as their passport photo. Submitting stamps them in, numbered,
- * and their name prints on the desktop's manifest. One stamp per phone.
+ * The scan is logged straight away (the screen that showed the code reacts). The card says
+ * how many visitors came before, the number this visitor would get and the date and time; then
+ * they can sign the visitors' passport: a name, a reason for visit, and the cat that looks
+ * most like them as their passport photo. Their stamp prints itself as they type (a light
+ * draft), and submitting thumps it in, numbered and dated, while their name prints on the
+ * desktop's manifest. One stamp per phone.
+ *
+ * `total` and `next` come from the passport on the server (next is 0 when it couldn't be read).
  */
-export function Customs({ code }: { code: string }) {
+export function Customs({ code, total, next }: { code: string; total: number; next: number }) {
   const valid = VALID.test(code);
   const [scan, setScan] = useState<"checking" | "cleared" | "offline">(valid ? "checking" : "offline");
   const saved = useSyncExternalStore(subscribeSigned, signedSnapshot, () => null);
+  const today = useSyncExternalStore(noSubscribe, localDate, () => "");
+  // The clock the preview stamp prints, kept current while the card is open.
+  const [clock, setClock] = useState("");
+  useEffect(() => {
+    const tick = () => setClock(localTime());
+    tick();
+    const id = window.setInterval(tick, 15_000);
+    return () => window.clearInterval(id);
+  }, []);
   const [stamped, setStamped] = useState<VisitorEntry | null>(null);
   const [skipped, setSkipped] = useState(false);
   const [name, setName] = useState("");
@@ -124,7 +159,7 @@ export function Customs({ code }: { code: string }) {
       const res = await fetch("/api/visitors", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, name, line, cat, website: trap }),
+        body: JSON.stringify({ code, name, line, cat, at: localMoment(), date: localDate(), website: trap }),
       });
       const body = (await res.json().catch(() => null)) as SignResponse | null;
       if (body && body.ok) {
@@ -151,12 +186,26 @@ export function Customs({ code }: { code: string }) {
   }, [stamped]);
 
   const mine = stamped ?? saved;
-  const rows: [string, string][] = [
-    ["Item", "1 curious human"],
-    ["Shipped with", "22 other things"],
-    ["Declared value", "priceless"],
-    ["Parcel", `no. 23 of 22 · ${valid ? code.toUpperCase() : "UNKNOWN"}`],
+  // The count from the server doesn't include a stamp made on this page just now.
+  const count = total + (stamped ? 1 : 0);
+  const number = mine ? mine.n : next;
+  const rows: [string, ReactNode][] = [
+    ["Visitors so far", count > 0 ? count.toLocaleString("en-US") : "none yet"],
+    [
+      mine ? "Your number" : "You'd be",
+      number > 0 ? (
+        <>
+          {visitorNo(number)}
+          {!mine && <span className="text-fg-muted"> · if you sign</span>}
+        </>
+      ) : (
+        "your own number, once you sign"
+      ),
+    ],
+    ["Arrived", (mine ? [formatVisitDate(mine.d), mine.tm] : [formatVisitDate(today), clock]).filter(Boolean).join(", ") || "today"],
+    ["Via", "the manifest on the Work page"],
   ];
+  const open = !mine && !skipped && scan !== "offline";
 
   return (
     <main className="faded-mat px-gutter flex flex-1 flex-col items-center pt-28 pb-36">
@@ -178,27 +227,53 @@ export function Customs({ code }: { code: string }) {
           ))}
         </dl>
 
-        {mine ? (
-          // Signed: their stamp, thumped onto the card.
+        {(mine || open) && (
+          // Their stamp: a light draft that prints itself as they fill the card in, then thumped in for real.
           <div className="relative border-t-2 border-dashed border-line px-5 pt-5 pb-6">
             {/* The heading and CLEARED share a row, so the stamp never lands on the card's rows or the heading. */}
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex min-h-9 items-center justify-between gap-3">
               <h2 ref={stampedRef} tabIndex={-1} className="text-[12px] tracking-[0.16em] text-fg-muted uppercase outline-none">
-                {stamped ? "Stamped. Welcome in." : "Welcome back"}
+                {stamped ? "Stamped. Welcome in." : mine ? "Welcome back" : "Your stamp"}
               </h2>
-              <span aria-hidden="true" className="customs-stamp shrink-0 rounded-[8px] border-[3px] px-2.5 py-0.5 text-[17px] font-bold tracking-[0.16em] sm:text-[20px]">
-                CLEARED
-              </span>
+              {mine ? (
+                <span
+                  aria-hidden="true"
+                  className="customs-stamp shrink-0 rounded-[8px] border-[3px] px-2.5 py-0.5 text-[17px] font-bold tracking-[0.16em] sm:text-[20px]"
+                >
+                  CLEARED
+                </span>
+              ) : (
+                <span aria-hidden="true" className="font-hand text-[18px] text-fg-muted">
+                  prints as you fill it in
+                </span>
+              )}
             </div>
-            <div className="passport-paper mt-4 flex justify-center rounded-[8px] px-3 py-6">
-              <PassportStamp entry={mine} className={stamped ? "visa-stamp-thump" : undefined} />
+            <div aria-hidden="true" className="passport-paper mt-4 flex min-h-[236px] items-center justify-center rounded-[8px] px-3 py-6">
+              {mine ? (
+                <PassportStamp key={mine.id} entry={mine} className={stamped ? "visa-stamp-thump" : undefined} />
+              ) : (
+                <PassportStamp
+                  entry={{
+                    n: next,
+                    name: name.trim(),
+                    line: line.trim(),
+                    cat: cat ?? undefined,
+                    d: today || undefined,
+                    tm: clock || undefined,
+                  }}
+                  draft
+                />
+              )}
             </div>
-            <p className="mt-4 font-sans text-[15px] leading-relaxed">
-              You&apos;re visitor <strong>{visitorNo(mine.n)}</strong> in the visitors&apos; passport
-              {stamped ? ", and your name just printed on the screen you scanned from." : "."}
-            </p>
+            {mine && (
+              <p className="mt-4 font-sans text-[15px] leading-relaxed">
+                You&apos;re visitor <strong>{visitorNo(mine.n)}</strong> in the visitors&apos; passport
+                {stamped ? ", and your name just printed on the screen you scanned from." : "."}
+              </p>
+            )}
           </div>
-        ) : skipped || scan === "offline" ? (
+        )}
+        {!mine && (skipped || scan === "offline") && (
           <div className="flex items-center justify-between gap-4 border-t-2 border-dashed border-line px-5 py-4">
             <p className="text-[12px] leading-relaxed text-fg-muted">
               {scan === "offline"
@@ -207,13 +282,16 @@ export function Customs({ code }: { code: string }) {
             </p>
             {/* Beside the message, clear of the card's rows. */}
             {scan === "cleared" && (
-              <span aria-hidden="true" className="customs-stamp my-2 shrink-0 rounded-[8px] border-[3px] px-2.5 py-0.5 text-[17px] font-bold tracking-[0.16em] sm:text-[20px]">
+              <span
+                aria-hidden="true"
+                className="customs-stamp my-2 shrink-0 rounded-[8px] border-[3px] px-2.5 py-0.5 text-[17px] font-bold tracking-[0.16em] sm:text-[20px]"
+              >
                 CLEARED
               </span>
             )}
           </div>
-        ) : (
-          // The arrival card: sign the passport.
+        )}
+        {open && (
           <form ref={formRef} onSubmit={sign} noValidate className="border-t-2 border-dashed border-line px-5 pt-5 pb-6 font-sans">
             <p className="font-mono text-[12px] tracking-[0.16em] text-fg-muted uppercase">Sign the visitors&apos; passport</p>
             <div className="mt-4 flex flex-col gap-4">
@@ -296,12 +374,11 @@ export function Customs({ code }: { code: string }) {
               </button>
             </div>
             <p id={ids.note} className="mt-3 text-[13px] leading-relaxed text-fg-muted">
-              Your name, line and cat go in the public visitors&apos; passport, with no time or place. A scrambled network address is kept for a day to stop
-              spam.
+              Your name, reason, cat and the date and time go in the public visitors&apos; passport, and nothing else about you. A scrambled network
+              address is kept for a day to stop spam.
             </p>
           </form>
         )}
-
       </div>
       <p className="sr-only" aria-live="polite">
         {stamped ? `Stamped. You're visitor ${visitorNo(stamped.n)}.` : scan === "cleared" ? "Cleared by customs." : ""}

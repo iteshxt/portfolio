@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Customs } from "@/components/eggs/Customs";
+import { cachedVisitors } from "@/lib/visitors/cached";
 
 export const metadata: Metadata = {
   title: "Customs",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
  */
 export const instant = false;
 
-/** Where the manifest barcode leads (docs/design.md §2.17). */
+/** Where the manifest barcode leads (docs/design.md §2.17, §2.18). */
 export default function ScanPage({ params }: PageProps<"/s/[code]">) {
   return (
     <Suspense fallback={<main className="flex-1" />}>
@@ -25,6 +26,7 @@ export default function ScanPage({ params }: PageProps<"/s/[code]">) {
 }
 
 async function ScanBody({ params }: { params: PageProps<"/s/[code]">["params"] }) {
-  const { code } = await params;
-  return <Customs code={code.toLowerCase()} />;
+  // The arrival card says how many visitors came before and the number this one would get.
+  const [{ code }, { total, next }] = await Promise.all([params, cachedVisitors()]);
+  return <Customs code={code.toLowerCase()} total={total} next={next} />;
 }
