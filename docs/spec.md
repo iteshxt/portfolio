@@ -52,6 +52,11 @@ src/
     not-found.tsx        "the model hallucinated this page"
     api/arcee/route.ts   chatbot (streaming)
     api/arcee/message/route.ts   leave-a-message (email)
+    api/scan/route.ts            manifest QR scan ping (phone POSTs, desktop polls; carries the signer's name)
+    api/visitors/route.ts        sign the visitors' passport (POST)
+    api/visitors/hide/route.ts   hide a stamp (POST from the emailed confirm page)
+    s/[code]/page.tsx            arrival card (where the manifest QR code leads)
+    visitors/page.tsx            the visitors' passport; visitors/hide/page.tsx confirms a hide
     sitemap.ts, robots.ts, opengraph-image.tsx
     globals.css          tokens, shift themes, base styles, print styles
   components/
@@ -257,6 +262,8 @@ ArceePanel (useChat, AI SDK)
 
 `/api/arcee/message`: Zod validation, a honeypot field, a rate limit of 3 per day per hashed IP, then a Resend email to `CONTACT_TO_EMAIL` with `reply_to` set when the contact is an email address.
 
+**The visitors' passport (2026-11-17, design.md §2.18).** `POST /api/visitors` takes `{ code, name, line?, cat, website? }` (types in `lib/visitors/types.ts`): honeypot → an attempt limit (20 per 10 minutes) → the code must have been scanned in the last hour (`lib/scan-store.ts`) → `lib/visitors/validate.ts` (normalised, length-limited, no links or contact details, English/Hinglish word filter, a known cat) → the stamp limit (1 per hashed network and code, 3 per hashed network, 40 overall, per day; a network is the IPv4 address or the IPv6 /64, `clientNetwork` in `lib/arcee/ratelimit.ts`; the 40 matches the email cap so every stamp gets a hide link; checked only now so a rejected word doesn't use up the day's stamp) → `lib/visitors/store.ts` assigns the next visitor number and stores `{ id, n, name, line, cat }` (nothing else: no time, no place, no IP) → the scan record gets the name, so the desktop's manifest prints it → the `visitors` cache tag is revalidated → after the response, an email to `CONTACT_TO_EMAIL` with a hide link (at most 40 a day) (`lib/visitors/hide-token.ts`, HMAC). The emailed link opens `/visitors/hide`, a confirmation page; only its form POST (`/api/visitors/hide`) hides the stamp, because mail scanners pre-open links. `/visitors` reads `cachedVisitors()` (`"use cache"`, tagged). Storage: Upstash Redis (`visitors:*` keys) when configured, in memory otherwise; on Vercel without Redis the endpoint answers 503 rather than losing stamps. `npm run visitors` (`scripts/visitors.mjs`) lists every stored stamp with its hide link, for when an email never arrived. The QR code itself is drawn by `lib/qr.ts` (byte mode, versions 1–10, tested against libqrencode).
+
 ## 9. Easter eggs
 
 | Egg | Implementation |
@@ -306,8 +313,10 @@ Techniques: Server Components by default (only interactive pieces are client com
 | `NEXT_PUBLIC_SITE_URL` | metadata, OG | yes (prod) |
 | `GROQ_API_KEY` | Arcee | yes for Arcee |
 | `ARCEE_MODEL` | Arcee (default `openai/gpt-oss-20b`) | no |
-| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN` from Vercel's Marketplace integration) | rate limits | yes for Arcee in prod |
-| `RESEND_API_KEY`, `CONTACT_TO_EMAIL` | leave-a-message | yes for messages |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` (or `KV_REST_API_URL`, `KV_REST_API_TOKEN` from Vercel's Marketplace integration) | rate limits; the visitors' passport (stamps) and the QR scan ping across server instances | yes in prod (the passport refuses new stamps on Vercel without it) |
+| `RESEND_API_KEY`, `CONTACT_TO_EMAIL` | leave-a-message; the email for each new passport stamp | yes for messages |
+| `VISITOR_HIDE_SECRET` | signs the passport's hide links (falls back to `RESEND_API_KEY`) | no |
+| `RATE_LIMIT_SECRET` | salts the hashed visitor keys in rate limits, rotated daily (falls back to `VISITOR_HIDE_SECRET`, then `RESEND_API_KEY`) | no |
 | `GITHUB_TOKEN` | currently building: without a valid token GitHub allows 60 requests an hour per IP, which shared Vercel IPs run out of. A fine-grained token with no permissions (public data only) is enough | strongly recommended |
 
 Local values go in `.env.local` (git-ignored). `.env.example` documents them.
