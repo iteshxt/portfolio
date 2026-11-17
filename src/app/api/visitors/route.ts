@@ -8,12 +8,12 @@ import { sendVisitorEmail } from "@/lib/email/visitor-email";
 import { SCAN_CODE, markScanned, wasScanned } from "@/lib/scan-store";
 import { hasStorage, signVisitor } from "@/lib/visitors/store";
 import { LINE_MAX, NAME_MAX, type SignError, type SignResponse, VISITORS_TAG, type VisitorEntry } from "@/lib/visitors/types";
-import { validateCard } from "@/lib/visitors/validate";
+import { resolveVisitMoment, validateCard } from "@/lib/visitors/validate";
 
 /**
- * Signing the visitors' passport (docs/design.md §2.18): someone who scanned the Work
- * page's QR code within the hour fills the arrival card and gets a numbered stamp. The
- * owner is emailed after the response, with a one-click hide link.
+ * Signing the visitors' passport (docs/design.md §2.18): someone who scanned the barcode on
+ * the Work page's manifest within the hour fills the arrival card and gets a numbered,
+ * dated and timed stamp. The owner is emailed after the response, with a one-click hide link.
  *
  * Order matters: rejected cards are counted as attempts only, so a typo or a filtered word
  * doesn't use up the visitor's one stamp of the day, and the stamp limit is taken right
@@ -27,6 +27,10 @@ const Body = z.object({
   line: z.string().max(400).optional(),
   cat: z.string().max(32),
   website: z.string().max(200).optional(),
+  // The visitor's local "YYYY-MM-DD". Never fails the card: anything odd falls back to the server's date.
+  date: z.string().max(10).optional().catch(undefined),
+  // The visitor's local moment, ISO with offset. Same: anything odd falls back to `date` and no time.
+  at: z.string().max(40).optional().catch(undefined),
 });
 
 function fail(error: SignError, message: string, status: number) {
@@ -44,7 +48,7 @@ export async function POST(req: Request) {
 
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return fail("invalid", "That arrival card is missing something.", 400);
-  const { code, name, line, cat, website } = parsed.data;
+  const { code, name, line, cat, website, date, at } = parsed.data;
 
   // Bots that fill the honeypot get a convincing stamp, and nothing is kept.
   if (website) {
@@ -54,6 +58,7 @@ export async function POST(req: Request) {
       name: name.trim().slice(0, NAME_MAX) || "Visitor",
       line: (line ?? "").trim().slice(0, LINE_MAX),
       cat: (STICKER_MOODS as readonly string[]).includes(cat) ? (cat as (typeof STICKER_MOODS)[number]) : "hype",
+      ...resolveVisitMoment(at, date),
     };
     return Response.json({ ok: true, entry: fake } satisfies SignResponse, { status: 201 });
   }
@@ -75,7 +80,7 @@ export async function POST(req: Request) {
     const limit = await limitSign(visitor, code);
     if (!limit.ok) return fail("rate-limited", "One stamp per visitor per day. Come back tomorrow.", 429);
 
-    entry = await signVisitor(card.value);
+    entry = await signVisitor({ ...card.value, ...resolveVisitMoment(at, date) });
   } catch {
     // Redis down or out of quota: answer in the SignResponse shape, not a bare 500.
     return fail("unavailable", UNAVAILABLE, 503);

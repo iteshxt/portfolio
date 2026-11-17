@@ -17,7 +17,14 @@ describe("cachedVisitors", () => {
   });
 
   it("caches the stamps for minutes under the visitors tag", async () => {
-    const result = { entries: [{ id: "a", n: 1, name: "Ada", line: "", cat: "hype" }], total: 1 };
+    const result = {
+      entries: [
+        { id: "b", n: 3, name: "Bo", line: "hi", cat: "sus", d: "2026-11-17" },
+        { id: "a", n: 1, name: "Ada", line: "", cat: "hype" },
+      ],
+      total: 2,
+      next: 4,
+    };
     listVisitors.mockResolvedValue(result);
     expect(await cachedVisitors()).toEqual(result);
     expect(cacheTag).toHaveBeenCalledWith("visitors");
@@ -26,7 +33,8 @@ describe("cachedVisitors", () => {
 
   it("keeps a failed read for seconds only, so an empty passport doesn't stick", async () => {
     listVisitors.mockRejectedValue(new Error("redis down"));
-    expect(await cachedVisitors()).toEqual({ entries: [], total: 0 });
+    // next: 0 means unknown, so the pages hide the next visitor number.
+    expect(await cachedVisitors()).toEqual({ entries: [], total: 0, next: 0 });
     expect(cacheLife.mock.calls).toEqual([["seconds"]]);
   });
 });

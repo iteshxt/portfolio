@@ -87,30 +87,125 @@ process.env.UPSTASH_REDIS_REST_TOKEN = "fake";
 const { getVisitor, hasStorage, hideVisitor, listVisitors, signVisitor } = await import("./store");
 const { markScanned, scanInfo, wasScanned } = await import("@/lib/scan-store");
 
+const D = "2026-11-17";
+
+/** Writes a stamp straight into the store, as older code (or a bad hand edit) may have left it. */
+function plant(entry: Record<string, unknown>) {
+  hash("visitors:entries").set(String(entry.id), JSON.stringify(entry));
+  zset("visitors:order").set(String(entry.id), Number(entry.n));
+}
+
 describe("visitor store (Redis)", () => {
   it("uses durable storage", () => {
     expect(hasStorage()).toBe(true);
   });
 
-  it("numbers, lists newest first, hides and keeps the hidden stamp aside", async () => {
-    const a = await signVisitor({ name: "Ada", line: "", cat: "hype" });
-    const b = await signVisitor({ name: "Bo", line: "hi", cat: "sus" });
+  it("numbers, dates, lists newest first, hides and keeps the hidden stamp aside", async () => {
+    const a = await signVisitor({ name: "Ada", line: "", cat: "hype", d: "2026-11-16" });
+    const b = await signVisitor({ name: "Bo", line: "hi", cat: "sus", d: D });
     expect([a.n, b.n]).toEqual([1, 2]);
-    expect(await listVisitors()).toEqual({ entries: [b, a], total: 2 });
-    expect((await listVisitors(1)).entries).toEqual([b]);
+    expect([a.d, b.d]).toEqual(["2026-11-16", D]);
+    expect(revive(hash("visitors:entries").get(b.id))).toEqual(b);
+    expect(await listVisitors()).toEqual({ entries: [b, a], total: 2, next: 3 });
+    expect(await listVisitors(1)).toEqual({ entries: [b], total: 2, next: 3 });
     expect(await getVisitor(a.id)).toEqual(a);
 
     expect(await hideVisitor(a.id)).toBe(true);
     expect(await hideVisitor(a.id)).toBe(false);
     expect(await getVisitor(a.id)).toBeNull();
-    expect(await listVisitors()).toEqual({ entries: [b], total: 1 });
+    // The hidden stamp keeps No. 1: the next visitor is No. 3, not total + 1.
+    expect(await listVisitors()).toEqual({ entries: [b], total: 1, next: 3 });
     expect(revive(hash("visitors:hidden").get(a.id))).toEqual(a);
-    expect((await signVisitor({ name: "Cy", line: "", cat: "hype" })).n).toBe(3);
+    const c = await signVisitor({ name: "Cy", line: "", cat: "hype", d: D });
+    expect(c.n).toBe(3);
+    expect((await listVisitors()).next).toBe(4);
   });
 
-  it("returns an empty passport when nothing is signed", async () => {
+  it("returns an empty passport when nothing is signed, with No. 1 up next", async () => {
     data.clear();
-    expect(await listVisitors()).toEqual({ entries: [], total: 0 });
+    expect(await listVisitors()).toEqual({ entries: [], total: 0, next: 1 });
+  });
+
+  it("keeps counting when every stamp is hidden", async () => {
+    data.clear();
+    const a = await signVisitor({ name: "Ada", line: "", cat: "hype", d: D });
+    await hideVisitor(a.id);
+    expect(await listVisitors()).toEqual({ entries: [], total: 0, next: 2 });
+  });
+
+  it("reads stamps from before dates existed", async () => {
+    data.clear();
+    data.set("visitors:n", 1);
+    plant({ id: "old-stamp", n: 1, name: "Ada", line: "first!", cat: "hype" });
+    const b = await signVisitor({ name: "Bo", line: "", cat: "sus", d: D });
+    const { entries, total, next } = await listVisitors();
+    expect(entries).toEqual([b, { id: "old-stamp", n: 1, name: "Ada", line: "first!", cat: "hype" }]);
+    expect("d" in entries[1]).toBe(false);
+    expect([total, next]).toEqual([2, 3]);
+    expect(await getVisitor("old-stamp")).toEqual({ id: "old-stamp", n: 1, name: "Ada", line: "first!", cat: "hype" });
+  });
+
+  it("drops a malformed date and keeps the stamp", async () => {
+    data.clear();
+    data.set("visitors:n", 6);
+    const bad = ["2026-02-30", "17 Nov 2026", 20261117, null, "2026-11-17T10:00:00Z", ""];
+    bad.forEach((d, i) => plant({ id: `bad${i}`, n: i + 1, name: `V${i}`, line: "", cat: "hype", d }));
+    const { entries, total, next } = await listVisitors();
+    expect([total, next]).toEqual([6, 7]);
+    expect(entries.map((e) => e.id)).toEqual(["bad5", "bad4", "bad3", "bad2", "bad1", "bad0"]);
+    for (const e of entries) expect("d" in e, e.id).toBe(false);
+    expect(await getVisitor("bad0")).toEqual({ id: "bad0", n: 1, name: "V0", line: "", cat: "hype" });
+    // Hiding one keeps it aside without the bad date.
+    expect(await hideVisitor("bad0")).toBe(true);
+    expect(revive(hash("visitors:hidden").get("bad0"))).toEqual({ id: "bad0", n: 1, name: "V0", line: "", cat: "hype" });
+  });
+
+  it("stores and returns the time of signing", async () => {
+    data.clear();
+    const a = await signVisitor({ name: "Ada", line: "", cat: "hype", d: D, tm: "22:14" });
+    const b = await signVisitor({ name: "Bo", line: "", cat: "sus", d: D });
+    expect(a.tm).toBe("22:14");
+    expect("tm" in b).toBe(false);
+    expect(revive(hash("visitors:entries").get(a.id))).toEqual(a);
+    expect(await listVisitors()).toEqual({ entries: [b, a], total: 2, next: 3 });
+    expect(await getVisitor(a.id)).toEqual(a);
+    expect(await hideVisitor(a.id)).toBe(true);
+    expect(revive(hash("visitors:hidden").get(a.id))).toEqual(a);
+  });
+
+  it("reads dated stamps from before times existed", async () => {
+    data.clear();
+    data.set("visitors:n", 1);
+    plant({ id: "dated", n: 1, name: "Ada", line: "", cat: "hype", d: D });
+    expect(await getVisitor("dated")).toEqual({ id: "dated", n: 1, name: "Ada", line: "", cat: "hype", d: D });
+  });
+
+  it("drops a malformed time and keeps the stamp (and its date)", async () => {
+    data.clear();
+    const bad = ["24:00", "9:41", "12:60", "22:14:05", "", null, 2214, "10 pm"];
+    data.set("visitors:n", bad.length);
+    bad.forEach((tm, i) => plant({ id: `tm${i}`, n: i + 1, name: `V${i}`, line: "", cat: "hype", d: D, tm }));
+    const { entries } = await listVisitors();
+    expect(entries).toHaveLength(bad.length);
+    for (const e of entries) {
+      expect("tm" in e, e.id).toBe(false);
+      expect(e.d, e.id).toBe(D);
+    }
+    // A bad date and a bad time on one stamp: both go, the stamp stays.
+    plant({ id: "both", n: 99, name: "W", line: "", cat: "hype", d: "nope", tm: "25:00" });
+    expect(await getVisitor("both")).toEqual({ id: "both", n: 99, name: "W", line: "", cat: "hype" });
+    // A good time survives a bad date.
+    plant({ id: "half", n: 100, name: "H", line: "", cat: "hype", d: "nope", tm: "00:00" });
+    expect(await getVisitor("half")).toEqual({ id: "half", n: 100, name: "H", line: "", cat: "hype", tm: "00:00" });
+  });
+
+  it("still skips entries that aren't stamps at all", async () => {
+    data.clear();
+    data.set("visitors:n", 2);
+    plant({ id: "ok", n: 2, name: "Bo", line: "", cat: "hype", d: D });
+    hash("visitors:entries").set("junk", "not json at all {");
+    zset("visitors:order").set("junk", 1);
+    expect(await listVisitors()).toEqual({ entries: [{ id: "ok", n: 2, name: "Bo", line: "", cat: "hype", d: D }], total: 2, next: 3 });
   });
 });
 
@@ -121,7 +216,7 @@ describe("scan store (Redis)", () => {
     expect(await wasScanned("rd01")).toBe(true);
     expect(await scanInfo("rd01")).toEqual({ scanned: true });
 
-    const entry = await signVisitor({ name: "Ada", line: "", cat: "hype" });
+    const entry = await signVisitor({ name: "Ada", line: "", cat: "hype", d: D });
     await markScanned("rd01", entry.name, entry.id);
     await markScanned("rd01");
     expect(await scanInfo("rd01")).toEqual({ scanned: true, name: "Ada" });

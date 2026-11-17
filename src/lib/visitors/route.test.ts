@@ -33,7 +33,15 @@ const { GET: SCAN_GET } = await import("@/app/api/scan/route");
 const { markScanned, scanInfo } = await import("@/lib/scan-store");
 const { hideVisitor, listVisitors } = await import("./store");
 const { hideToken } = await import("./hide-token");
+const { utcDate } = await import("./validate");
 const { limitSignEmail } = await import("@/lib/arcee/ratelimit");
+
+/** A moment as a visitor's browser would send it: their wall clock, then their offset ("+05:30"). */
+function localIso(t: Date, offsetMin: number): string {
+  const wall = new Date(t.getTime() + offsetMin * 60_000).toISOString().slice(0, 19);
+  const abs = Math.abs(offsetMin);
+  return `${wall}${offsetMin < 0 ? "-" : "+"}${String(Math.floor(abs / 60)).padStart(2, "0")}:${String(abs % 60).padStart(2, "0")}`;
+}
 
 let ipCounter = 0;
 const freshIp = () => `10.0.${Math.floor(++ipCounter / 250)}.${ipCounter % 250}`;
@@ -54,6 +62,12 @@ describe("POST /api/visitors", () => {
     sendVisitorEmail.mockClear();
     later.length = 0;
     delete process.env.VERCEL;
+  });
+
+  it("answers in the SignResponse shape when the card itself is malformed", async () => {
+    const res = await sign({ code: "abcd", name: 42, cat: "hype" });
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ ok: false, error: "invalid", message: "That arrival card is missing something." });
   });
 
   it("only takes JSON", async () => {
@@ -79,6 +93,8 @@ describe("POST /api/visitors", () => {
     expect(res.status).toBe(201);
     const body = await res.json();
     expect(body).toMatchObject({ ok: true, entry: { name: "Bot", cat: "hype" } });
+    // As convincing as a real one: numbered and dated.
+    expect(Object.keys(body.entry).sort()).toEqual(["cat", "d", "id", "line", "n", "name"]);
     expect((await listVisitors()).total).toBe(before);
     expect(revalidateTag).not.toHaveBeenCalled();
     expect(later).toHaveLength(0);
@@ -109,19 +125,86 @@ describe("POST /api/visitors", () => {
 
   it("stamps the passport, names the scan, revalidates and emails after the response", async () => {
     await markScanned("ok01");
-    const res = await sign({ code: "ok01", name: "  Ada  ", line: "Saw the QR", cat: "sus" });
+    const before = utcDate(new Date());
+    const res = await sign({ code: "ok01", name: "  Ada  ", line: "Saw the barcode", cat: "sus" });
+    const after = utcDate(new Date());
     expect(res.status).toBe(201);
     const body = await res.json();
     expect(body.ok).toBe(true);
-    expect(body.entry).toMatchObject({ name: "Ada", line: "Saw the QR", cat: "sus" });
+    expect(body.entry).toMatchObject({ name: "Ada", line: "Saw the barcode", cat: "sus" });
     expect(typeof body.entry.n).toBe("number");
-    expect(Object.keys(body.entry).sort()).toEqual(["cat", "id", "line", "n", "name"]);
+    expect([before, after]).toContain(body.entry.d);
+    expect(Object.keys(body.entry).sort()).toEqual(["cat", "d", "id", "line", "n", "name"]);
     expect((await listVisitors()).entries[0]).toEqual(body.entry);
     expect(await scanInfo("ok01")).toEqual({ scanned: true, name: "Ada" });
     expect(revalidateTag).toHaveBeenCalledWith("visitors", { expire: 0 });
     expect(sendVisitorEmail).not.toHaveBeenCalled();
     await Promise.all(later.map((fn) => fn()));
     expect(sendVisitorEmail).toHaveBeenCalledWith(body.entry);
+  });
+
+  it("dates the stamp with the visitor's own day when it's within a day of the server's", async () => {
+    // Tomorrow in UTC is today somewhere east (UTC+14 is a day ahead for ten hours of every UTC day).
+    const tomorrow = utcDate(new Date(Date.now() + 86_400_000));
+    await markScanned("dt01");
+    const res = await sign({ code: "dt01", name: "Kiri", cat: "hype", date: tomorrow });
+    expect(res.status).toBe(201);
+    const { entry } = await res.json();
+    expect(entry.d).toBe(tomorrow);
+    expect((await listVisitors()).entries[0]).toEqual(entry);
+    await Promise.all(later.map((fn) => fn()));
+    expect(sendVisitorEmail).toHaveBeenCalledWith(entry);
+  });
+
+  it("falls back to the server's UTC date for a missing, odd or far-off date, without failing the card", async () => {
+    const odd: unknown[] = [undefined, "not-a-date", "2026-02-30", "1999-01-01", "2026-11-17T10:00:00Z", 20261117, { y: 2026 }];
+    for (const [i, date] of odd.entries()) {
+      const code = `df0${i}`;
+      await markScanned(code);
+      const before = utcDate(new Date());
+      const res = await sign({ code, name: "Ada", cat: "hype", date });
+      const after = utcDate(new Date());
+      expect(res.status, JSON.stringify(date)).toBe(201);
+      const { entry } = await res.json();
+      expect([before, after], JSON.stringify(date)).toContain(entry.d);
+    }
+  });
+
+  it("stamps the visitor's own date and wall-clock time from their local moment", async () => {
+    const at = localIso(new Date(), 330);
+    await markScanned("tm01");
+    const res = await sign({ code: "tm01", name: "Asha", cat: "hype", at, date: "1999-01-01" });
+    expect(res.status).toBe(201);
+    const { entry } = await res.json();
+    expect(entry.d).toBe(at.slice(0, 10));
+    expect(entry.tm).toBe(at.slice(11, 16));
+    expect(Object.keys(entry).sort()).toEqual(["cat", "d", "id", "line", "n", "name", "tm"]);
+    expect((await listVisitors()).entries[0]).toEqual(entry);
+    await Promise.all(later.map((fn) => fn()));
+    expect(sendVisitorEmail).toHaveBeenCalledWith(entry);
+  });
+
+  it("falls back to the date field and no time for an odd or skewed moment, without failing the card", async () => {
+    const hourOff = localIso(new Date(Date.now() + 3_600_000), 0);
+    const odd: unknown[] = [hourOff, "2026-11-17T24:00:00Z", "now", `${localIso(new Date(), 0)}${" ".repeat(40)}`, 1_763_397_845_000, { at: 1 }, null];
+    for (const [i, at] of odd.entries()) {
+      const code = `tf0${i}`;
+      await markScanned(code);
+      const before = utcDate(new Date());
+      const res = await sign({ code, name: "Ada", cat: "hype", at });
+      const after = utcDate(new Date());
+      expect(res.status, JSON.stringify(at)).toBe(201);
+      const { entry } = await res.json();
+      expect([before, after], JSON.stringify(at)).toContain(entry.d);
+      expect("tm" in entry, JSON.stringify(at)).toBe(false);
+    }
+  });
+
+  it("times the honeypot's fake stamp too", async () => {
+    const at = localIso(new Date(), -300);
+    const res = await sign({ code: "zzzz", name: "Bot", cat: "hype", website: "http://spam", at });
+    const { entry } = await res.json();
+    expect(entry).toMatchObject({ d: at.slice(0, 10), tm: at.slice(11, 16) });
   });
 
   it("allows one stamp per visitor per day", async () => {

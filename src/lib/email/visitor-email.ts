@@ -24,14 +24,36 @@ export function hideLink(entry: Pick<VisitorEntry, "id">): string | null {
   return t ? `${site()}/visitors/hide?id=${encodeURIComponent(entry.id)}&t=${encodeURIComponent(t)}` : null;
 }
 
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/** "2026-11-17" as "17 Nov 2026" (the day the visitor signed), or null when it isn't a "YYYY-MM-DD". */
+export function formatVisitDate(d: string | undefined): string | null {
+  const m = d?.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  const month = m ? MONTHS[Number(m[2]) - 1] : undefined;
+  const day = m ? Number(m[3]) : 0;
+  return m && month && day >= 1 && day <= 31 ? `${day} ${month} ${m[1]}` : null;
+}
+
+/**
+ * The date and, when the stamp has one, the visitor's wall-clock time: "17 Nov 2026, 22:14".
+ * Just the date for older stamps (or a malformed time), null without a date.
+ */
+export function formatVisitMoment(entry: Pick<VisitorEntry, "d" | "tm">): string | null {
+  const date = formatVisitDate(entry.d);
+  if (!date) return null;
+  return entry.tm && /^([01]\d|2[0-3]):[0-5]\d$/.test(entry.tm) ? `${date}, ${entry.tm}` : date;
+}
+
 export function visitorSubject(entry: Pick<VisitorEntry, "name" | "n">): string {
   return `New stamp in the passport: ${entry.name} (No. ${visitorNo(entry.n)})`;
 }
 
 export function visitorText(entry: VisitorEntry): string {
   const hide = hideLink(entry);
+  const date = formatVisitMoment(entry);
   return [
     `Visitor No. ${visitorNo(entry.n)}: ${entry.name}`,
+    ...(date ? [`Signed on: ${date}`] : []),
     `Reason for visit: ${entry.line || "(left blank)"}`,
     `Passport photo: the ${entry.cat} cat`,
     "",
@@ -45,6 +67,7 @@ export function visitorHtml(entry: VisitorEntry): string {
   const name = escapeHtml(entry.name);
   const line = entry.line ? escapeHtml(entry.line) : `<span style="color:${C.muted};font-style:italic;">left blank</span>`;
   const no = visitorNo(entry.n);
+  const date = formatVisitMoment(entry);
   const hide = hideLink(entry);
   const photo = `${site()}${STICKERS[entry.cat].still}`;
   const passport = `${site()}/visitors`;
@@ -78,7 +101,7 @@ export function visitorHtml(entry: VisitorEntry): string {
           <td valign="top" style="padding:26px 26px 0 16px;">
             <div style="font-family:${MONO};font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:${C.muted};">Visitor No. ${no}</div>
             <div style="font-family:${SANS};font-size:28px;line-height:1.1;font-weight:700;letter-spacing:-0.03em;color:${C.ink};padding-top:6px;">${name}</div>
-            <div style="display:inline-block;margin-top:10px;border:2px solid ${C.red};border-radius:6px;padding:3px 8px;font-family:${MONO};font-size:11px;font-weight:700;letter-spacing:0.14em;color:${C.red};">ADMITTED</div>
+            <div style="display:inline-block;margin-top:10px;border:2px solid ${C.red};border-radius:6px;padding:3px 8px;font-family:${MONO};font-size:11px;font-weight:700;letter-spacing:0.14em;color:${C.red};">ADMITTED${date ? ` &middot; ${escapeHtml(date)}` : ""}</div>
           </td>
         </tr>
         <tr><td colspan="2" style="padding:22px 26px 0;"><div style="border-top:2px dashed ${C.line};font-size:0;line-height:0;">&nbsp;</div></td></tr>

@@ -8,7 +8,7 @@ vi.mock("resend", () => ({
   },
 }));
 
-const { hideLink, sendVisitorEmail, visitorHtml, visitorSubject, visitorText } = await import("./visitor-email");
+const { formatVisitDate, formatVisitMoment, hideLink, sendVisitorEmail, visitorHtml, visitorSubject, visitorText } = await import("./visitor-email");
 
 const entry = { id: "abc_DEF-123", n: 142, name: `<b>Ada</b> & "co"`, line: "<img src=x onerror=alert(1)>", cat: "hype" as const };
 const env = { ...process.env };
@@ -36,6 +36,52 @@ describe("new-stamp email", () => {
     expect(html).toContain("&lt;b&gt;Ada&lt;/b&gt; &amp; &quot;co&quot;");
     expect(html).toContain("&lt;img src=x onerror=alert(1)&gt;");
     expect(html).toContain("Visitor No. 0142");
+  });
+
+  it("prints the day they signed, when the stamp has one", () => {
+    const dated = { ...entry, d: "2026-11-17" };
+    expect(visitorText(dated)).toContain("Signed on: 17 Nov 2026");
+    expect(visitorText(dated).split("\n").slice(0, 3)).toEqual([
+      `Visitor No. 0142: <b>Ada</b> & "co"`,
+      "Signed on: 17 Nov 2026",
+      "Reason for visit: <img src=x onerror=alert(1)>",
+    ]);
+    expect(visitorHtml(dated)).toContain("ADMITTED &middot; 17 Nov 2026</div>");
+    // Undated (older) stamps: no date line, no dangling separator.
+    expect(visitorText(entry)).not.toContain("Signed on");
+    expect(visitorHtml(entry)).toContain(">ADMITTED</div>");
+    expect(visitorHtml(entry)).not.toContain("&middot;");
+  });
+
+  it("prints the time next to the date, when the stamp has one", () => {
+    const timed = { ...entry, d: "2026-11-17", tm: "22:14" };
+    expect(visitorText(timed).split("\n")[1]).toBe("Signed on: 17 Nov 2026, 22:14");
+    expect(visitorHtml(timed)).toContain("ADMITTED &middot; 17 Nov 2026, 22:14</div>");
+    // A time without a date has nothing to sit next to.
+    expect(visitorText({ ...entry, tm: "22:14" })).not.toContain("Signed on");
+    expect(visitorHtml({ ...entry, tm: "22:14" })).toContain(">ADMITTED</div>");
+  });
+
+  it("formats the visit moment: date, then time when there's a well-formed one", () => {
+    expect(formatVisitMoment({ d: "2026-11-17", tm: "22:14" })).toBe("17 Nov 2026, 22:14");
+    expect(formatVisitMoment({ d: "2026-11-17", tm: "00:00" })).toBe("17 Nov 2026, 00:00");
+    expect(formatVisitMoment({ d: "2026-11-17", tm: "23:59" })).toBe("17 Nov 2026, 23:59");
+    expect(formatVisitMoment({ d: "2026-11-17" })).toBe("17 Nov 2026");
+    for (const tm of ["24:00", "9:41", "12:60", "", "22:14:05", "<b>"]) {
+      expect(formatVisitMoment({ d: "2026-11-17", tm }), tm).toBe("17 Nov 2026");
+    }
+    expect(formatVisitMoment({ tm: "22:14" })).toBeNull();
+    expect(formatVisitMoment({ d: "nope", tm: "22:14" })).toBeNull();
+  });
+
+  it("formats visit dates without a time zone getting in the way", () => {
+    expect(formatVisitDate("2026-11-17")).toBe("17 Nov 2026");
+    expect(formatVisitDate("2027-01-01")).toBe("1 Jan 2027");
+    expect(formatVisitDate("2028-02-29")).toBe("29 Feb 2028");
+    expect(formatVisitDate("2026-12-31")).toBe("31 Dec 2026");
+    for (const bad of [undefined, "", "2026-13-01", "2026-00-10", "2026-11-00", "2026-11-32", "17 Nov 2026", "2026-11-17T00:00:00Z"]) {
+      expect(formatVisitDate(bad), String(bad)).toBeNull();
+    }
   });
 
   it("links to the hide confirm page with a signed token", () => {

@@ -262,3 +262,77 @@ export function validateCard(input: { name: string; line?: string; cat: string }
   if (!line.ok) return line;
   return { ok: true, value: { name: name.value, line: line.value, cat: input.cat } };
 }
+
+// ---------------------------------------------------------------------------
+// Visit date
+// ---------------------------------------------------------------------------
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+const DAY_MS = 86_400_000;
+
+/** "YYYY-MM-DD" for the UTC calendar day of a moment. */
+export const utcDate = (t: Date) => t.toISOString().slice(0, 10);
+
+/** "YYYY-MM-DD" naming a day that exists: "2026-02-30" and "2026-13-01" don't (Date.parse would roll them over). */
+export function isCalendarDate(s: unknown): s is string {
+  if (typeof s !== "string" || !ISO_DATE.test(s)) return false;
+  const t = Date.parse(`${s}T00:00:00Z`);
+  return !Number.isNaN(t) && utcDate(new Date(t)) === s;
+}
+
+/**
+ * The day printed on a new stamp: the visitor's own calendar date when it's believable, so
+ * someone in Auckland signing at 9 am sees their today, not the server's yesterday. Every time
+ * zone (UTC-12 to UTC+14) is within one day of the UTC date, so anything further off, or not a
+ * real date, gets the server's UTC date instead.
+ */
+export function resolveVisitDate(input: unknown, now = new Date()): string {
+  const today = utcDate(now);
+  if (!isCalendarDate(input)) return today;
+  const gap = Math.abs(Date.parse(`${input}T00:00:00Z`) - Date.parse(`${today}T00:00:00Z`));
+  return gap <= DAY_MS ? input : today;
+}
+
+// ---------------------------------------------------------------------------
+// Visit moment (date and time)
+// ---------------------------------------------------------------------------
+
+/** "2026-11-17T22:14", optional seconds and milliseconds, then Z or a ±HH:MM offset. */
+const ISO_MOMENT = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d{1,3})?)?(Z|[+-]\d{2}:\d{2})$/;
+/** Real time zones run from UTC-12:00 to UTC+14:00. */
+const OFFSET_MIN = -12 * 60;
+const OFFSET_MAX = 14 * 60;
+/** How far the visitor's clock may be from the server's. */
+const CLOCK_SKEW_MS = 15 * 60_000;
+
+/**
+ * The date and time printed on a new stamp. `at` is the visitor's local moment with its offset
+ * ("2026-11-17T22:14:05+05:30"): when it's a real date and time in a real time zone and names an
+ * instant within 15 minutes of the server's clock, the stamp shows their wall clock (d
+ * "2026-11-17", tm "22:14"). Otherwise the date comes from resolveVisitDate(date) and there's no
+ * time. Only the wall-clock reading is kept, never the offset, so no place can be read back.
+ */
+export function resolveVisitMoment(at: unknown, date: unknown, now = new Date()): { d: string; tm?: string } {
+  const fallback = () => ({ d: resolveVisitDate(date, now) });
+  if (typeof at !== "string" || !ISO_MOMENT.test(at)) return fallback();
+  const d = at.slice(0, 10);
+  const hh = Number(at.slice(11, 13));
+  const mm = Number(at.slice(14, 16));
+  const ss = at[16] === ":" ? Number(at.slice(17, 19)) : 0;
+  if (!isCalendarDate(d) || hh > 23 || mm > 59 || ss > 59) return fallback();
+
+  const zone = at.match(/(Z|[+-]\d{2}:\d{2})$/)?.[1] ?? "Z";
+  let offset = 0;
+  if (zone !== "Z") {
+    const oh = Number(zone.slice(1, 3));
+    const om = Number(zone.slice(4, 6));
+    if (om > 59) return fallback();
+    offset = (zone[0] === "-" ? -1 : 1) * (oh * 60 + om);
+    if (offset < OFFSET_MIN || offset > OFFSET_MAX) return fallback();
+  }
+
+  // The instant it names: its wall clock read as UTC, minus the offset.
+  const instant = Date.UTC(Number(d.slice(0, 4)), Number(d.slice(5, 7)) - 1, Number(d.slice(8, 10)), hh, mm, ss) - offset * 60_000;
+  if (Math.abs(instant - now.getTime()) > CLOCK_SKEW_MS) return fallback();
+  return { d, tm: at.slice(11, 16) };
+}
