@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "e2e": "playwright test",
-    "arcee:corpus": "node scripts/arcee-corpus.mjs"
+    "arcee:corpus": "node scripts/arcee-corpus.mjs",
+    "visitors": "node --env-file-if-exists=.env.local scripts/visitors.mjs"
   },
   "dependencies": {
     "@ai-sdk/groq": "^4.0.81",
