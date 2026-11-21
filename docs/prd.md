@@ -131,7 +131,7 @@ From a full audit of all 49 repos in `iteshxt` and `DiaLabs` (Nov 2026). Facts c
 
 ### 5.7 Contact channels
 
-Email (iteshxt@gmail.com), LinkedIn (/in/iteshxt), GitHub (iteshxt), X (@iteshxt), resume (print view and PDF), and a message through Arcee. The phone number stays off the site unless Itesh asks for it.
+Email (mail.iteshxt@gmail.com), LinkedIn (/in/iteshxt), GitHub (iteshxt), X (@iteshxt), resume (print view and PDF), and a message through Arcee. The phone number stays off the site unless Itesh asks for it.
 
 ## 6. Feature requirements
 

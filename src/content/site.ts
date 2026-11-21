@@ -7,7 +7,7 @@ export const SITE = {
   /** The cheeky line after his name. */
   tagline: "ships, mostly on time",
   role: "ML engineer & full-stack developer",
-  email: "iteshxt@gmail.com",
+  email: "mail.iteshxt@gmail.com",
   socials: {
     github: "https://github.com/iteshxt",
     linkedin: "https://www.linkedin.com/in/iteshxt",

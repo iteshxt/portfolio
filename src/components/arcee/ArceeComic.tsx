@@ -232,7 +232,7 @@ function ExchangePanel({ n, ex, pending, failed, allowed }: { n: number; ex: Exc
               Arcee
             </span>
             {failed && !reply ? (
-              <p>Arcee tripped over a cable. Try again, or email Itesh at iteshxt@gmail.com.</p>
+              <p>Arcee tripped over a cable. Try again, or email Itesh at mail.iteshxt@gmail.com.</p>
             ) : empty ? (
               <p className="text-fg-muted">My brain blanked on that one. Ask me again?</p>
             ) : reply ? (

@@ -6,7 +6,7 @@
 export const ARCEE_FACTS: { title: string; text: string }[] = [
   {
     title: "Contacting Itesh",
-    text: "The best way to reach Itesh is email at iteshxt@gmail.com. He's also on LinkedIn (linkedin.com/in/iteshxt), GitHub (github.com/iteshxt) and X (@iteshxt). Visitors can write him a postcard on the Contact page, or leave a message through Arcee: Arcee drafts it, the visitor checks it and presses Send, and it lands in his inbox. For availability, roles or rates, ask him directly.",
+    text: "The best way to reach Itesh is email at mail.iteshxt@gmail.com. He's also on LinkedIn (linkedin.com/in/iteshxt), GitHub (github.com/iteshxt) and X (@iteshxt). Visitors can write him a postcard on the Contact page, or leave a message through Arcee: Arcee drafts it, the visitor checks it and presses Send, and it lands in his inbox. For availability, roles or rates, ask him directly.",
   },
   {
     title: "About this website",

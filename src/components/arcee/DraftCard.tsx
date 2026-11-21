@@ -7,8 +7,8 @@ import { play } from "@/lib/sound";
 export type Draft = { name: string; contact: string; message: string };
 
 const ERRORS: Record<string, string> = {
-  "not-configured": "Message sending isn't switched on yet. Email iteshxt@gmail.com instead.",
-  "rate-limited": "That's enough messages for today. Email works too: iteshxt@gmail.com.",
+  "not-configured": "Message sending isn't switched on yet. Email mail.iteshxt@gmail.com instead.",
+  "rate-limited": "That's enough messages for today. Email works too: mail.iteshxt@gmail.com.",
   invalid: "Something in the message looks off. Try rephrasing it.",
 };
 
@@ -32,11 +32,11 @@ export function DraftCard({ draft }: { draft: Draft }) {
         play("found");
       } else {
         setState("error");
-        setError(ERRORS[body.error ?? ""] ?? "Couldn't send that. Email iteshxt@gmail.com instead.");
+        setError(ERRORS[body.error ?? ""] ?? "Couldn't send that. Email mail.iteshxt@gmail.com instead.");
       }
     } catch {
       setState("error");
-      setError("Couldn't reach the server. Email iteshxt@gmail.com instead.");
+      setError("Couldn't reach the server. Email mail.iteshxt@gmail.com instead.");
     }
   }
 

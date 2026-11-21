@@ -176,7 +176,7 @@ export function ArceeChat({ active }: { active: boolean }) {
         )}
         {error && (
           <div className="self-start rounded-[18px] bg-tomato/15 px-4 py-2.5 text-[14px]">
-            Arcee tripped over a cable. Try again, or email Itesh at iteshxt@gmail.com.
+            Arcee tripped over a cable. Try again, or email Itesh at mail.iteshxt@gmail.com.
           </div>
         )}
       </div>
